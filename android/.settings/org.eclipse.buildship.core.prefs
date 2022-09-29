@@ -1,0 +1,13 @@
+arguments=--init-script C\:\\Users\\HIGHTE~1\\AppData\\Local\\Temp\\init17143723373459839389.gradle --init-script C\:\\Users\\HIGHTE~1\\AppData\\Local\\Temp\\init16071508693828034513.gradle
+auto.sync=false
+build.scans.enabled=false
+connection.gradle.distribution=GRADLE_DISTRIBUTION(VERSION(7.4.2))
+connection.project.dir=
+eclipse.preferences.version=1
+gradle.user.home=
+java.home=C\:/Program Files/Java/jdk-16.0.1
+jvm.arguments=
+offline.mode=false
+override.workspace.settings=true
+show.console.view=true
+show.executions.view=true
