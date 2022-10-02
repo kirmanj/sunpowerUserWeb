@@ -1,4 +1,5 @@
 import 'package:explore/homeScreen.dart';
+import 'package:explore/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,19 +22,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
-
-      // Scaffold(
-      //   body: Center(child:
-      //   InkWell(
-      //       onTap: (){
-      //         Navigator.push(
-      //           context,
-      //           MaterialPageRoute(builder: (context) =>  AddProduct()),
-      //         );
-      //         },
-      //       child: Text('Add Prodcuct',style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,),textAlign: TextAlign.center,))),
-      // ),
+      home: AddProduct(),
     );
   }
 }
