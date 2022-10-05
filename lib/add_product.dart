@@ -1,10 +1,17 @@
 import 'dart:html';
 
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:explore/ppdfView.dart';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:firebase/firebase.dart' as fb;
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:typed_data';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({Key? key}) : super(key: key);
@@ -35,10 +42,14 @@ class _AddProductState extends State<AddProduct> {
   late String randomNumber;
   var uuid = Uuid();
 
+  List<String> images = [];
+
   List<QueryDocumentSnapshot> categoryList = [];
   String categoryID = '';
   String image = '';
   bool loading = false;
+  bool pdfLoading = false;
+  String pdfurl = '';
   String selectedCategory = '';
 
   List<QueryDocumentSnapshot> makeList = [];
@@ -48,6 +59,49 @@ class _AddProductState extends State<AddProduct> {
   List<QueryDocumentSnapshot> modelList = [];
   String selectedModel = '';
   String modelID = '';
+
+  late List<Widget> imageSliders = images
+      .map((item) => Container(
+            child: Container(
+              margin: EdgeInsets.all(5.0),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  child: Stack(
+                    children: <Widget>[
+                      Image.network(item, fit: BoxFit.cover, width: 1000.0),
+                      Positioned(
+                        bottom: 0.0,
+                        left: 0.0,
+                        right: 0.0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromARGB(200, 0, 0, 0),
+                                Color.fromARGB(0, 0, 0, 0)
+                              ],
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 20.0),
+                          child: Text(
+                            'No. ${images.indexOf(item)} image',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
+          ))
+      .toList();
+
   getCategory() {
     FirebaseFirestore.instance.collection('categories').get().then((value) {
       setState(() {
@@ -121,6 +175,10 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    print("width");
+    print(width);
+    print("height");
+    print(height);
     return Scaffold(body: Builder(
       builder: (BuildContext context) {
         return Container(
@@ -134,244 +192,613 @@ class _AddProductState extends State<AddProduct> {
                   child: Column(
                     //mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Container(
+                            width: width * 0.1,
+                            height: height * 0.05,
+                            decoration: BoxDecoration(
+                                border: const GradientBoxBorder(
+                                  gradient: LinearGradient(colors: [
+                                    Color.fromARGB(255, 0, 178, 169),
+                                    Color.fromARGB(255, 0, 106, 101),
+                                  ]),
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Center(child: Text('Product Panel'))),
+                      ),
                       Container(
-                          width: width * 0.1,
-                          height: height * 0.1,
-                          child: Center(
-                              child: Text('Add Product',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  )))),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: width * 0.15,
-                                  child: InkWell(
-                                    onTap: () {
-                                      uploadImgToStorage();
-                                    },
-                                    child: image.isEmpty
+                        child: Row(
+                          children: [
+                            Container(
+                              width: width * 0.23,
+                              height: height * 0.8,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(
+                                        0, 3), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: width * 0.2,
+                                    height: height * 0.2,
+                                    child: images.isEmpty
                                         ? Container(
-                                            height: 250,
-                                            child: loading == true
-                                                ? Transform.scale(
-                                                    scale: 0.2,
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      strokeWidth: 10,
-                                                    ),
-                                                  )
-                                                : Icon(
-                                                    Icons.add_a_photo_rounded),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Colors.grey),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(
-                                                      10.0) //                 <--- border radius here
-                                                  ),
-                                            ),
+                                            child:
+                                                Center(child: Text("No Data")),
                                           )
                                         : Container(
-                                            height: 160,
-                                            width: 160,
-                                            child:
-                                                Image.network(image.toString()),
-                                          ),
+                                            child: CarouselSlider(
+                                            options: CarouselOptions(),
+                                            items: images
+                                                .map((item) => Container(
+                                                      child: Center(
+                                                          child: Container(
+                                                        margin:
+                                                            EdgeInsets.all(5.0),
+                                                        child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            5.0)),
+                                                            child: Stack(
+                                                              children: <
+                                                                  Widget>[
+                                                                Image.network(
+                                                                    item,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    height:
+                                                                        height *
+                                                                            0.2,
+                                                                    width: width *
+                                                                        0.15),
+                                                                Positioned(
+                                                                  bottom: 0.0,
+                                                                  left: 0.0,
+                                                                  right: 0.0,
+                                                                  child:
+                                                                      Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      gradient:
+                                                                          LinearGradient(
+                                                                        colors: [
+                                                                          Color.fromARGB(
+                                                                              100,
+                                                                              0,
+                                                                              0,
+                                                                              0),
+                                                                          Color.fromARGB(
+                                                                              0,
+                                                                              0,
+                                                                              0,
+                                                                              0)
+                                                                        ],
+                                                                        begin: Alignment
+                                                                            .bottomCenter,
+                                                                        end: Alignment
+                                                                            .topCenter,
+                                                                      ),
+                                                                    ),
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        vertical:
+                                                                            10.0,
+                                                                        horizontal:
+                                                                            20.0),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        Text(
+                                                                          'No. ${images.indexOf(item) + 1}',
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontSize:
+                                                                                12.0,
+                                                                          ),
+                                                                        ),
+                                                                        InkWell(
+                                                                          onTap:
+                                                                              () {
+                                                                            setState(() {
+                                                                              images.removeAt(images.indexOf(item));
+                                                                            });
+                                                                            images.indexOf(item);
+                                                                          },
+                                                                          child:
+                                                                              Icon(
+                                                                            Icons.delete,
+                                                                            size:
+                                                                                16,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      )),
+                                                    ))
+                                                .toList(),
+                                          )),
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text('Select Category'),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    DropdownButton<String>(
-                                      // focusColor: Theme.of(context).highlightColor,
-                                      //value: _chosenValue,
-                                      //elevation: 5,
-                                      style: TextStyle(color: Colors.black),
-                                      value: selectedCategory,
-                                      iconEnabledColor:
-                                          Theme.of(context).highlightColor,
-                                      items: categoryList
-                                          .map<DropdownMenuItem<String>>(
-                                              (QueryDocumentSnapshot value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value['name'].toString(),
-                                          child: Text(
-                                            value['name'],
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                        );
-                                      }).toList(),
-                                      hint: Text("Choose Category"),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedCategory = value.toString();
-                                        });
-                                        FirebaseFirestore.instance
-                                            .collection('categories')
-                                            .where("name",
-                                                isEqualTo: value.toString())
-                                            .get()
-                                            .then((value) {
-                                          categoryID = value.docs[0].id;
-                                          print(categoryID);
-                                        });
-                                      },
-                                      // onTap: () {
-                                      //   setState(() {
-                                      //     saveData(_chosenValue);
-                                      //   });
-                                      // },
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text('Select Make'),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    DropdownButton<String>(
-                                      style: TextStyle(color: Colors.black),
-                                      value: selectedMake,
-                                      iconEnabledColor:
-                                          Theme.of(context).highlightColor,
-                                      items: makeList
-                                          .map<DropdownMenuItem<String>>(
-                                              (QueryDocumentSnapshot value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value['make'].toString(),
-                                          child: Text(
-                                            value['make'],
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                        );
-                                      }).toList(),
-                                      hint: Text("Choose Make"),
-                                      onTap: () {},
-
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedMake = value.toString();
-                                        });
-
-                                        FirebaseFirestore.instance
-                                            .collection('make')
-                                            .where("make",
-                                                isEqualTo: value.toString())
-                                            .get()
-                                            .then((value) {
-                                          makeID = value.docs[0].id;
-                                          print(makeID);
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Container(
+                                        width: width * 0.05,
+                                        decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Color.fromARGB(
+                                                    255, 0, 178, 169),
+                                                Color.fromARGB(
+                                                    255, 0, 106, 101),
+                                              ],
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight,
+                                            ),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(25.0),
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.green
+                                                    .withOpacity(0.2),
+                                                spreadRadius: 4,
+                                                blurRadius: 10,
+                                                offset: Offset(0, 0),
+                                              )
+                                            ]),
+                                        child: InkWell(
+                                            onTap: () {
+                                              uploadImgToStorage();
+                                            },
+                                            child: Container(
+                                              height: height * 0.05,
+                                              width: 25,
+                                              child: loading == true
+                                                  ? Transform.scale(
+                                                      scale: 0.2,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        strokeWidth: 10,
+                                                      ),
+                                                    )
+                                                  : Icon(
+                                                      Icons.add_a_photo_rounded,
+                                                      color: Colors.white,
+                                                      size: 16,
+                                                    ),
+                                            )),
+                                      ),
+                                      InkWell(
+                                        child: Container(
+                                            width: width * 0.1,
+                                            height: height * 0.05,
+                                            decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Color.fromARGB(
+                                                        255, 0, 178, 169),
+                                                    Color.fromARGB(
+                                                        255, 0, 106, 101),
+                                                  ],
+                                                  begin: Alignment.centerLeft,
+                                                  end: Alignment.centerRight,
+                                                ),
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(25.0),
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.green
+                                                        .withOpacity(0.2),
+                                                    spreadRadius: 4,
+                                                    blurRadius: 10,
+                                                    offset: Offset(0, 0),
+                                                  )
+                                                ]),
+                                            child: Center(
+                                                child: Container(
+                                              child: pdfLoading
+                                                  ? Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        Text("Done",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                            )),
+                                                        Icon(
+                                                          Icons.done,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : Text('Upload PDF',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                      )),
+                                            ))),
+                                        onTap: () {
+                                          pdfLoading
+                                              ? null
+                                              : uploadPDFToStorage();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text('Select Category'),
+                                      SizedBox(
+                                        width: width * 0.0146,
+                                      ),
+                                      DropdownButton<String>(
+                                        // focusColor: Theme.of(context).highlightColor,
+                                        //value: _chosenValue,
+                                        //elevation: 5,
+                                        style: TextStyle(color: Colors.black),
+                                        value: selectedCategory,
+                                        iconEnabledColor:
+                                            Theme.of(context).highlightColor,
+                                        items: categoryList
+                                            .map<DropdownMenuItem<String>>(
+                                                (QueryDocumentSnapshot value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value['name'].toString(),
+                                            child: Text(
+                                              value['name'],
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          );
+                                        }).toList(),
+                                        hint: Text("Choose Category"),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedCategory = value.toString();
+                                          });
                                           FirebaseFirestore.instance
-                                              .collection('make')
-                                              .doc(value.docs[0].id)
-                                              .collection("models")
+                                              .collection('categories')
+                                              .where("name",
+                                                  isEqualTo: value.toString())
                                               .get()
                                               .then((value) {
-                                            modelList = [];
-                                            modelID = value.docs[0].id;
-                                            print(modelID);
-                                            setState(() {
-                                              selectedModel =
-                                                  value.docs[0]["mname"];
-                                              print(value.docs[0]["mname"]);
-                                              value.docs.forEach((element) {
-                                                modelList.add(element);
+                                            categoryID = value.docs[0].id;
+                                            print(categoryID);
+                                          });
+                                        },
+                                        // onTap: () {
+                                        //   setState(() {
+                                        //     saveData(_chosenValue);
+                                        //   });
+                                        // },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: width * 0.0146,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text('Select Make'),
+                                      SizedBox(
+                                        width: width * 0.0146,
+                                      ),
+                                      DropdownButton<String>(
+                                        style: TextStyle(color: Colors.black),
+                                        value: selectedMake,
+                                        iconEnabledColor:
+                                            Theme.of(context).highlightColor,
+                                        items: makeList
+                                            .map<DropdownMenuItem<String>>(
+                                                (QueryDocumentSnapshot value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value['make'].toString(),
+                                            child: Text(
+                                              value['make'],
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          );
+                                        }).toList(),
+                                        hint: Text("Choose Make"),
+                                        onTap: () {},
+
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedMake = value.toString();
+                                          });
+
+                                          FirebaseFirestore.instance
+                                              .collection('make')
+                                              .where("make",
+                                                  isEqualTo: value.toString())
+                                              .get()
+                                              .then((value) {
+                                            makeID = value.docs[0].id;
+                                            print(makeID);
+                                            FirebaseFirestore.instance
+                                                .collection('make')
+                                                .doc(value.docs[0].id)
+                                                .collection("models")
+                                                .get()
+                                                .then((value) {
+                                              modelList = [];
+                                              modelID = value.docs[0].id;
+                                              print(modelID);
+                                              setState(() {
+                                                selectedModel =
+                                                    value.docs[0]["mname"];
+                                                print(value.docs[0]["mname"]);
+                                                value.docs.forEach((element) {
+                                                  modelList.add(element);
+                                                });
                                               });
                                             });
                                           });
-                                        });
-                                      },
-                                      // onTap: () {
-                                      //   setState(() {
-                                      //     saveData(_chosenValue);
-                                      //   });
-                                      // },
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text('Select Model'),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    DropdownButton<String>(
-                                      style: TextStyle(color: Colors.black),
-                                      value: selectedModel,
-                                      iconEnabledColor:
-                                          Theme.of(context).highlightColor,
-                                      items: modelList
-                                          .map<DropdownMenuItem<String>>(
-                                              (QueryDocumentSnapshot value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value['mname'].toString(),
-                                          child: Text(
-                                            value['mname'],
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                        );
-                                      }).toList(),
-                                      hint: Text("Choose Model"),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedModel = value.toString();
-                                        });
+                                        },
+                                        // onTap: () {
+                                        //   setState(() {
+                                        //     saveData(_chosenValue);
+                                        //   });
+                                        // },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: width * 0.0146,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text('Select Model'),
+                                      SizedBox(
+                                        width: width * 0.0146,
+                                      ),
+                                      DropdownButton<String>(
+                                        style: TextStyle(color: Colors.black),
+                                        value: selectedModel,
+                                        iconEnabledColor:
+                                            Theme.of(context).highlightColor,
+                                        items: modelList
+                                            .map<DropdownMenuItem<String>>(
+                                                (QueryDocumentSnapshot value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value['mname'].toString(),
+                                            child: Text(
+                                              value['mname'],
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          );
+                                        }).toList(),
+                                        hint: Text("Choose Model"),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedModel = value.toString();
+                                          });
 
-                                        FirebaseFirestore.instance
-                                            .collection('make')
-                                            .doc(makeID)
-                                            .collection("models")
-                                            .where("mname",
-                                                isEqualTo: value.toString())
-                                            .get()
-                                            .then((value) {
-                                          modelID = value.docs[0].id;
-                                          print(modelID);
-                                        });
-                                      },
-                                      // onTap: () {
-                                      //   setState(() {
-                                      //     saveData(_chosenValue);
-                                      //   });
-                                      // },
+                                          FirebaseFirestore.instance
+                                              .collection('make')
+                                              .doc(makeID)
+                                              .collection("models")
+                                              .where("mname",
+                                                  isEqualTo: value.toString())
+                                              .get()
+                                              .then((value) {
+                                            modelID = value.docs[0].id;
+                                            print(modelID);
+                                          });
+                                        },
+                                        // onTap: () {
+                                        //   setState(() {
+                                        //     saveData(_chosenValue);
+                                        //   });
+                                        // },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: width * 0.0146,
+                                  ),
+                                  Container(
+                                    width: width * 0.15,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        SizedBox(
+                                          height: width * 0.0146,
+                                        ),
+                                        Container(
+                                          height: height * 0.075,
+                                          width: width * 0.15,
+                                          child: BarcodeWidget(
+                                            data: barCode.text,
+                                            barcode:
+                                                Barcode.code128(escapes: true),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: width * 0.0146,
+                                        ),
+                                        InkWell(
+                                          child: Container(
+                                              width: width * 0.1,
+                                              height: height * 0.05,
+                                              decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      Color.fromARGB(
+                                                          255, 0, 178, 169),
+                                                      Color.fromARGB(
+                                                          255, 0, 106, 101),
+                                                    ],
+                                                    begin: Alignment.centerLeft,
+                                                    end: Alignment.centerRight,
+                                                  ),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                    Radius.circular(25.0),
+                                                  ),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.green
+                                                          .withOpacity(0.2),
+                                                      spreadRadius: 4,
+                                                      blurRadius: 10,
+                                                      offset: Offset(0, 0),
+                                                    )
+                                                  ]),
+                                              child: Center(
+                                                  child: Container(
+                                                child: Text('ADD',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    )),
+                                              ))),
+                                          onTap: () {
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              if (categoryID.isEmpty ||
+                                                  image.isEmpty) {
+                                                Scaffold.of(context)
+                                                    .showSnackBar(_missingData);
+                                              } else {
+                                                menuProducts
+                                                    .doc(randomNumber)
+                                                    .set({
+                                                  "categoryID": categoryID,
+                                                  'productID':
+                                                      randomNumber.toString(),
+                                                  'makeId': makeID,
+                                                  'modelId': modelID,
+                                                  'name': name.text,
+                                                  "images": images,
+                                                  'nameK': nameK.text,
+                                                  'nameA': nameA.text,
+                                                  'desc': descE.text,
+                                                  'descK': descK.text,
+                                                  'descA': descA.text,
+
+                                                  'oemCode': int.parse(
+                                                      oemCode.text.toString()),
+                                                  'itemCode': int.parse(
+                                                      itemCode.text.toString()),
+                                                  'barCode': int.parse(
+                                                      barCode.text.toString()),
+                                                  'piecesInBox': int.parse(
+                                                      piecesInBox.text
+                                                          .toString()),
+                                                  'brand': brand.text,
+                                                  'volt': volt.text,
+                                                  "pdfUrl": pdfurl.toString(),
+                                                  'quantity': int.parse(
+                                                      quantity.text.toString()),
+                                                  'cost price': cPrice.text,
+                                                  'retail price': rPrice.text,
+                                                  'wholesale price':
+                                                      wPrice.text,
+                                                  "Time": DateTime.now(),
+                                                  "img": image,
+
+                                                  // "Time": DateTime.now(),// John Doe
+                                                });
+                                                setState(() {
+                                                  name.text = '';
+                                                  nameK.text = '';
+                                                  nameA.text = '';
+                                                  descE.text = '';
+                                                  descK.text = '';
+                                                  descA.text = '';
+                                                  cPrice.text = '';
+                                                  wPrice.text = '';
+                                                  images = [];
+                                                  rPrice.text = '';
+                                                  image = '';
+                                                  brand.text = '';
+                                                  oemCode.text = '';
+                                                  itemCode.text = '';
+                                                  barCode.text = '';
+                                                  quantity.text = '';
+                                                  volt.text = '';
+                                                  piecesInBox.text = '';
+
+                                                  randomNumber = uuid.v1();
+                                                });
+                                                Scaffold.of(context)
+                                                    .showSnackBar(_success);
+                                              }
+                                            }
+                                          },
+                                        ),
+                                        SizedBox(
+                                          height: width * 0.0146,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(width * 0.0146),
+                              child: Container(
+                                width: width * 0.7,
+                                height: height * 0.8,
+                                padding: EdgeInsets.all(width * 0.0146),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: Offset(
+                                          0, 3), // changes position of shadow
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 20),
-                              child: Container(
-                                // width:00,
                                 child: Column(
                                   children: [
                                     Container(
@@ -402,7 +829,7 @@ class _AddProductState extends State<AddProduct> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 15,
+                                            width: width * 0.01,
                                           ),
                                           Expanded(
                                             flex: 1,
@@ -427,7 +854,7 @@ class _AddProductState extends State<AddProduct> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 15,
+                                            width: width * 0.01,
                                           ),
                                           Expanded(
                                             flex: 1,
@@ -457,7 +884,7 @@ class _AddProductState extends State<AddProduct> {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 15,
+                                      height: height * 0.0229,
                                     ),
                                     Container(
                                       child: Row(
@@ -487,7 +914,7 @@ class _AddProductState extends State<AddProduct> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 15,
+                                            width: width * 0.0146,
                                           ),
                                           Expanded(
                                             flex: 1,
@@ -512,7 +939,7 @@ class _AddProductState extends State<AddProduct> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 15,
+                                            width: width * 0.01,
                                           ),
                                           Expanded(
                                             flex: 1,
@@ -547,7 +974,7 @@ class _AddProductState extends State<AddProduct> {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 15,
+                                      height: height * 0.0229,
                                     ),
                                     Container(
                                       child: Row(
@@ -577,7 +1004,7 @@ class _AddProductState extends State<AddProduct> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 15,
+                                            width: width * 0.01,
                                           ),
                                           Expanded(
                                             flex: 1,
@@ -602,7 +1029,7 @@ class _AddProductState extends State<AddProduct> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 15,
+                                            width: width * 0.01,
                                           ),
                                           Expanded(
                                             flex: 1,
@@ -632,7 +1059,7 @@ class _AddProductState extends State<AddProduct> {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 15,
+                                      height: height * 0.0229,
                                     ),
                                     TextFormField(
                                       controller: descE,
@@ -653,7 +1080,7 @@ class _AddProductState extends State<AddProduct> {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 15,
+                                      height: height * 0.0229,
                                     ),
                                     TextFormField(
                                       controller: descK,
@@ -674,7 +1101,7 @@ class _AddProductState extends State<AddProduct> {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 15,
+                                      height: height * 0.0229,
                                     ),
                                     TextFormField(
                                       controller: descA,
@@ -695,7 +1122,7 @@ class _AddProductState extends State<AddProduct> {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 15,
+                                      height: height * 0.0229,
                                     ),
                                     //prices
                                     Row(
@@ -796,125 +1223,8 @@ class _AddProductState extends State<AddProduct> {
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Container(
-                        width: width * 0.6,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: height * 0.1,
-                              width: width * 0.2,
-                              child: BarcodeWidget(
-                                data: barCode.text,
-                                barcode: Barcode.code128(escapes: true),
-                              ),
-                            ),
-                            InkWell(
-                              child: Container(
-                                  width: width * 0.1,
-                                  height: height * 0.05,
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color.fromARGB(255, 0, 178, 169),
-                                          Color.fromARGB(255, 0, 106, 101),
-                                        ],
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                      ),
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(25.0),
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.green.withOpacity(0.2),
-                                          spreadRadius: 4,
-                                          blurRadius: 10,
-                                          offset: Offset(0, 0),
-                                        )
-                                      ]),
-                                  child: Center(
-                                      child: Container(
-                                    child: Text('ADD',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        )),
-                                  ))),
-                              onTap: () {
-                                if (_formKey.currentState!.validate()) {
-                                  if (categoryID.isEmpty || image.isEmpty) {
-                                    Scaffold.of(context)
-                                        .showSnackBar(_missingData);
-                                  } else {
-                                    menuProducts.doc(randomNumber).set({
-                                      "categoryID": categoryID,
-                                      'productID': randomNumber.toString(),
-                                      'makeId': makeID,
-                                      'modelId': modelID,
-                                      'name': name.text,
-                                      'nameK': nameK.text,
-                                      'nameA': nameA.text,
-                                      'desc': descE.text,
-                                      'descK': descK.text,
-                                      'descA': descA.text,
-
-                                      'oemCode':
-                                          int.parse(oemCode.text.toString()),
-                                      'itemCode':
-                                          int.parse(itemCode.text.toString()),
-                                      'barCode':
-                                          int.parse(barCode.text.toString()),
-                                      'piecesInBox': int.parse(
-                                          piecesInBox.text.toString()),
-                                      'brand': brand.text,
-                                      'volt': volt.text,
-                                      'quantity':
-                                          int.parse(quantity.text.toString()),
-                                      'cost price': cPrice.text,
-                                      'retail price': rPrice.text,
-                                      'wholesale price': wPrice.text,
-                                      "Time": DateTime.now(),
-                                      "img": image,
-
-                                      // "Time": DateTime.now(),// John Doe
-                                    });
-                                    setState(() {
-                                      name.text = '';
-                                      nameK.text = '';
-                                      nameA.text = '';
-                                      descE.text = '';
-                                      descK.text = '';
-                                      descA.text = '';
-                                      cPrice.text = '';
-                                      wPrice.text = '';
-                                      rPrice.text = '';
-                                      image = '';
-                                      brand.text = '';
-                                      oemCode.text = '';
-                                      itemCode.text = '';
-                                      barCode.text = '';
-                                      quantity.text = '';
-                                      volt.text = '';
-                                      piecesInBox.text = '';
-
-                                      randomNumber = uuid.v1();
-                                    });
-                                    Scaffold.of(context).showSnackBar(_success);
-                                  }
-                                }
-                              },
-                            ),
                           ],
                         ),
-                      ),
-                      SizedBox(
-                        height: 30,
                       ),
                     ],
                   ),
@@ -957,7 +1267,48 @@ class _AddProductState extends State<AddProduct> {
       Future.delayed(Duration(milliseconds: 100), () {
         setState(() {
           image = imageUri.toString();
+          images.add(image);
+
           loading = false;
+        });
+      });
+    });
+  }
+
+  void selectPDF({required Function(File file) onSelected}) {
+    var uploadInput = FileUploadInputElement()..accept = '.pdf';
+    uploadInput.click();
+    uploadInput.onChange.listen((event) {
+      final file = uploadInput.files!.first;
+      final reader = FileReader();
+      reader.readAsDataUrl(file);
+      reader.onLoadEnd.listen((event) {
+        onSelected(file);
+        setState(() {
+          pdfLoading = true;
+        });
+      });
+    });
+  }
+
+  void uploadPDFToStorage() {
+    final dateTime = DateTime.now();
+    final name = 'PDF';
+    final path = '$name/$dateTime';
+    selectPDF(onSelected: (file) async {
+      fb.StorageReference storageRef = fb
+          .storage()
+          .refFromURL('gs://resturant-management-f42e5.appspot.com')
+          .child(path);
+      fb.UploadTaskSnapshot uploadTaskSnapshot =
+          await storageRef.put(file).future;
+      Uri imageUri = await uploadTaskSnapshot.ref.getDownloadURL();
+
+      Future.delayed(Duration(milliseconds: 100), () {
+        setState(() {
+          pdfurl = imageUri.toString();
+          print(pdfurl);
+          // pdfLoading = false;
         });
       });
     });

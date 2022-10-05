@@ -22,13 +22,16 @@ dependencies:
   intl: ^0.17.0
   #firebase_storage: ^8.0.0
   cloud_firestore: ^1.0.0
+  file_picker:
   #cloud_firestore: ^3.0.0
   shared_preferences:
+  carousel_slider: ^4.1.1
   firebase_storage: ^9.0.0
   image_picker: ^0.7.0
   uuid: 3.0.0
   firebase: ^9.0.0
   
+
 
 dev_dependencies:
   flutter_test:
