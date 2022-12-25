@@ -1,4 +1,4 @@
-import 'package:explore/homeScreen.dart';
+import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +40,7 @@ class _GoogleButtonState extends State<GoogleButton> {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   fullscreenDialog: true,
-                  builder: (context) => HomeScreen(),
+                  builder: (context) => HomePage(),
                 ),
               );
             }

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
-import 'package:explore/homeScreen.dart';
 import 'package:explore/main.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
@@ -1735,7 +1734,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                         value ? _isHovering[6] = true : _isHovering[6] = false;
                       });
                     },
-                    onTap: userEmail == null
+                    onTap: uid == null
                         ? () {
                             showDialog(
                               context: context,

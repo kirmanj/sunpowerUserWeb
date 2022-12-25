@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:explore/homeScreen.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
+import 'package:explore/web/widgets/responsive.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -208,17 +208,31 @@ class _AuthDialogState extends State<AuthDialog> {
                             canShow = false;
                           });
                         },
-                        child: Text(
-                          'Email address',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: isPhone
-                                ? Colors.grey[400]
-                                : Theme.of(context).textTheme.subtitle2!.color,
-                            fontSize: 18,
-                            // fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            // letterSpacing: 3,
+                        child: Flexible(
+                          child: RichText(
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.visible,
+                            strutStyle: StrutStyle(
+                              fontSize: ResponsiveWidget.isSmallScreen(context)
+                                  ? 12
+                                  : 18,
+                            ),
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: isPhone
+                                    ? Colors.grey[400]
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .subtitle2!
+                                        .color,
+                                fontSize:
+                                    ResponsiveWidget.isSmallScreen(context)
+                                        ? 12
+                                        : 18,
+                              ),
+                              text: 'Email address',
+                            ),
                           ),
                         ),
                       ),
@@ -226,26 +240,39 @@ class _AuthDialogState extends State<AuthDialog> {
                         width: 30,
                       ),
                       InkWell(
-                        onTap: () {
-                          setState(() {
-                            isPhone = true;
-                            canShow = false;
-                          });
-                        },
-                        child: Text(
-                          'Phone Number',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: !isPhone
-                                ? Colors.grey[400]
-                                : Theme.of(context).textTheme.subtitle2!.color,
-                            fontSize: 18,
-                            // fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            // letterSpacing: 3,
-                          ),
-                        ),
-                      )
+                          onTap: () {
+                            setState(() {
+                              isPhone = true;
+                              canShow = false;
+                            });
+                          },
+                          child: Flexible(
+                            child: RichText(
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.visible,
+                              strutStyle: StrutStyle(
+                                fontSize:
+                                    ResponsiveWidget.isSmallScreen(context)
+                                        ? 12
+                                        : 18,
+                              ),
+                              text: TextSpan(
+                                style: TextStyle(
+                                  color: !isPhone
+                                      ? Colors.grey[400]
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .subtitle2!
+                                          .color,
+                                  fontSize:
+                                      ResponsiveWidget.isSmallScreen(context)
+                                          ? 12
+                                          : 18,
+                                ),
+                                text: 'Phone Number',
+                              ),
+                            ),
+                          ))
                     ],
                   ),
                 ),
@@ -471,14 +498,29 @@ class _AuthDialogState extends State<AuthDialog> {
                           left: 20.0,
                           bottom: 8,
                         ),
-                        child: Text(
-                          isPhone ? "OTP" : "Password",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.subtitle2!.color,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            // letterSpacing: 3,
+                        child: Flexible(
+                          child: RichText(
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.visible,
+                            strutStyle: StrutStyle(
+                              fontSize: ResponsiveWidget.isSmallScreen(context)
+                                  ? 12
+                                  : 18,
+                            ),
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2!
+                                    .color,
+                                fontSize:
+                                    ResponsiveWidget.isSmallScreen(context)
+                                        ? 12
+                                        : 18,
+                              ),
+                              text: isPhone ? "OTP" : "Password",
+                            ),
                           ),
                         ),
                       ),

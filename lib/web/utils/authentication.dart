@@ -1,6 +1,5 @@
 import 'dart:js';
 
-import 'package:explore/homeScreen.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,7 +12,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
-String? uid = "irLb25BTB6YXUnwI4PLcpLLsywE3";
+String? uid;
 String? name;
 String? userEmail;
 String? imageUrl;
