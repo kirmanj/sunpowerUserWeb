@@ -1,4 +1,4 @@
-> The project has been updated to **Flutter 2.0** with sound null-safety support :rocket:
+<!-- > The project has been updated to **Flutter 2.0** with sound null-safety support :rocket:
 
 <p align="center">
   <img src="https://github.com/sbis04/explore/raw/master/screenshots/explore_cover_updated.gif" alt="Explore Cover"/>
@@ -25,4 +25,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-# zbaraWebsite
+# zbaraWebsite -->
