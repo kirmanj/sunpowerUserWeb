@@ -1,12 +1,9 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
-import 'package:explore/load_pdf.dart';
+
 import 'package:explore/scrollbehaivori.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/utils/theme_data.dart';
-import 'package:explore/web/widgets/sales.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 int cartC = 0;
@@ -40,7 +37,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Explore',
+      title: 'Sunpower',
       theme: lightThemeData,
       scrollBehavior: MyCustomScrollBehavior(),
       darkTheme: darkThemeData,
