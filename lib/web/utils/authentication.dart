@@ -1,6 +1,7 @@
 import 'dart:js';
 
 import 'package:explore/homeScreen.dart';
+import 'package:explore/web/screens/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +13,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
-String? uid;
+String? uid = "irLb25BTB6YXUnwI4PLcpLLsywE3";
 String? name;
 String? userEmail;
 String? imageUrl;
@@ -55,9 +56,7 @@ Future<User?> signInWithGoogle() async {
           await _auth.signInWithPopup(authProvider);
 
       user = userCredential.user;
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   } else {
     final GoogleSignIn googleSignIn = GoogleSignIn();
 
@@ -154,7 +153,7 @@ Future<User?> signInWithEmailPassword(
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           fullscreenDialog: true,
-          builder: (context) => HomeScreen(),
+          builder: (context) => HomePage(),
         ),
       );
     }

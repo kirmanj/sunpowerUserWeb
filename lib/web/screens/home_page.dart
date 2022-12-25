@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
+import 'package:explore/main.dart';
+import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/widgets/contact.dart';
 import 'package:explore/web/widgets/newProduts.dart';
 import 'package:explore/web/widgets/web_scrollbar.dart';
@@ -28,13 +31,55 @@ class _HomePageState extends State<HomePage> {
   double _scrollPosition = 0;
   double _opacity = 0;
 
+  getCart() async {
+    if (uid!.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('cart')
+          .get()
+          .then((myDocuments) {
+        setState(() {
+          cartC = myDocuments.docs.length;
+        });
+      });
+    }
+  }
+
+  List _isHovering = [];
+  List _isSelected = [];
+
+  List<Map> brands = [];
+  getBrands() {
+    FirebaseFirestore.instance.collection('brand').get().then((value) {
+      value.docs.forEach((element) async {
+        _isHovering.add(false);
+        _isSelected.add(false);
+
+        brands.add({
+          "name": element.data()['name'],
+          'image': element.data()['img'],
+          'pdf': element.data()['pdfurl']
+        });
+      });
+      if (_isSelected.length != 0) {
+        _isSelected[0] = true;
+      }
+    }).whenComplete(() {
+      setState(() {
+        brands = brands;
+        _isHovering = _isHovering;
+        _isSelected = _isSelected;
+      });
+    });
+  }
+
   final FocusNode _focusNode = FocusNode();
   void _handleKeyEvent(RawKeyEvent event) {
     var offset = _scrollController.offset;
     if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
       setState(() {
         if (kReleaseMode) {
-          print(offset);
           _scrollController.animateTo(offset - 20,
               duration: Duration(milliseconds: 30), curve: Curves.ease);
         } else {
@@ -85,6 +130,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
+    getBrands();
+    getCart();
+
     super.initState();
   }
 
@@ -183,7 +231,9 @@ class _HomePageState extends State<HomePage> {
                   : SizedBox(height: screenSize.height / 10),
               LatestProducts(),
               DestinationHeading(screenSize: screenSize),
-              DestinationCarousel(),
+              brands.isEmpty
+                  ? Container()
+                  : DestinationCarousel(_isHovering, _isSelected, brands),
               SizedBox(height: screenSize.height / 10),
               ContactUs(),
               SizedBox(height: screenSize.height / 15),

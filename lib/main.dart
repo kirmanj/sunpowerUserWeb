@@ -1,14 +1,19 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
+import 'package:explore/add_user.dart';
 import 'package:explore/homeScreen.dart';
+import 'package:explore/load_pdf.dart';
 import 'package:explore/scrollbehaivori.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/utils/theme_data.dart';
+import 'package:explore/web/widgets/sales.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'add_product.dart';
+
+int cartC = 0;
 
 void main() {
   runApp(
@@ -45,7 +50,7 @@ class _MyAppState extends State<MyApp> {
       darkTheme: darkThemeData,
       debugShowCheckedModeBanner: false,
       themeMode: EasyDynamicTheme.of(context).themeMode,
-      home: HomePage(),
+      home: Sales(),
     );
   }
 }
