@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:explore/homeScreen.dart';
+import 'package:explore/web/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
@@ -216,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      HomeScreen()));
+                                                      HomePage()));
                                         });
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(_success);

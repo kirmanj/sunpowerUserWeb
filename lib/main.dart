@@ -4,7 +4,11 @@ import 'package:explore/scrollbehaivori.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/utils/theme_data.dart';
+import 'package:explore/web/widgets/sales.dart';
 import 'package:flutter/material.dart';
+import 'dart:html';
+import 'package:provider/provider.dart';
+import 'localization/kurdish_material_localization.dart';
 
 int cartC = 0;
 
@@ -24,7 +28,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Future getUserInfo() async {
     await getUser();
-    setState(() {});
+    setState(() {
+      uid = '';
+    });
     print(uid);
   }
 

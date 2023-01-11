@@ -1,5 +1,6 @@
 import 'package:explore/web/widgets/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactUs extends StatefulWidget {
   const ContactUs({Key? key}) : super(key: key);
@@ -9,6 +10,15 @@ class ContactUs extends StatefulWidget {
 }
 
 class _ContactUsState extends State<ContactUs> {
+  _launchURL(url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -148,46 +158,72 @@ class _ContactUsState extends State<ContactUs> {
                                   child:
                                       Image.asset("assets/images/email.png"))),
                         ),
-                        ListTile(
-                          title: Text(
-                            "sunpowercompany",
-                            style: TextStyle(color: Colors.white),
+                        InkWell(
+                          onTap: () {
+                            _launchURL(
+                                "https://www.youtube.com/@sunpowercompany172");
+                          },
+                          child: ListTile(
+                            title: Text(
+                              "sunpowercompany",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            leading: Container(
+                                width: 25,
+                                height: 25,
+                                child:
+                                    Image.asset("assets/images/youtube.png")),
                           ),
-                          leading: Container(
-                              width: 25,
-                              height: 25,
-                              child: Image.asset("assets/images/youtube.png")),
                         ),
-                        ListTile(
-                          title: Text(
-                            "SunPowerCompany",
-                            style: TextStyle(color: Colors.white),
+                        InkWell(
+                          onTap: () {
+                            _launchURL(
+                                "https://m.facebook.com/SunPowerCompany/?refsrc=deprecated&_rdr");
+                          },
+                          child: ListTile(
+                            title: Text(
+                              "SunPowerCompany",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            leading: Container(
+                                width: 25,
+                                height: 25,
+                                child:
+                                    Image.asset("assets/images/facebook.png")),
                           ),
-                          leading: Container(
-                              width: 25,
-                              height: 25,
-                              child: Image.asset("assets/images/facebook.png")),
                         ),
-                        ListTile(
-                          title: Text(
-                            "sunpower_iraq",
-                            style: TextStyle(color: Colors.white),
+                        InkWell(
+                          onTap: () {
+                            _launchURL(
+                                "https://www.instagram.com/sunpower_iraq/?igshid=MWI4MTIyMDE%3D");
+                          },
+                          child: ListTile(
+                            title: Text(
+                              "sunpower_iraq",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            leading: Container(
+                                width: 25,
+                                height: 25,
+                                child:
+                                    Image.asset("assets/images/instagram.png")),
                           ),
-                          leading: Container(
-                              width: 25,
-                              height: 25,
-                              child:
-                                  Image.asset("assets/images/instagram.png")),
                         ),
-                        ListTile(
-                          title: Text(
-                            "Sunpowercompany",
-                            style: TextStyle(color: Colors.white),
+                        InkWell(
+                          onTap: () {
+                            _launchURL(
+                                "https://www.tiktok.com/@sunpower_company");
+                          },
+                          child: ListTile(
+                            title: Text(
+                              "Sunpowercompany",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            leading: Container(
+                                width: 25,
+                                height: 25,
+                                child: Image.asset("assets/images/tiktok.png")),
                           ),
-                          leading: Container(
-                              width: 25,
-                              height: 25,
-                              child: Image.asset("assets/images/tiktok.png")),
                         )
                       ],
                     ),
@@ -275,46 +311,72 @@ class _ContactUsState extends State<ContactUs> {
                                   child:
                                       Image.asset("assets/images/email.png"))),
                         ),
-                        ListTile(
-                          title: Text(
-                            "sunpowercompany",
-                            style: TextStyle(color: Colors.white),
+                        InkWell(
+                          onTap: () {
+                            _launchURL(
+                                "https://www.youtube.com/@sunpowercompany172");
+                          },
+                          child: ListTile(
+                            title: Text(
+                              "sunpowercompany",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            leading: Container(
+                                width: 25,
+                                height: 25,
+                                child:
+                                    Image.asset("assets/images/youtube.png")),
                           ),
-                          leading: Container(
-                              width: 25,
-                              height: 25,
-                              child: Image.asset("assets/images/youtube.png")),
                         ),
-                        ListTile(
-                          title: Text(
-                            "SunPowerCompany",
-                            style: TextStyle(color: Colors.white),
+                        InkWell(
+                          onTap: () {
+                            _launchURL(
+                                "https://m.facebook.com/SunPowerCompany/?refsrc=deprecated&_rdr");
+                          },
+                          child: ListTile(
+                            title: Text(
+                              "SunPowerCompany",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            leading: Container(
+                                width: 25,
+                                height: 25,
+                                child:
+                                    Image.asset("assets/images/facebook.png")),
                           ),
-                          leading: Container(
-                              width: 25,
-                              height: 25,
-                              child: Image.asset("assets/images/facebook.png")),
                         ),
-                        ListTile(
-                          title: Text(
-                            "sunpower_iraq",
-                            style: TextStyle(color: Colors.white),
+                        InkWell(
+                          onTap: () {
+                            _launchURL(
+                                "https://www.instagram.com/sunpower_iraq/?igshid=MWI4MTIyMDE%3D");
+                          },
+                          child: ListTile(
+                            title: Text(
+                              "sunpower_iraq",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            leading: Container(
+                                width: 25,
+                                height: 25,
+                                child:
+                                    Image.asset("assets/images/instagram.png")),
                           ),
-                          leading: Container(
-                              width: 25,
-                              height: 25,
-                              child:
-                                  Image.asset("assets/images/instagram.png")),
                         ),
-                        ListTile(
-                          title: Text(
-                            "Sunpowercompany",
-                            style: TextStyle(color: Colors.white),
+                        InkWell(
+                          onTap: () {
+                            _launchURL(
+                                "https://www.tiktok.com/@sunpower_company");
+                          },
+                          child: ListTile(
+                            title: Text(
+                              "Sunpowercompany",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            leading: Container(
+                                width: 25,
+                                height: 25,
+                                child: Image.asset("assets/images/tiktok.png")),
                           ),
-                          leading: Container(
-                              width: 25,
-                              height: 25,
-                              child: Image.asset("assets/images/tiktok.png")),
                         )
                       ],
                     ),

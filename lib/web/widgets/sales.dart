@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/pdfread.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
@@ -83,24 +84,6 @@ class _SalesState extends State<Sales> {
         });
       }
 
-      if (model == models[index]['id'] && sel == 'model') {
-        setState(() {
-          model = "";
-        });
-      } else if (sel == 'model') {
-        setState(() {
-          model = models[index]['id'];
-
-          products.removeWhere((element) => element['modelId'] != model);
-          products = products;
-        });
-      } else if (model != '') {
-        setState(() {
-          products.removeWhere((element) => element['modelId'] != model);
-          products = products;
-        });
-      }
-
       if (category == categories[index]["id"] && sel == 'cat') {
         setState(() {
           category = "";
@@ -115,6 +98,24 @@ class _SalesState extends State<Sales> {
       } else if (category != '') {
         setState(() {
           products.removeWhere((element) => element['categoryID'] != category);
+          products = products;
+        });
+      }
+
+      if (model == models[index]['id'] && sel == 'model') {
+        setState(() {
+          model = "";
+        });
+      } else if (sel == 'model') {
+        setState(() {
+          model = models[index]['id'];
+
+          products.removeWhere((element) => element['modelId'] != model);
+          products = products;
+        });
+      } else if (model != '') {
+        setState(() {
+          products.removeWhere((element) => element['modelId'] != model);
           products = products;
         });
       }
@@ -140,6 +141,8 @@ class _SalesState extends State<Sales> {
       value.docs.forEach((element) async {
         categories.add({
           "name": element.data()['name'],
+          "nameA": element.data()['nameA'],
+          "nameK": element.data()['nameK'],
           'img': element.data()['img'],
           'id': element.id
         });
@@ -293,6 +296,16 @@ class _SalesState extends State<Sales> {
                                                                           fontSize:
                                                                               10,
                                                                         ),
+                                                                        //   text: AppLocalizations.of(context).locale.languageCode.toString() ==
+                                                                        //           'ku'
+                                                                        //       ? categories[index]['nameK']
+                                                                        //           .toString()
+                                                                        //           .toString()
+                                                                        //           .toUpperCase()
+                                                                        //       : AppLocalizations.of(context).locale.languageCode.toString() == 'ar'
+                                                                        //           ? categories[index]['nameA'].toString().toString().toUpperCase()
+                                                                        //           : categories[index]['name'].toString().toString().toUpperCase(),
+                                                                        // ),
                                                                         text: categories[index]['name'].toString()),
                                                                   ),
                                                                 ),

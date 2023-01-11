@@ -84,6 +84,23 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
           products = products;
         });
       }
+      if (category == categories[index]["id"] && sel == 'cat') {
+        setState(() {
+          category = "";
+        });
+      } else if (sel == 'cat') {
+        setState(() {
+          category = categories[index]["id"];
+
+          products.removeWhere((element) => element['categoryID'] != category);
+          products = products;
+        });
+      } else if (category != '') {
+        setState(() {
+          products.removeWhere((element) => element['categoryID'] != category);
+          products = products;
+        });
+      }
 
       if (model == models[index]['id'] && sel == 'model') {
         setState(() {
@@ -99,24 +116,6 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
       } else if (model != '') {
         setState(() {
           products.removeWhere((element) => element['modelId'] != model);
-          products = products;
-        });
-      }
-
-      if (category == categories[index]["id"] && sel == 'cat') {
-        setState(() {
-          category = "";
-        });
-      } else if (sel == 'cat') {
-        setState(() {
-          category = categories[index]["id"];
-
-          products.removeWhere((element) => element['categoryID'] != category);
-          products = products;
-        });
-      } else if (category != '') {
-        setState(() {
-          products.removeWhere((element) => element['categoryID'] != category);
           products = products;
         });
       }

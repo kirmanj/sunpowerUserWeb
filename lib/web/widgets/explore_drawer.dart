@@ -244,6 +244,32 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                       context: context,
                       builder: (context) => AuthDialog(),
                     );
+                  } else if (cartC == 0 && uid != null) {
+                    Widget okButton = TextButton(
+                      child: Text(
+                        "OK",
+                        style: TextStyle(color: Colors.red[900]),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    );
+
+                    // set up the AlertDialog
+                    AlertDialog alert = AlertDialog(
+                      content: Text("Your Cart is Empty"),
+                      actions: [
+                        okButton,
+                      ],
+                    );
+
+                    // show the dialog
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return alert;
+                      },
+                    );
                   } else {
                     String phoneNo = "",
                         email = "",

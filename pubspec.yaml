@@ -30,10 +30,13 @@ dependencies:
   uuid: 
   firebase: ^9.0.0
   easy_dynamic_theme: ^2.0.0
+  url_launcher: 
   google_sign_in: ^5.0.1
   countup: ^0.1.4
   path_provider:
   open_file: 
+  easy_localization:
+  provider:
 
 
   
