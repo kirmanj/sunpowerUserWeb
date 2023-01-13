@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: 1,
                       ),
                       borderRadius: BorderRadius.circular(5)),
-                  child: Center(child: Text('User Panel'))),
+                  child: Center(child: Text(AppLocalizations.of(context).trans("user_panel")))),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
