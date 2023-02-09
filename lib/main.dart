@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp> {
   Future getUserInfo() async {
     await getUser();
     setState(() {
-      uid = '';
+      uid = 'b6sbCo5zKfYC1oYCMo0BRBCsPa83';
     });
     print(uid);
   }
@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
         return SettingsServiceProvider();
       },
       child: Consumer<SettingsServiceProvider>(
-        builder: (context,settings,child){
+        builder: (context, settings, child) {
           return MaterialApp(
             title: 'Sunpower',
             theme: lightThemeData,

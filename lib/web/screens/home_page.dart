@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
+import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/main.dart';
+import 'package:explore/services/local_storage_service.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/widgets/contact.dart';
 import 'package:explore/web/widgets/newProduts.dart';
@@ -27,7 +29,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late ScrollController _scrollController;
+  late ScrollController _scrollController = ScrollController();
   double _scrollPosition = 0;
   double _opacity = 0;
 
@@ -128,7 +130,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     getBrands();
     getCart();
@@ -216,12 +217,12 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: EdgeInsets.only(
                   left: screenSize.width / 14,
+                  right: screenSize.width / 14,
                 ),
                 child: Container(
                   width: screenSize.width,
                   child: Text(
-                    'Latest Products',
-                    textAlign: TextAlign.left,
+                    AppLocalizations.of(context).trans("latestProduct"),
                     style: TextStyle(fontSize: 24),
                   ),
                 ),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/widgets/ResponsiveSales.dart';
 import 'package:explore/web/widgets/auth_dialog.dart';
@@ -75,8 +76,30 @@ class _LatestProductsState extends State<LatestProducts> {
                                           FittedBox(
                                             fit: BoxFit.cover,
                                             child: Text(
-                                              snapshot.data.docs[index]
-                                                  .data()['name'],
+                                              AppLocalizations.of(context)
+                                                          .locale
+                                                          .languageCode
+                                                          .toString() ==
+                                                      'ku'
+                                                  ? snapshot.data.docs[index]
+                                                      .data()['nameK']
+                                                      .toString()
+                                                      .toUpperCase()
+                                                  : AppLocalizations.of(context)
+                                                              .locale
+                                                              .languageCode
+                                                              .toString() ==
+                                                          'ar'
+                                                      ? snapshot
+                                                          .data.docs[index]
+                                                          .data()['nameA']
+                                                          .toString()
+                                                          .toUpperCase()
+                                                      : snapshot
+                                                          .data.docs[index]
+                                                          .data()['name']
+                                                          .toString()
+                                                          .toUpperCase(),
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: 16,
@@ -137,7 +160,9 @@ class _LatestProductsState extends State<LatestProducts> {
                                                       child: FittedBox(
                                                         fit: BoxFit.cover,
                                                         child: Text(
-                                                          "Buy",
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .trans("buy"),
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.white),
@@ -163,12 +188,33 @@ class _LatestProductsState extends State<LatestProducts> {
                                           strutStyle:
                                               StrutStyle(fontSize: 12.0),
                                           text: TextSpan(
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12,
-                                              ),
-                                              text: snapshot.data.docs[index]
-                                                  .data()['name']),
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                            ),
+                                            text: AppLocalizations.of(context)
+                                                        .locale
+                                                        .languageCode
+                                                        .toString() ==
+                                                    'ku'
+                                                ? snapshot.data.docs[index]
+                                                    .data()['nameK']
+                                                    .toString()
+                                                    .toUpperCase()
+                                                : AppLocalizations.of(context)
+                                                            .locale
+                                                            .languageCode
+                                                            .toString() ==
+                                                        'ar'
+                                                    ? snapshot.data.docs[index]
+                                                        .data()['nameA']
+                                                        .toString()
+                                                        .toUpperCase()
+                                                    : snapshot.data.docs[index]
+                                                        .data()['name']
+                                                        .toString()
+                                                        .toUpperCase(),
+                                          ),
                                         ),
                                       ),
                                       FittedBox(
@@ -208,7 +254,8 @@ class _LatestProductsState extends State<LatestProducts> {
                                               child: FittedBox(
                                                 fit: BoxFit.cover,
                                                 child: Text(
-                                                  "Buy",
+                                                  AppLocalizations.of(context)
+                                                      .trans("buy"),
                                                   style: TextStyle(
                                                       color: Colors.white),
                                                 ),
@@ -224,7 +271,10 @@ class _LatestProductsState extends State<LatestProducts> {
                       })));
             } else {
               //<DoretcumentSnapshot> items = snapshot.data;
-              return Container(child: Text("No data"));
+              return Container(
+                  child: Text(
+                AppLocalizations.of(context).trans("Empty"),
+              ));
             }
           }),
     );

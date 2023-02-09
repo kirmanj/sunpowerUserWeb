@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/widgets/responsive.dart';
@@ -133,28 +134,6 @@ class _AuthDialogState extends State<AuthDialog> {
       setState(() {
         isNew = true;
       });
-      // FirebaseFirestore.instance
-      //     .collection('users')
-      //     .doc(userCredential.user!.uid.toString())
-      //     .set({
-      //   "username": " ",
-      //   'phone': textControllerPhone.text,
-      //   'address': " ",
-      //   "email": " ",
-      //   'password': " ",
-      //   "role": 1
-      // });
-      // setState(() {
-      //   loginStatus = 'You have successfully signed up';
-      //   loginStringColor = Colors.green;
-      // });
-      // Future.delayed(Duration(milliseconds: 500), () {
-      //   Navigator.of(context).pop();
-      //   Navigator.of(context).pushReplacement(MaterialPageRoute(
-      //     fullscreenDialog: true,
-      //     builder: (context) => HomeScreen(),
-      //   ));
-      // });
     } else {
       setState(() {
         loginStatus = 'You have successfully logged in';
@@ -181,614 +160,407 @@ class _AuthDialogState extends State<AuthDialog> {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            width: 400,
-            color: Theme.of(context).backgroundColor,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Center(
-                  child: Image.asset('assets/images/sunpower.png'),
+        child: Container(
+          width: 400,
+          padding: EdgeInsets.all(16.0),
+          color: Theme.of(context).backgroundColor,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Image.asset('assets/images/sunpower.png'),
+              ),
+              SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 20.0,
+                  bottom: 8,
                 ),
-                SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20.0,
-                    bottom: 8,
-                  ),
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          isPhone = false;
+                          canShow = false;
+                        });
+                      },
+                      child: Text(
+                        AppLocalizations.of(context).trans("email"),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isPhone
+                                ? Colors.grey[400]
+                                : Theme.of(context).textTheme.subtitle2!.color,
+                            fontSize: ResponsiveWidget.isSmallScreen(context)
+                                ? 12
+                                : 18),
+                      ),
+                      // Flexible(
+                      //   child: RichText(
+                      //     textAlign: TextAlign.left,
+                      //     overflow: TextOverflow.visible,
+                      //     strutStyle: StrutStyle(
+                      //       fontSize: ResponsiveWidget.isSmallScreen(context)
+                      //           ? 12
+                      //           : 18,
+                      //     ),
+                      //     text: TextSpan(
+                      //       style: TextStyle(
+                      //         fontWeight: FontWeight.bold,
+                      //         color: isPhone
+                      //             ? Colors.grey[400]
+                      //             : Theme.of(context)
+                      //                 .textTheme
+                      //                 .subtitle2!
+                      //                 .color,
+                      //         fontSize: ResponsiveWidget.isSmallScreen(context)
+                      //             ? 12
+                      //             : 18,
+                      //       ),
+                      //       text: 'Email address',
+                      //     ),
+                      //   ),
+                      // ),
+                    ),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          isPhone = true;
+                          canShow = false;
+                        });
+                      },
+                      child: Text(
+                        AppLocalizations.of(context).trans("phone"),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: !isPhone
+                                ? Colors.grey[400]
+                                : Theme.of(context).textTheme.subtitle2!.color,
+                            fontSize: ResponsiveWidget.isSmallScreen(context)
+                                ? 12
+                                : 18),
+                      ),
+
+                      // )
+                    )
+                  ],
+                ),
+              ),
+              isNew && isPhone
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        left: 20.0,
+                        right: 20,
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context).trans("name"),
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.subtitle2!.color,
+                          fontSize: 18,
+                          // fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          // letterSpacing: 3,
+                        ),
+                      ),
+                    )
+                  : Container(),
+              isNew && isPhone
+                  ? Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20.0,
+                        right: 20,
+                      ),
+                      child: TextField(
+                        keyboardType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                        controller: textControllerName,
+                        autofocus: false,
+                        onChanged: (value) {
                           setState(() {
-                            isPhone = false;
-                            canShow = false;
+                            _isEditingName = true;
                           });
                         },
-                        child: Flexible(
-                          child: RichText(
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.visible,
-                            strutStyle: StrutStyle(
-                              fontSize: ResponsiveWidget.isSmallScreen(context)
-                                  ? 12
-                                  : 18,
+                        onSubmitted: (value) {},
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          border: new OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.blueGrey[800]!,
+                              width: 3,
                             ),
-                            text: TextSpan(
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: isPhone
-                                    ? Colors.grey[400]
-                                    : Theme.of(context)
-                                        .textTheme
-                                        .subtitle2!
-                                        .color,
-                                fontSize:
-                                    ResponsiveWidget.isSmallScreen(context)
-                                        ? 12
-                                        : 18,
-                              ),
-                              text: 'Email address',
-                            ),
+                          ),
+                          filled: true,
+                          hintStyle: new TextStyle(
+                            color: Colors.blueGrey[300],
+                          ),
+                          hintText: "Username",
+                          fillColor: Colors.white,
+                          errorText: _isEditingName
+                              ? _validateName(textControllerName.text)
+                              : null,
+                          errorStyle: TextStyle(
+                            fontSize: 12,
+                            color: Colors.redAccent,
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 30,
+                    )
+                  : Container(),
+              isNew && isPhone
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        left: 20.0,
+                        right: 20,
                       ),
-                      InkWell(
-                          onTap: () {
-                            setState(() {
-                              isPhone = true;
-                              canShow = false;
-                            });
-                          },
-                          child: Flexible(
-                            child: RichText(
-                              textAlign: TextAlign.left,
-                              overflow: TextOverflow.visible,
-                              strutStyle: StrutStyle(
-                                fontSize:
-                                    ResponsiveWidget.isSmallScreen(context)
-                                        ? 12
-                                        : 18,
-                              ),
-                              text: TextSpan(
-                                style: TextStyle(
-                                  color: !isPhone
-                                      ? Colors.grey[400]
-                                      : Theme.of(context)
-                                          .textTheme
-                                          .subtitle2!
-                                          .color,
-                                  fontSize:
-                                      ResponsiveWidget.isSmallScreen(context)
-                                          ? 12
-                                          : 18,
+                      child: Text(
+                        AppLocalizations.of(context).trans("address"),
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.subtitle2!.color,
+                          fontSize: 18,
+                          // fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          // letterSpacing: 3,
+                        ),
+                      ),
+                    )
+                  : Container(),
+              isNew && isPhone
+                  ? Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20.0,
+                        right: 20,
+                      ),
+                      child: TextField(
+                        keyboardType: TextInputType.streetAddress,
+                        textInputAction: TextInputAction.next,
+                        controller: textControllerAddress,
+                        autofocus: false,
+                        onChanged: (value) {
+                          setState(() {
+                            _isEditingAddress = true;
+                          });
+                        },
+                        onSubmitted: (value) {},
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          border: new OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.blueGrey[800]!,
+                              width: 3,
+                            ),
+                          ),
+                          filled: true,
+                          hintStyle: new TextStyle(
+                            color: Colors.blueGrey[300],
+                          ),
+                          hintText: "Address...",
+                          fillColor: Colors.white,
+                          errorText: _isEditingAddress
+                              ? _validateName(textControllerAddress.text)
+                              : null,
+                          errorStyle: TextStyle(
+                            fontSize: 12,
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+              isPhone && !isNew
+                  ? Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20.0,
+                        right: 20,
+                      ),
+                      child: TextField(
+                        keyboardType: TextInputType.phone,
+                        textInputAction: TextInputAction.next,
+                        controller: textControllerPhone,
+                        autofocus: false,
+                        onChanged: (value) {
+                          setState(() {
+                            _isEditingEmail = true;
+                          });
+                        },
+                        onSubmitted: (value) {},
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          border: new OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.blueGrey[800]!,
+                              width: 3,
+                            ),
+                          ),
+                          filled: true,
+                          hintStyle: new TextStyle(
+                            color: Colors.blueGrey[300],
+                          ),
+                          hintText: "ex: 750 *** ****",
+                          fillColor: Colors.white,
+                          errorText: _isEditingPhone
+                              ? _validateEmail(textControllerPhone.text)
+                              : null,
+                          errorStyle: TextStyle(
+                            fontSize: 12,
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                      ),
+                    )
+                  : isPhone && isNew
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.only(
+                            left: 20.0,
+                            right: 20,
+                          ),
+                          child: TextField(
+                            focusNode: textFocusNodeEmail,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            controller: textControllerEmail,
+                            autofocus: false,
+                            onChanged: (value) {
+                              setState(() {
+                                _isEditingEmail = true;
+                              });
+                            },
+                            onSubmitted: (value) {
+                              textFocusNodeEmail.unfocus();
+                              FocusScope.of(context)
+                                  .requestFocus(textFocusNodePassword);
+                            },
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: Colors.blueGrey[800]!,
+                                  width: 3,
                                 ),
-                                text: 'Phone Number',
+                              ),
+                              filled: true,
+                              hintStyle: new TextStyle(
+                                color: Colors.blueGrey[300],
+                              ),
+                              hintText: "Email",
+                              fillColor: Colors.white,
+                              errorText: _isEditingEmail
+                                  ? _validateEmail(textControllerEmail.text)
+                                  : null,
+                              errorStyle: TextStyle(
+                                fontSize: 12,
+                                color: Colors.redAccent,
                               ),
                             ),
-                          ))
-                    ],
-                  ),
-                ),
-                isNew && isPhone
-                    ? Padding(
-                        padding: EdgeInsets.only(
-                          left: 20.0,
-                          right: 20,
+                          ),
                         ),
-                        child: Text(
-                          'User Name',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.subtitle2!.color,
-                            fontSize: 18,
-                            // fontFamily: 'Montserrat',
+              SizedBox(height: 20),
+              (!canShow && isPhone) || (isNew)
+                  ? Container()
+                  : Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20.0,
+                        bottom: 8,
+                      ),
+                      child: Text(
+                        isPhone
+                            ? AppLocalizations.of(context).trans("otp")
+                            : AppLocalizations.of(context).trans("password"),
+                        style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            // letterSpacing: 3,
-                          ),
-                        ),
-                      )
-                    : Container(),
-                isNew && isPhone
-                    ? Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20.0,
-                          right: 20,
-                        ),
-                        child: TextField(
-                          keyboardType: TextInputType.name,
-                          textInputAction: TextInputAction.next,
-                          controller: textControllerName,
-                          autofocus: false,
-                          onChanged: (value) {
-                            setState(() {
-                              _isEditingName = true;
-                            });
-                          },
-                          onSubmitted: (value) {},
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                color: Colors.blueGrey[800]!,
-                                width: 3,
-                              ),
-                            ),
-                            filled: true,
-                            hintStyle: new TextStyle(
-                              color: Colors.blueGrey[300],
-                            ),
-                            hintText: "Username",
-                            fillColor: Colors.white,
-                            errorText: _isEditingName
-                                ? _validateName(textControllerName.text)
-                                : null,
-                            errorStyle: TextStyle(
-                              fontSize: 12,
-                              color: Colors.redAccent,
+                            color: !isPhone
+                                ? Colors.grey[400]
+                                : Theme.of(context).textTheme.subtitle2!.color,
+                            fontSize: ResponsiveWidget.isSmallScreen(context)
+                                ? 12
+                                : 18),
+                      ),
+                    ),
+              (!canShow && isPhone) || (isNew)
+                  ? Container()
+                  : Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20.0,
+                        right: 20,
+                      ),
+                      child: TextField(
+                        focusNode: textFocusNodePassword,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.done,
+                        controller: textControllerPassword,
+                        obscureText: !isPhone,
+                        autofocus: false,
+                        onChanged: (value) {
+                          setState(() {
+                            _isEditingPassword = true;
+                          });
+                        },
+                        onSubmitted: (value) {
+                          textFocusNodePassword.unfocus();
+                          FocusScope.of(context)
+                              .requestFocus(textFocusNodePassword);
+                        },
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          border: new OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.blueGrey[800]!,
+                              width: 3,
                             ),
                           ),
-                        ),
-                      )
-                    : Container(),
-                isNew && isPhone
-                    ? Padding(
-                        padding: EdgeInsets.only(
-                          left: 20.0,
-                          right: 20,
-                        ),
-                        child: Text(
-                          'Address',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.subtitle2!.color,
-                            fontSize: 18,
-                            // fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            // letterSpacing: 3,
+                          filled: true,
+                          hintStyle: new TextStyle(
+                            color: Colors.blueGrey[300],
                           ),
-                        ),
-                      )
-                    : Container(),
-                isNew && isPhone
-                    ? Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20.0,
-                          right: 20,
-                        ),
-                        child: TextField(
-                          keyboardType: TextInputType.streetAddress,
-                          textInputAction: TextInputAction.next,
-                          controller: textControllerAddress,
-                          autofocus: false,
-                          onChanged: (value) {
-                            setState(() {
-                              _isEditingAddress = true;
-                            });
-                          },
-                          onSubmitted: (value) {},
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                color: Colors.blueGrey[800]!,
-                                width: 3,
-                              ),
-                            ),
-                            filled: true,
-                            hintStyle: new TextStyle(
-                              color: Colors.blueGrey[300],
-                            ),
-                            hintText: "Address...",
-                            fillColor: Colors.white,
-                            errorText: _isEditingAddress
-                                ? _validateName(textControllerAddress.text)
-                                : null,
-                            errorStyle: TextStyle(
-                              fontSize: 12,
-                              color: Colors.redAccent,
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container(),
-                isPhone && !isNew
-                    ? Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20.0,
-                          right: 20,
-                        ),
-                        child: TextField(
-                          keyboardType: TextInputType.phone,
-                          textInputAction: TextInputAction.next,
-                          controller: textControllerPhone,
-                          autofocus: false,
-                          onChanged: (value) {
-                            setState(() {
-                              _isEditingEmail = true;
-                            });
-                          },
-                          onSubmitted: (value) {},
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                color: Colors.blueGrey[800]!,
-                                width: 3,
-                              ),
-                            ),
-                            filled: true,
-                            hintStyle: new TextStyle(
-                              color: Colors.blueGrey[300],
-                            ),
-                            hintText: "ex: 750 *** ****",
-                            fillColor: Colors.white,
-                            errorText: _isEditingPhone
-                                ? _validateEmail(textControllerPhone.text)
-                                : null,
-                            errorStyle: TextStyle(
-                              fontSize: 12,
-                              color: Colors.redAccent,
-                            ),
-                          ),
-                        ),
-                      )
-                    : isPhone && isNew
-                        ? Container()
-                        : Padding(
-                            padding: const EdgeInsets.only(
-                              left: 20.0,
-                              right: 20,
-                            ),
-                            child: TextField(
-                              focusNode: textFocusNodeEmail,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              controller: textControllerEmail,
-                              autofocus: false,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isEditingEmail = true;
-                                });
-                              },
-                              onSubmitted: (value) {
-                                textFocusNodeEmail.unfocus();
-                                FocusScope.of(context)
-                                    .requestFocus(textFocusNodePassword);
-                              },
-                              style: TextStyle(color: Colors.black),
-                              decoration: InputDecoration(
-                                border: new OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: Colors.blueGrey[800]!,
-                                    width: 3,
-                                  ),
-                                ),
-                                filled: true,
-                                hintStyle: new TextStyle(
-                                  color: Colors.blueGrey[300],
-                                ),
-                                hintText: "Email",
-                                fillColor: Colors.white,
-                                errorText: _isEditingEmail
-                                    ? _validateEmail(textControllerEmail.text)
-                                    : null,
-                                errorStyle: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.redAccent,
-                                ),
-                              ),
-                            ),
-                          ),
-                SizedBox(height: 20),
-                (!canShow && isPhone) || (isNew)
-                    ? Container()
-                    : Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20.0,
-                          bottom: 8,
-                        ),
-                        child: Flexible(
-                          child: RichText(
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.visible,
-                            strutStyle: StrutStyle(
-                              fontSize: ResponsiveWidget.isSmallScreen(context)
-                                  ? 12
-                                  : 18,
-                            ),
-                            text: TextSpan(
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .color,
-                                fontSize:
-                                    ResponsiveWidget.isSmallScreen(context)
-                                        ? 12
-                                        : 18,
-                              ),
-                              text: isPhone ? "OTP" : "Password",
-                            ),
+                          hintText: isPhone ? "OTP" : "Password",
+                          fillColor: Colors.white,
+                          errorText: _isEditingPassword
+                              ? _validatePassword(textControllerPassword.text)
+                              : null,
+                          errorStyle: TextStyle(
+                            fontSize: 12,
+                            color: Colors.redAccent,
                           ),
                         ),
                       ),
-                (!canShow && isPhone) || (isNew)
-                    ? Container()
-                    : Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20.0,
-                          right: 20,
-                        ),
-                        child: TextField(
-                          focusNode: textFocusNodePassword,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.done,
-                          controller: textControllerPassword,
-                          obscureText: !isPhone,
-                          autofocus: false,
-                          onChanged: (value) {
-                            setState(() {
-                              _isEditingPassword = true;
-                            });
-                          },
-                          onSubmitted: (value) {
-                            textFocusNodePassword.unfocus();
-                            FocusScope.of(context)
-                                .requestFocus(textFocusNodePassword);
-                          },
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                color: Colors.blueGrey[800]!,
-                                width: 3,
-                              ),
-                            ),
-                            filled: true,
-                            hintStyle: new TextStyle(
-                              color: Colors.blueGrey[300],
-                            ),
-                            hintText: isPhone ? "OTP" : "Password",
-                            fillColor: Colors.white,
-                            errorText: _isEditingPassword
-                                ? _validatePassword(textControllerPassword.text)
-                                : null,
-                            errorStyle: TextStyle(
-                              fontSize: 12,
-                              color: Colors.redAccent,
-                            ),
-                          ),
-                        ),
-                      ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      isPhone && !isNew
-                          ? Flexible(
-                              flex: 1,
-                              child: InkWell(
-                                onTap: () async {
-                                  print(canShow);
-                                  print(textControllerPhone.text.length);
-
-                                  if (!canShow &&
-                                      (textControllerPhone.text.length == 10)) {
-                                    setState(() {
-                                      canShow = !canShow;
-                                    });
-                                    temp =
-                                        await sendOTP(textControllerPhone.text);
-                                  } else {
-                                    authenticateMe(
-                                        temp, textControllerPassword.text);
-                                  }
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topRight,
-                                      end: Alignment.bottomLeft,
-                                      colors: [
-                                        Color.fromARGB(254, 246, 238, 50),
-                                        Color.fromARGB(254, 211, 160, 38),
-                                        Color.fromARGB(254, 246, 238, 50),
-                                      ],
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 15.0,
-                                      bottom: 15.0,
-                                    ),
-                                    child: _isLoggingIn
-                                        ? SizedBox(
-                                            height: 16,
-                                            width: 16,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2,
-                                              valueColor:
-                                                  new AlwaysStoppedAnimation<
-                                                      Color>(
-                                                Colors.white,
-                                              ),
-                                            ),
-                                          )
-                                        : Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 50.0,
-                                                right: 50.0,
-                                                bottom: 1.0,
-                                                top: 1.0),
-                                            child: Text(
-                                              canShow ? "Submit" : 'Send Otp',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          : Flexible(
-                              flex: 1,
-                              child: isNew
-                                  ? SizedBox.shrink()
-                                  : InkWell(
-                                      onTap: () async {
-                                        setState(() {
-                                          _isLoggingIn = true;
-                                          textFocusNodeEmail.unfocus();
-                                          textFocusNodePassword.unfocus();
-                                        });
-                                        if (_validateEmail(
-                                                    textControllerEmail.text) ==
-                                                null &&
-                                            _validatePassword(
-                                                    textControllerPassword
-                                                        .text) ==
-                                                null) {
-                                          await signInWithEmailPassword(
-                                                  textControllerEmail.text,
-                                                  textControllerPassword.text,
-                                                  context)
-                                              .then((result) {
-                                            if (result != null) {
-                                              print(result);
-                                              setState(() {
-                                                loginStatus =
-                                                    'You have successfully logged in';
-                                                loginStringColor = Colors.green;
-                                              });
-                                              Future.delayed(
-                                                  Duration(milliseconds: 500),
-                                                  () {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context)
-                                                    .pushReplacement(
-                                                        MaterialPageRoute(
-                                                  fullscreenDialog: true,
-                                                  builder: (context) =>
-                                                      HomePage(),
-                                                ));
-                                              });
-                                            }
-                                          }).catchError((error) {
-                                            print('Login Error: $error');
-                                            setState(() {
-                                              loginStatus =
-                                                  'Error occured while logging in';
-                                              loginStringColor = Colors.red;
-                                            });
-                                          });
-                                        } else {
-                                          setState(() {
-                                            loginStatus =
-                                                'Please enter email & password';
-                                            loginStringColor = Colors.red;
-                                          });
-                                        }
-                                        setState(() {
-                                          _isLoggingIn = false;
-                                          textControllerEmail.text = '';
-                                          textControllerPassword.text = '';
-                                          _isEditingEmail = false;
-                                          _isEditingPassword = false;
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topRight,
-                                            end: Alignment.bottomLeft,
-                                            colors: [
-                                              Color.fromARGB(254, 246, 238, 50),
-                                              Color.fromARGB(254, 211, 160, 38),
-                                              Color.fromARGB(254, 246, 238, 50),
-                                            ],
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                            top: 15.0,
-                                            bottom: 15.0,
-                                          ),
-                                          child: _isLoggingIn
-                                              ? SizedBox(
-                                                  height: 16,
-                                                  width: 16,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    strokeWidth: 2,
-                                                    valueColor:
-                                                        new AlwaysStoppedAnimation<
-                                                            Color>(
-                                                      Colors.white,
-                                                    ),
-                                                  ),
-                                                )
-                                              : Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 50.0,
-                                                      right: 50.0,
-                                                      bottom: 1.0,
-                                                      top: 1.0),
-                                                  child: Text(
-                                                    'Log in',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                        ),
-                                      ),
-                                    ),
-                            ),
-                      isPhone && isNew
-                          ? InkWell(
+                    ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    isPhone && !isNew
+                        ? Flexible(
+                            flex: 1,
+                            child: InkWell(
                               onTap: () async {
-                                FirebaseFirestore.instance
-                                    .collection('users')
-                                    .doc(userCredential.user!.uid.toString())
-                                    .set({
-                                  "username": textControllerName.text,
-                                  'phone': textControllerPhone.text,
-                                  'address': textControllerAddress.text,
-                                  "email": "",
-                                  'password': " ",
-                                  "role": 1
-                                });
-                                setState(() {
-                                  loginStatus =
-                                      'You have successfully signed up';
-                                  loginStringColor = Colors.green;
-                                });
-                                Future.delayed(Duration(milliseconds: 500), () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context)
-                                      .pushReplacement(MaterialPageRoute(
-                                    fullscreenDialog: true,
-                                    builder: (context) => HomePage(),
-                                  ));
-                                });
+                                print(canShow);
+                                print(textControllerPhone.text.length);
+
+                                if (!canShow &&
+                                    (textControllerPhone.text.length == 10)) {
+                                  setState(() {
+                                    canShow = !canShow;
+                                  });
+                                  temp =
+                                      await sendOTP(textControllerPhone.text);
+                                } else {
+                                  authenticateMe(
+                                      temp, textControllerPassword.text);
+                                }
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -808,7 +580,18 @@ class _AuthDialogState extends State<AuthDialog> {
                                     bottom: 15.0,
                                   ),
                                   child: _isLoggingIn
-                                      ? SizedBox.shrink()
+                                      ? SizedBox(
+                                          height: 16,
+                                          width: 16,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor:
+                                                new AlwaysStoppedAnimation<
+                                                    Color>(
+                                              Colors.white,
+                                            ),
+                                          ),
+                                        )
                                       : Padding(
                                           padding: EdgeInsets.only(
                                               left: 50.0,
@@ -816,7 +599,11 @@ class _AuthDialogState extends State<AuthDialog> {
                                               bottom: 1.0,
                                               top: 1.0),
                                           child: Text(
-                                            'Sign Up',
+                                            canShow
+                                                ? AppLocalizations.of(context)
+                                                    .trans("submit")
+                                                : AppLocalizations.of(context)
+                                                    .trans("submit"),
                                             style: TextStyle(
                                               fontSize: 14,
                                               color: Colors.white,
@@ -825,55 +612,235 @@ class _AuthDialogState extends State<AuthDialog> {
                                         ),
                                 ),
                               ),
-                            )
-                          : SizedBox.shrink()
-                    ],
-                  ),
-                ),
-                loginStatus != null
-                    ? Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 20.0,
-                          ),
-                          child: Text(
-                            loginStatus!,
-                            style: TextStyle(
-                              color: loginStringColor,
-                              fontSize: 14,
-                              // letterSpacing: 3,
                             ),
+                          )
+                        : Flexible(
+                            flex: 1,
+                            child: isNew
+                                ? SizedBox.shrink()
+                                : InkWell(
+                                    onTap: () async {
+                                      setState(() {
+                                        _isLoggingIn = true;
+                                        textFocusNodeEmail.unfocus();
+                                        textFocusNodePassword.unfocus();
+                                      });
+                                      if (_validateEmail(
+                                                  textControllerEmail.text) ==
+                                              null &&
+                                          _validatePassword(
+                                                  textControllerPassword
+                                                      .text) ==
+                                              null) {
+                                        await signInWithEmailPassword(
+                                                textControllerEmail.text,
+                                                textControllerPassword.text,
+                                                context)
+                                            .then((result) {
+                                          if (result != null) {
+                                            print(result);
+                                            setState(() {
+                                              loginStatus =
+                                                  'You have successfully logged in';
+                                              loginStringColor = Colors.green;
+                                            });
+                                            Future.delayed(
+                                                Duration(milliseconds: 500),
+                                                () {
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                fullscreenDialog: true,
+                                                builder: (context) =>
+                                                    HomePage(),
+                                              ));
+                                            });
+                                          }
+                                        }).catchError((error) {
+                                          print('Login Error: $error');
+                                          setState(() {
+                                            loginStatus =
+                                                'Error occured while logging in';
+                                            loginStringColor = Colors.red;
+                                          });
+                                        });
+                                      } else {
+                                        setState(() {
+                                          loginStatus =
+                                              'Please enter email & password';
+                                          loginStringColor = Colors.red;
+                                        });
+                                      }
+                                      setState(() {
+                                        _isLoggingIn = false;
+                                        textControllerEmail.text = '';
+                                        textControllerPassword.text = '';
+                                        _isEditingEmail = false;
+                                        _isEditingPassword = false;
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topRight,
+                                          end: Alignment.bottomLeft,
+                                          colors: [
+                                            Color.fromARGB(254, 246, 238, 50),
+                                            Color.fromARGB(254, 211, 160, 38),
+                                            Color.fromARGB(254, 246, 238, 50),
+                                          ],
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                          top: 15.0,
+                                          bottom: 15.0,
+                                        ),
+                                        child: _isLoggingIn
+                                            ? SizedBox(
+                                                height: 16,
+                                                width: 16,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                  valueColor:
+                                                      new AlwaysStoppedAnimation<
+                                                          Color>(
+                                                    Colors.white,
+                                                  ),
+                                                ),
+                                              )
+                                            : Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 50.0,
+                                                    right: 50.0,
+                                                    bottom: 1.0,
+                                                    top: 1.0),
+                                                child: Text(
+                                                  AppLocalizations.of(context)
+                                                      .trans("login"),
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                    isPhone && isNew
+                        ? InkWell(
+                            onTap: () async {
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(userCredential.user!.uid.toString())
+                                  .set({
+                                "username": textControllerName.text,
+                                'phone': textControllerPhone.text,
+                                'address': textControllerAddress.text,
+                                "email": "",
+                                'password': " ",
+                                "role": 1
+                              });
+                              setState(() {
+                                loginStatus = 'You have successfully signed up';
+                                loginStringColor = Colors.green;
+                              });
+                              Future.delayed(Duration(milliseconds: 500), () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(
+                                  fullscreenDialog: true,
+                                  builder: (context) => HomePage(),
+                                ));
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    Color.fromARGB(254, 246, 238, 50),
+                                    Color.fromARGB(254, 211, 160, 38),
+                                    Color.fromARGB(254, 246, 238, 50),
+                                  ],
+                                ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  top: 15.0,
+                                  bottom: 15.0,
+                                ),
+                                child: _isLoggingIn
+                                    ? SizedBox.shrink()
+                                    : Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 50.0,
+                                            right: 50.0,
+                                            bottom: 1.0,
+                                            top: 1.0),
+                                        child: Text(
+                                          AppLocalizations.of(context)
+                                              .trans("Signup"),
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          )
+                        : SizedBox.shrink()
+                  ],
+                ),
+              ),
+              loginStatus != null
+                  ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: 20.0,
+                        ),
+                        child: Text(
+                          loginStatus!,
+                          style: TextStyle(
+                            color: loginStringColor,
+                            fontSize: 14,
+                            // letterSpacing: 3,
                           ),
                         ),
-                      )
-                    : Container(),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 40.0,
-                    right: 40.0,
-                  ),
-                  child: Container(
-                    height: 1,
-                    width: double.maxFinite,
-                    color: Colors.blueGrey[200],
+                      ),
+                    )
+                  : Container(),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 40.0,
+                  right: 40.0,
+                ),
+                child: Container(
+                  height: 1,
+                  width: double.maxFinite,
+                  color: Colors.blueGrey[200],
+                ),
+              ),
+              SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Sunpower',
+                  maxLines: 2,
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.subtitle2!.color,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                    // letterSpacing: 3,
                   ),
                 ),
-                SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Sunpower',
-                    maxLines: 2,
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.subtitle2!.color,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w300,
-                      // letterSpacing: 3,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

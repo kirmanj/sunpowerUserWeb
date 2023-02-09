@@ -1,4 +1,5 @@
 import 'package:countup/countup.dart';
+import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/web/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,7 @@ class _FloatingQuickAccessBarState extends State<FloatingQuickAccessBar> {
   List _isHovering = [false, false, false, false];
   List<Widget> rowElements = [];
 
-  List<String> items = ['Customers', 'Brands', 'Products'];
+  List<String> items = ['customers', 'Brands', 'products'];
   List<double> itemsC = [4560, 10, 3450];
   List<IconData> icons = [
     Icons.people,
@@ -48,7 +49,7 @@ class _FloatingQuickAccessBarState extends State<FloatingQuickAccessBar> {
               width: 10,
             ),
             Text(
-              items[i],
+              AppLocalizations.of(context).trans(items[i]),
               style: TextStyle(
                 color: !_isHovering[i]
                     ? Colors.black

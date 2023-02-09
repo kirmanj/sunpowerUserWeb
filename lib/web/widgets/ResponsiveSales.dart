@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:explore/pdfread.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
-import 'package:explore/web/widgets/filtering.dart';
 import 'package:explore/web/widgets/responsive.dart';
 
 import 'package:barcode_widget/barcode_widget.dart';

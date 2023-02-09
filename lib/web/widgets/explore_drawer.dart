@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/main.dart';
+import 'package:explore/services/local_storage_service.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/widgets/responsive.dart';
@@ -84,7 +86,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Sign In',
+                            AppLocalizations.of(context).trans("login"),
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -133,7 +135,8 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                               child: _isProcessing
                                   ? CircularProgressIndicator()
                                   : Text(
-                                      'Sign out',
+                                      AppLocalizations.of(context)
+                                          .trans("logout"),
                                       style: TextStyle(
                                         color: Colors.white,
                                       ),
@@ -163,7 +166,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Services',
+                      AppLocalizations.of(context).trans("services"),
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -192,7 +195,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Products',
+                      AppLocalizations.of(context).trans("products"),
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -221,7 +224,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Brands',
+                      AppLocalizations.of(context).trans("brands"),
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -247,7 +250,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                   } else if (cartC == 0 && uid != null) {
                     Widget okButton = TextButton(
                       child: Text(
-                        "OK",
+                        AppLocalizations.of(context).trans("ok"),
                         style: TextStyle(color: Colors.red[900]),
                       ),
                       onPressed: () {
@@ -257,7 +260,8 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
 
                     // set up the AlertDialog
                     AlertDialog alert = AlertDialog(
-                      content: Text("Your Cart is Empty"),
+                      content:
+                          Text(AppLocalizations.of(context).trans("Empty")),
                       actions: [
                         okButton,
                       ],
@@ -313,7 +317,8 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                           Row(
                                             children: [
                                               Text(
-                                                "Deliver to: ",
+                                                AppLocalizations.of(context)
+                                                    .trans('Deliverto'),
                                                 style: TextStyle(fontSize: 12),
                                               ),
                                               Text(
@@ -327,7 +332,9 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                           Row(
                                             children: [
                                               Text(
-                                                "Location: " + address,
+                                                AppLocalizations.of(context)
+                                                        .trans('address') +
+                                                    address,
                                                 style: TextStyle(fontSize: 12),
                                               ),
                                             ],
@@ -560,7 +567,10 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                   } else {
                                                     return Container(
                                                         child: Center(
-                                                      child: Text("No data"),
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .trans('Empty')),
                                                     ));
                                                   }
                                                 }),
@@ -576,7 +586,10 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                               .spaceBetween,
                                                       children: [
                                                         Text(
-                                                          'Sub Total',
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .trans(
+                                                                  'subtotal'),
                                                           style: TextStyle(
                                                               fontSize: 14),
                                                         ),
@@ -593,7 +606,10 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                               .spaceBetween,
                                                       children: [
                                                         Text(
-                                                          'Dilivery Fee',
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .trans(
+                                                                  'DeliveryFee'),
                                                           style: TextStyle(
                                                               fontSize: 12),
                                                         ),
@@ -611,7 +627,9 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                               .spaceBetween,
                                                       children: [
                                                         Text(
-                                                          'Total',
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .trans('total'),
                                                           style: TextStyle(
                                                               fontWeight:
                                                                   FontWeight
@@ -637,7 +655,10 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                               .spaceBetween,
                                                       children: [
                                                         Text(
-                                                          'Exchange Rate',
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .trans(
+                                                                  'Exchangedrate'),
                                                           style: TextStyle(
                                                               fontSize: 12),
                                                         ),
@@ -724,7 +745,8 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                           });
                                         },
                                         child: Text(
-                                          "Send Order",
+                                          AppLocalizations.of(context)
+                                              .trans('Sendorder'),
                                           style:
                                               TextStyle(color: Colors.red[900]),
                                         ),
@@ -760,7 +782,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                         top: 8,
                         child: Container(
                           child: Text(
-                            'My Cart',
+                            AppLocalizations.of(context).trans("Cart"),
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -858,7 +880,10 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                       child: FittedBox(
                                                         fit: BoxFit.cover,
                                                         child: Text(
-                                                          "Current",
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .trans(
+                                                                  "currentorder"),
                                                           style: TextStyle(
                                                             color: select
                                                                 ? Colors
@@ -890,7 +915,10 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                       child: FittedBox(
                                                         fit: BoxFit.cover,
                                                         child: Text(
-                                                          "History",
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .trans(
+                                                                  "orderHistory"),
                                                           style: TextStyle(
                                                               color: select
                                                                   ? Colors.white
@@ -987,7 +1015,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                     style: TextStyle(fontSize: 12),
                                                                                                   ),
                                                                                                   Text(
-                                                                                                    snapshot.data.docs[index]['OrderStatus'],
+                                                                                                    AppLocalizations.of(context).trans(snapshot.data.docs[index]['OrderStatus']),
                                                                                                     style: TextStyle(fontSize: 12),
                                                                                                   ),
                                                                                                   Text(
@@ -1000,11 +1028,11 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                                                 children: [
                                                                                                   Text(
-                                                                                                    "Deliver to: " + snapshot.data.docs[index]['userName'],
+                                                                                                    AppLocalizations.of(context).trans('Deliverto') + snapshot.data.docs[index]['userName'],
                                                                                                     style: TextStyle(fontSize: 12),
                                                                                                   ),
                                                                                                   Text(
-                                                                                                    "Location: " + snapshot.data.docs[index]['userAddress'],
+                                                                                                    AppLocalizations.of(context).trans('address') + snapshot.data.docs[index]['userAddress'],
                                                                                                     style: TextStyle(fontSize: 12),
                                                                                                   ),
                                                                                                 ],
@@ -1013,7 +1041,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                 height: screenSize.height * 0.005,
                                                                                               ),
                                                                                               Text(
-                                                                                                "Items",
+                                                                                                AppLocalizations.of(context).trans('items'),
                                                                                                 style: TextStyle(
                                                                                                   fontSize: 12,
                                                                                                   color: Colors.black,
@@ -1095,7 +1123,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                               color: Colors.black,
                                                                                                               fontSize: 12,
                                                                                                             ),
-                                                                                                            text: "Sub Total"),
+                                                                                                            text: AppLocalizations.of(context).trans('subtotal')),
                                                                                                       )),
                                                                                                   Expanded(
                                                                                                       flex: 1,
@@ -1141,7 +1169,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                               color: Colors.grey[900],
                                                                                                               fontSize: 10,
                                                                                                             ),
-                                                                                                            text: "Delivery Fee"),
+                                                                                                            text: AppLocalizations.of(context).trans('DeliveryFee')),
                                                                                                       )),
                                                                                                   Expanded(
                                                                                                       flex: 1,
@@ -1179,7 +1207,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                               color: Colors.grey[900],
                                                                                                               fontSize: 10,
                                                                                                             ),
-                                                                                                            text: "Dinnar Exg Rate"),
+                                                                                                            text: AppLocalizations.of(context).trans('Exchangedrate')),
                                                                                                       )),
                                                                                                   Expanded(
                                                                                                       flex: 1,
@@ -1221,7 +1249,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                               color: Colors.black,
                                                                                                               fontSize: 12,
                                                                                                             ),
-                                                                                                            text: "Total"),
+                                                                                                            text: AppLocalizations.of(context).trans('total')),
                                                                                                       )),
                                                                                                   Expanded(
                                                                                                       flex: 1,
@@ -1284,7 +1312,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                     style: TextStyle(fontSize: 12),
                                                                                                   ),
                                                                                                   Text(
-                                                                                                    snapshot.data.docs[index]['OrderStatus'],
+                                                                                                    AppLocalizations.of(context).trans(snapshot.data.docs[index]['OrderStatus']),
                                                                                                     style: TextStyle(fontSize: 12),
                                                                                                   ),
                                                                                                   Text(
@@ -1297,11 +1325,11 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                                                 children: [
                                                                                                   Text(
-                                                                                                    "Deliver to: " + snapshot.data.docs[index]['userName'],
+                                                                                                    AppLocalizations.of(context).trans('Deliverto') + snapshot.data.docs[index]['userName'],
                                                                                                     style: TextStyle(fontSize: 12),
                                                                                                   ),
                                                                                                   Text(
-                                                                                                    "Location: " + snapshot.data.docs[index]['userAddress'],
+                                                                                                    AppLocalizations.of(context).trans('address') + snapshot.data.docs[index]['userAddress'],
                                                                                                     style: TextStyle(fontSize: 12),
                                                                                                   ),
                                                                                                 ],
@@ -1310,7 +1338,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                 height: screenSize.height * 0.005,
                                                                                               ),
                                                                                               Text(
-                                                                                                "Items",
+                                                                                                AppLocalizations.of(context).trans('items'),
                                                                                                 style: TextStyle(
                                                                                                   fontSize: 12,
                                                                                                   color: Colors.black,
@@ -1392,7 +1420,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                               color: Colors.black,
                                                                                                               fontSize: 12,
                                                                                                             ),
-                                                                                                            text: "Sub Total"),
+                                                                                                            text: AppLocalizations.of(context).trans('subtotal')),
                                                                                                       )),
                                                                                                   Expanded(
                                                                                                       flex: 1,
@@ -1438,7 +1466,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                               color: Colors.grey[900],
                                                                                                               fontSize: 10,
                                                                                                             ),
-                                                                                                            text: "Delivery Fee"),
+                                                                                                            text: AppLocalizations.of(context).trans('DeliveryFee')),
                                                                                                       )),
                                                                                                   Expanded(
                                                                                                       flex: 1,
@@ -1476,7 +1504,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                               color: Colors.grey[900],
                                                                                                               fontSize: 10,
                                                                                                             ),
-                                                                                                            text: "Dinnar Exg Rate"),
+                                                                                                            text: AppLocalizations.of(context).trans("Exchangedrate")),
                                                                                                       )),
                                                                                                   Expanded(
                                                                                                       flex: 1,
@@ -1518,7 +1546,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                                               color: Colors.black,
                                                                                                               fontSize: 12,
                                                                                                             ),
-                                                                                                            text: "Total"),
+                                                                                                            text: AppLocalizations.of(context).trans('total')),
                                                                                                       )),
                                                                                                   Expanded(
                                                                                                       flex: 1,
@@ -1559,7 +1587,11 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                   } else {
                                                     //<DoretcumentSnapshot> items = snapshot.data;
                                                     return Container(
-                                                        child: Text("No data"));
+                                                        child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .trans(
+                                                                    'Empty')));
                                                   }
                                                 }),
                                           ),
@@ -1592,7 +1624,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                 child: Column(
                   children: [
                     Text(
-                      'Orders',
+                      AppLocalizations.of(context).trans("orders"),
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -1621,7 +1653,146 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Contact Us',
+                      AppLocalizations.of(context).trans("contact_us"),
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                child: Divider(
+                  color: Colors.white,
+                  thickness: 2,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return StatefulBuilder(builder: (context, setState) {
+                          return Container(
+                            child: AlertDialog(
+                              title: Container(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)
+                                          .trans("language"),
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              content: Container(
+                                width: screenSize.width * 0.3,
+                                height: screenSize.height * 0.1,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          LocalStorageService
+                                              .instance.languageCode = "ku";
+                                        });
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => MyApp()));
+                                      },
+                                      child: Container(
+                                        child: Card(
+                                            color: Colors.white,
+                                            elevation: 5,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text("Kurdish"),
+                                            )),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          LocalStorageService
+                                              .instance.languageCode = "en";
+                                        });
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => MyApp()));
+                                      },
+                                      child: Container(
+                                        child: Card(
+                                            color: Colors.white,
+                                            elevation: 5,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text("English"),
+                                            )),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          LocalStorageService
+                                              .instance.languageCode = "ar";
+                                        });
+
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => MyApp()));
+                                      },
+                                      child: Container(
+                                        child: Card(
+                                            color: Colors.white,
+                                            elevation: 5,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text("Arabic"),
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.red[900])),
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Cancel'),
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                    size: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        });
+                      });
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Change Language',
                       style: TextStyle(
                         color: Colors.white,
                       ),

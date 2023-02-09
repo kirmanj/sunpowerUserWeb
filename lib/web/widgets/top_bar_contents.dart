@@ -2,19 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/main.dart';
+import 'package:explore/services/local_storage_service.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/widgets/auth_dialog.dart';
 import 'package:explore/web/widgets/responsive.dart';
-import 'package:explore/web/widgets/sales.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class TopBarContents extends StatefulWidget {
   final double opacity;
 
-  ScrollController _scrollController;
+  final ScrollController _scrollController;
 
   TopBarContents(this.opacity, this._scrollController);
 
@@ -134,284 +135,284 @@ class _TopBarContentsState extends State<TopBarContents> {
       focusNode: _focusNode,
       autofocus: true,
       onKey: _handleKeyEvent,
-      child: PreferredSize(
-        preferredSize: Size(screenSize.width, 1000),
-        child: Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              image: widget.opacity > 0.6
-                  ? DecorationImage(
-                      image: AssetImage("assets/images/color.jpg"),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(2),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 200,
-                    child: Image.asset(
-                      widget.opacity > 0.6
-                          ? 'assets/images/sunpower2.png'
-                          : 'assets/images/sunpower.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      width: screenSize.width * 0.8,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 15.0, right: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onHover: (value) {
-                                setState(() {
-                                  value
-                                      ? _isHovering[0] = true
-                                      : _isHovering[0] = false;
-                                });
-                              },
-                              onTap: () {
-                                setState(() {
-                                  _scrollController.animateTo(
-                                      screenSize.height * 0.9,
-                                      duration: Duration(milliseconds: 300),
-                                      curve: Curves.ease);
-                                });
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Services',
-                                    // AppLocalizations.of(context)
-                                    //     .trans('Services'),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Visibility(
-                                    maintainAnimation: true,
-                                    maintainState: true,
-                                    maintainSize: true,
-                                    visible: _isHovering[0],
-                                    child: Container(
-                                      height: 2,
-                                      width: 20,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                ],
+      child: Container(
+        decoration: BoxDecoration(
+          image: widget.opacity > 0.6
+              ? DecorationImage(
+                  image: AssetImage("assets/images/color.jpg"),
+                  fit: BoxFit.cover,
+                )
+              : null,
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(2),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 200,
+                child: Image.asset(
+                  widget.opacity > 0.6
+                      ? 'assets/images/sunpower2.png'
+                      : 'assets/images/sunpower.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  width: screenSize.width * 0.8,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 15.0, right: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onHover: (value) {
+                            setState(() {
+                              value
+                                  ? _isHovering[0] = true
+                                  : _isHovering[0] = false;
+                            });
+                          },
+                          onTap: () {
+                            setState(() {
+                              _scrollController.animateTo(
+                                  screenSize.height * 0.9,
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease);
+                            });
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context).trans("services"),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            InkWell(
-                              onHover: (value) {
-                                setState(() {
-                                  value
-                                      ? _isHovering[1] = true
-                                      : _isHovering[1] = false;
-                                });
-                              },
-                              onTap: () {
-                                setState(() {
-                                  _scrollController.animateTo(
-                                      screenSize.height * 1.45,
-                                      duration: Duration(milliseconds: 300),
-                                      curve: Curves.ease);
-                                });
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Products',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Visibility(
-                                    maintainAnimation: true,
-                                    maintainState: true,
-                                    maintainSize: true,
-                                    visible: _isHovering[1],
-                                    child: Container(
-                                      height: 2,
-                                      width: 20,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                ],
+                              SizedBox(height: 5),
+                              Visibility(
+                                maintainAnimation: true,
+                                maintainState: true,
+                                maintainSize: true,
+                                visible: _isHovering[0],
+                                child: Container(
+                                  height: 2,
+                                  width: 20,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        InkWell(
+                          onHover: (value) {
+                            setState(() {
+                              value
+                                  ? _isHovering[1] = true
+                                  : _isHovering[1] = false;
+                            });
+                          },
+                          onTap: () {
+                            setState(() {
+                              _scrollController.animateTo(
+                                  screenSize.height * 1.45,
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease);
+                            });
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context).trans("products"),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            InkWell(
-                              onHover: (value) {
-                                setState(() {
-                                  value
-                                      ? _isHovering[2] = true
-                                      : _isHovering[2] = false;
-                                });
-                              },
-                              onTap: () {
-                                setState(() {
-                                  _scrollController.animateTo(
-                                      screenSize.height * 2.1,
-                                      duration: Duration(milliseconds: 300),
-                                      curve: Curves.ease);
-                                });
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Brands',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Visibility(
-                                    maintainAnimation: true,
-                                    maintainState: true,
-                                    maintainSize: true,
-                                    visible: _isHovering[2],
-                                    child: Container(
-                                      height: 2,
-                                      width: 20,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                ],
+                              SizedBox(height: 5),
+                              Visibility(
+                                maintainAnimation: true,
+                                maintainState: true,
+                                maintainSize: true,
+                                visible: _isHovering[1],
+                                child: Container(
+                                  height: 2,
+                                  width: 20,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        InkWell(
+                          onHover: (value) {
+                            setState(() {
+                              value
+                                  ? _isHovering[2] = true
+                                  : _isHovering[2] = false;
+                            });
+                          },
+                          onTap: () {
+                            setState(() {
+                              _scrollController.animateTo(
+                                  screenSize.height * 2.1,
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease);
+                            });
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context).trans("Brands"),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            InkWell(
-                              onHover: (value) {
-                                setState(() {
-                                  value
-                                      ? _isHovering[3] = true
-                                      : _isHovering[3] = false;
-                                });
-                              },
-                              onTap: () {
-                                if (uid == null) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AuthDialog(),
-                                  );
-                                } else if (cartC == 0 && uid != null) {
-                                  var okButton = TextButton(
-                                    child: Text(
-                                      "OK",
-                                      style: TextStyle(color: Colors.red[900]),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  );
+                              SizedBox(height: 5),
+                              Visibility(
+                                maintainAnimation: true,
+                                maintainState: true,
+                                maintainSize: true,
+                                visible: _isHovering[2],
+                                child: Container(
+                                  height: 2,
+                                  width: 20,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        InkWell(
+                          onHover: (value) {
+                            setState(() {
+                              value
+                                  ? _isHovering[3] = true
+                                  : _isHovering[3] = false;
+                            });
+                          },
+                          onTap: () {
+                            if (uid == null) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AuthDialog(),
+                              );
+                            } else if (cartC == 0 && uid != null) {
+                              var okButton = TextButton(
+                                child: Text(
+                                  AppLocalizations.of(context).trans("ok"),
+                                  style: TextStyle(color: Colors.red[900]),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              );
 
-                                  // set up the AlertDialog
-                                  AlertDialog alert = AlertDialog(
-                                    content: Text("Your Cart is Empty"),
-                                    actions: [
-                                      okButton,
-                                    ],
-                                  );
+                              // set up the AlertDialog
+                              AlertDialog alert = AlertDialog(
+                                content: Text(AppLocalizations.of(context)
+                                    .trans("Empty")),
+                                actions: [
+                                  okButton,
+                                ],
+                              );
 
-                                  // show the dialog
+                              // show the dialog
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return alert;
+                                },
+                              );
+                            } else {
+                              String phoneNo = "",
+                                  email = "",
+                                  address = "",
+                                  userName = "";
+                              FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(uid)
+                                  .get()
+                                  .then(
+                                (value) {
+                                  setState(() {
+                                    phoneNo = value.get("phone");
+                                    email = value.get("email");
+                                    userName = value.get("name");
+                                    address = value.get("address");
+                                    print(phoneNo + email + address);
+                                  });
+                                },
+                              ).whenComplete(
+                                () {
                                   showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return alert;
-                                    },
-                                  );
-                                } else {
-                                  String phoneNo = "",
-                                      email = "",
-                                      address = "",
-                                      userName = "";
-                                  FirebaseFirestore.instance
-                                      .collection("users")
-                                      .doc(uid)
-                                      .get()
-                                      .then(
-                                    (value) {
-                                      setState(() {
-                                        phoneNo = value.get("phone");
-                                        email = value.get("email");
-                                        userName = value.get("name");
-                                        address = value.get("address");
-                                        print(phoneNo + email + address);
-                                      });
-                                    },
-                                  ).whenComplete(
-                                    () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return StatefulBuilder(
-                                                builder: (context, setState) {
-                                              return Container(
-                                                child: AlertDialog(
-                                                  title: Container(
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return StatefulBuilder(
+                                            builder: (context, setState) {
+                                          return Container(
+                                            child: AlertDialog(
+                                              title: Container(
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "Your Cart",
+                                                      style: TextStyle(
+                                                          fontSize: 14),
+                                                    ),
+                                                    Row(
                                                       children: [
                                                         Text(
-                                                          "Your Cart",
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .trans(
+                                                                  'Deliverto'),
                                                           style: TextStyle(
-                                                              fontSize: 14),
+                                                              fontSize: 12),
                                                         ),
-                                                        Row(
-                                                          children: [
-                                                            Text(
-                                                              "Deliver to: ",
-                                                              style: TextStyle(
-                                                                  fontSize: 12),
-                                                            ),
-                                                            Text(
-                                                              phoneNo.isNotEmpty
-                                                                  ? phoneNo
-                                                                  : email,
-                                                              style: TextStyle(
-                                                                  fontSize: 12),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Text(
-                                                              "Location: " +
-                                                                  address,
-                                                              style: TextStyle(
-                                                                  fontSize: 12),
-                                                            ),
-                                                          ],
+                                                        Text(
+                                                          phoneNo.isNotEmpty
+                                                              ? phoneNo
+                                                              : email,
+                                                          style: TextStyle(
+                                                              fontSize: 12),
                                                         )
                                                       ],
                                                     ),
-                                                  ),
-                                                  content: Container(
-                                                    width:
-                                                        screenSize.width * 0.3,
-                                                    child: Column(
+                                                    Row(
                                                       children: [
-                                                        Expanded(
-                                                          flex: 8,
-                                                          child: StreamBuilder(
-                                                              stream: FirebaseFirestore
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                      context)
+                                                                  .trans(
+                                                                      'address') +
+                                                              address,
+                                                          style: TextStyle(
+                                                              fontSize: 12),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              content: Container(
+                                                width: screenSize.width * 0.3,
+                                                child: Column(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 8,
+                                                      child: StreamBuilder(
+                                                          stream:
+                                                              FirebaseFirestore
                                                                   .instance
                                                                   .collection(
                                                                       "users")
@@ -419,25 +420,34 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                   .collection(
                                                                       'cart')
                                                                   .snapshots(),
-                                                              builder: (context,
-                                                                  AsyncSnapshot
-                                                                      snapshot) {
-                                                                if (snapshot
-                                                                    .hasData) {
-                                                                  return Container(
-                                                                      width: ResponsiveWidget.isSmallScreen(
+                                                          builder: (context,
+                                                              AsyncSnapshot
+                                                                  snapshot) {
+                                                            if (snapshot
+                                                                .hasData) {
+                                                              return Container(
+                                                                  width: ResponsiveWidget
+                                                                          .isSmallScreen(
                                                                               context)
-                                                                          ? screenSize.width *
-                                                                              0.95
-                                                                          : screenSize.width *
-                                                                              0.7,
-                                                                      height:
-                                                                          screenSize.height *
-                                                                              0.7,
-                                                                      child: ListView.builder(
-                                                                          itemCount: snapshot.data.docs.length,
-                                                                          scrollDirection: Axis.vertical,
-                                                                          itemBuilder: ((context, index) {
+                                                                      ? screenSize
+                                                                              .width *
+                                                                          0.95
+                                                                      : screenSize
+                                                                              .width *
+                                                                          0.7,
+                                                                  height: screenSize
+                                                                          .height *
+                                                                      0.7,
+                                                                  child: ListView
+                                                                      .builder(
+                                                                          itemCount: snapshot
+                                                                              .data
+                                                                              .docs
+                                                                              .length,
+                                                                          scrollDirection: Axis
+                                                                              .vertical,
+                                                                          itemBuilder:
+                                                                              ((context, index) {
                                                                             return Container(
                                                                               width: ResponsiveWidget.isSmallScreen(context) ? screenSize.width * 0.6 : screenSize.width * 0.5,
                                                                               height: ResponsiveWidget.isSmallScreen(context) ? screenSize.height * 0.2 : screenSize.height * 0.1,
@@ -590,174 +600,198 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                               ),
                                                                             );
                                                                           })));
-                                                                } else {
-                                                                  return Container(
-                                                                      child:
-                                                                          Center(
-                                                                    child: Text(
-                                                                        "No data"),
-                                                                  ));
-                                                                }
-                                                              }),
-                                                        ),
-                                                        Expanded(
-                                                            flex: 2,
-                                                            child: Container(
-                                                              child: Column(
+                                                            } else {
+                                                              return Container(
+                                                                  child: Center(
+                                                                child: Text(AppLocalizations.of(
+                                                                        context)
+                                                                    .trans(
+                                                                        'Empty')),
+                                                              ));
+                                                            }
+                                                          }),
+                                                    ),
+                                                    Expanded(
+                                                        flex: 2,
+                                                        child: Container(
+                                                          child: Column(
+                                                            children: [
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
                                                                 children: [
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Text(
-                                                                        'Sub Total',
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                14),
-                                                                      ),
-                                                                      Text(
-                                                                        subTotal
-                                                                            .toString(),
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                14),
-                                                                      )
-                                                                    ],
+                                                                  Text(
+                                                                    AppLocalizations.of(
+                                                                            context)
+                                                                        .trans(
+                                                                            'subtotal'),
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            14),
                                                                   ),
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Text(
-                                                                        'Dilivery Fee',
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                12),
-                                                                      ),
-                                                                      Text(
-                                                                        deliveryFee
-                                                                            .toString(),
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                12),
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Text(
-                                                                        'Total',
-                                                                        style: TextStyle(
-                                                                            fontWeight:
-                                                                                FontWeight.w900,
-                                                                            fontSize: 14),
-                                                                      ),
-                                                                      Text(
-                                                                        (subTotal *
-                                                                                exchangeRate /
-                                                                                100)
-                                                                            .toString(),
-                                                                        style: TextStyle(
-                                                                            fontWeight:
-                                                                                FontWeight.w900,
-                                                                            fontSize: 14),
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Text(
-                                                                        'Exchange Rate',
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                12),
-                                                                      ),
-                                                                      Text(
-                                                                        exchangeRate
-                                                                            .toString(),
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                12),
-                                                                      )
-                                                                    ],
+                                                                  Text(
+                                                                    subTotal
+                                                                        .toString(),
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            14),
                                                                   )
                                                                 ],
                                                               ),
-                                                            ))
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      style: ButtonStyle(
-                                                          backgroundColor:
-                                                              MaterialStateProperty
-                                                                  .all(Colors
-                                                                      .white)),
-                                                      onPressed: () {
-                                                        List productsOrder = [];
-                                                        FirebaseFirestore
-                                                            .instance
-                                                            .collection("users")
-                                                            .doc(uid)
-                                                            .collection("cart")
-                                                            .get()
-                                                            .then((value) {
-                                                          value.docs.forEach(
-                                                              (element) {
-                                                            productsOrder.add({
-                                                              "img": element[
-                                                                  "img"],
-                                                              "price": element[
-                                                                  'price'],
-                                                              'quantity': element[
-                                                                  'quantity'],
-                                                              'name': element[
-                                                                  'name']
-                                                            });
-                                                          });
-                                                        }).whenComplete(() {
-                                                          FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  "users")
-                                                              .doc(uid)
-                                                              .collection(
-                                                                  "orders")
-                                                              .doc()
-                                                              .set({
-                                                            "OrderStatus":
-                                                                "Pending",
-                                                            "deliveryFee":
-                                                                deliveryFee,
-                                                            "dinnar":
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Text(
+                                                                    AppLocalizations.of(
+                                                                            context)
+                                                                        .trans(
+                                                                            'DeliveryFee'),
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            12),
+                                                                  ),
+                                                                  Text(
+                                                                    deliveryFee
+                                                                        .toString(),
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            12),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Text(
+                                                                    AppLocalizations.of(
+                                                                            context)
+                                                                        .trans(
+                                                                            'total'),
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w900,
+                                                                        fontSize:
+                                                                            14),
+                                                                  ),
+                                                                  Text(
+                                                                    (subTotal *
+                                                                            exchangeRate /
+                                                                            100)
+                                                                        .toString(),
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w900,
+                                                                        fontSize:
+                                                                            14),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Text(
+                                                                    AppLocalizations.of(
+                                                                            context)
+                                                                        .trans(
+                                                                            'Exchangedrate'),
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            12),
+                                                                  ),
+                                                                  Text(
+                                                                    exchangeRate
+                                                                        .toString(),
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            12),
+                                                                  )
+                                                                ],
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ))
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors
+                                                                  .white)),
+                                                  onPressed: () {
+                                                    List productsOrder = [];
+                                                    FirebaseFirestore.instance
+                                                        .collection("users")
+                                                        .doc(uid)
+                                                        .collection("cart")
+                                                        .get()
+                                                        .then((value) {
+                                                      value.docs
+                                                          .forEach((element) {
+                                                        productsOrder.add({
+                                                          "img": element["img"],
+                                                          "price":
+                                                              element['price'],
+                                                          'quantity': element[
+                                                              'quantity'],
+                                                          'name':
+                                                              element['name']
+                                                        });
+                                                      });
+                                                    }).whenComplete(() {
+                                                      var date = DateTime.now();
+                                                      var orderDate = DateFormat(
+                                                              'MM-dd-yyyy, hh:mm a')
+                                                          .format(date);
+                                                      FirebaseFirestore.instance
+                                                          .collection("users")
+                                                          .doc(uid)
+                                                          .collection("orders")
+                                                          .doc()
+                                                          .set({
+                                                        "OrderStatus":
+                                                            "Pending",
+                                                        'timeStamp': DateTime
+                                                                .now()
+                                                            .microsecondsSinceEpoch,
+                                                        'date': orderDate,
+                                                        "deliveryFee":
+                                                            deliveryFee,
+                                                        "dinnar":
+                                                            exchangeRate / 100,
+                                                        "subTotal": (subTotal),
+                                                        "totalPrice":
+                                                            (subTotal *
                                                                 exchangeRate /
-                                                                    100,
-                                                            "subTotal":
-                                                                (subTotal),
-                                                            "totalPrice":
-                                                                (subTotal *
-                                                                    exchangeRate /
-                                                                    100),
-                                                            "userAddress":
-                                                                address,
-                                                            "userID": uid,
-                                                            "userName":
-                                                                userName,
-                                                            "userPhone":
-                                                                "7505448229",
-                                                            "productList":
-                                                                productsOrder
-                                                          });
-                                                        }).whenComplete(() {
+                                                                100),
+                                                        "userAddress": address,
+                                                        "userID": uid,
+                                                        "userName": userName,
+                                                        "userPhone":
+                                                            "7505448229",
+                                                        "productList":
+                                                            productsOrder
+                                                      });
+                                                    }).whenComplete(() {
+                                                      FirebaseFirestore.instance
+                                                          .collection("users")
+                                                          .doc(uid)
+                                                          .collection("cart")
+                                                          .get()
+                                                          .then((value) {
+                                                        value.docs
+                                                            .forEach((element) {
                                                           FirebaseFirestore
                                                               .instance
                                                               .collection(
@@ -765,267 +799,250 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                               .doc(uid)
                                                               .collection(
                                                                   "cart")
-                                                              .get()
-                                                              .then((value) {
-                                                            value.docs.forEach(
-                                                                (element) {
-                                                              FirebaseFirestore
-                                                                  .instance
-                                                                  .collection(
-                                                                      "users")
-                                                                  .doc(uid)
-                                                                  .collection(
-                                                                      "cart")
-                                                                  .doc(element
-                                                                      .id)
-                                                                  .delete();
-                                                            });
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pushReplacement(
-                                                              MaterialPageRoute(
-                                                                fullscreenDialog:
-                                                                    true,
-                                                                builder:
-                                                                    (context) =>
-                                                                        HomePage(),
-                                                              ),
-                                                            );
-                                                          });
+                                                              .doc(element.id)
+                                                              .delete();
                                                         });
-                                                      },
-                                                      child: Text(
-                                                        "Send Order",
-                                                        style: TextStyle(
-                                                            color: Colors
-                                                                .red[900]),
-                                                      ),
-                                                    ),
-                                                    TextButton(
-                                                      style: ButtonStyle(
-                                                          backgroundColor:
-                                                              MaterialStateProperty
-                                                                  .all(Colors
-                                                                          .red[
-                                                                      900])),
-                                                      onPressed: () =>
-                                                          Navigator.pop(context,
-                                                              'Cancel'),
-                                                      child: Icon(
-                                                        Icons.close,
-                                                        color: Colors.white,
-                                                        size: 14,
-                                                      ),
-                                                    ),
-                                                  ],
+                                                        Navigator.of(context)
+                                                            .pushReplacement(
+                                                          MaterialPageRoute(
+                                                            fullscreenDialog:
+                                                                true,
+                                                            builder:
+                                                                (context) =>
+                                                                    HomePage(),
+                                                          ),
+                                                        );
+                                                      });
+                                                    });
+                                                  },
+                                                  child: Text(
+                                                    AppLocalizations.of(context)
+                                                        .trans('Sendorder'),
+                                                    style: TextStyle(
+                                                        color: Colors.red[900]),
+                                                  ),
                                                 ),
-                                              );
-                                            });
-                                          });
-                                    },
-                                  );
-                                }
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Center(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'My Cart',
-                                            style: TextStyle(
-                                              color: Colors.white,
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors
+                                                                  .red[900])),
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, 'Cancel'),
+                                                  child: Icon(
+                                                    Icons.close,
+                                                    color: Colors.white,
+                                                    size: 14,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
+                                          );
+                                        });
+                                      });
+                                },
+                              );
+                            }
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Stack(
+                                children: [
+                                  Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        AppLocalizations.of(context)
+                                            .trans("Cart"),
+                                        style: TextStyle(
+                                          color: Colors.white,
                                         ),
                                       ),
-                                      Positioned(
-                                        right: 0,
-                                        top: 0,
-                                        child: cartC == null
-                                            ? Container()
-                                            : Container(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(2.0),
-                                                  child: Text(
-                                                    cartC.toString(),
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 12),
-                                                  ),
-                                                ),
-                                                decoration: new BoxDecoration(
-                                                  color: Colors.red[900],
-                                                  shape: BoxShape.circle,
-                                                ),
-                                              ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 5),
-                                  Visibility(
-                                    maintainAnimation: true,
-                                    maintainState: true,
-                                    maintainSize: true,
-                                    visible: _isHovering[3],
-                                    child: Container(
-                                      height: 2,
-                                      width: 20,
-                                      color: Colors.white,
                                     ),
-                                  )
+                                  ),
+                                  Positioned(
+                                    right: 0,
+                                    top: 0,
+                                    child: cartC == null
+                                        ? Container()
+                                        : Container(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(2.0),
+                                              child: Text(
+                                                cartC.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12),
+                                              ),
+                                            ),
+                                            decoration: new BoxDecoration(
+                                              color: Colors.red[900],
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                  ),
                                 ],
                               ),
-                            ),
-                            InkWell(
-                              onHover: (value) {
-                                setState(() {
-                                  value
-                                      ? _isHovering[4] = true
-                                      : _isHovering[4] = false;
-                                });
-                              },
-                              onTap: () {
-                                if (uid == null) {
+                              SizedBox(height: 5),
+                              Visibility(
+                                maintainAnimation: true,
+                                maintainState: true,
+                                maintainSize: true,
+                                visible: _isHovering[3],
+                                child: Container(
+                                  height: 2,
+                                  width: 20,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        InkWell(
+                          onHover: (value) {
+                            setState(() {
+                              value
+                                  ? _isHovering[4] = true
+                                  : _isHovering[4] = false;
+                            });
+                          },
+                          onTap: () {
+                            if (uid == null) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AuthDialog(),
+                              );
+                            } else {
+                              String phoneNo = "", email = "", address = "";
+                              FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(uid)
+                                  .get()
+                                  .then(
+                                (value) {
+                                  setState(() {
+                                    phoneNo = value.get("phone");
+                                    email = value.get("email");
+                                    address = value.get("address");
+                                    print(phoneNo + email + address);
+                                  });
+                                },
+                              ).whenComplete(
+                                () {
                                   showDialog(
-                                    context: context,
-                                    builder: (context) => AuthDialog(),
-                                  );
-                                } else {
-                                  String phoneNo = "", email = "", address = "";
-                                  FirebaseFirestore.instance
-                                      .collection("users")
-                                      .doc(uid)
-                                      .get()
-                                      .then(
-                                    (value) {
-                                      setState(() {
-                                        phoneNo = value.get("phone");
-                                        email = value.get("email");
-                                        address = value.get("address");
-                                        print(phoneNo + email + address);
-                                      });
-                                    },
-                                  ).whenComplete(
-                                    () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return StatefulBuilder(
-                                                builder: (context, setState) {
-                                              return Container(
-                                                child: AlertDialog(
-                                                  title: Container(
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return StatefulBuilder(
+                                            builder: (context, setState) {
+                                          return Container(
+                                            child: AlertDialog(
+                                              title: Container(
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                              .spaceAround,
                                                       children: [
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceAround,
-                                                          children: [
-                                                            InkWell(
-                                                              onTap: () {
-                                                                setState((() {
-                                                                  select = true;
-                                                                }));
-                                                              },
-                                                              child: Card(
-                                                                color: select
-                                                                    ? Colors
-                                                                        .white
-                                                                    : Colors.red[
-                                                                        900],
-                                                                child: Padding(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .all(
-                                                                              8.0),
-                                                                  child:
-                                                                      Container(
-                                                                    child:
-                                                                        FittedBox(
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      child:
-                                                                          Text(
-                                                                        "Current",
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color: select
-                                                                              ? Colors.red[900]
-                                                                              : Colors.white,
-                                                                        ),
+                                                        InkWell(
+                                                          onTap: () {
+                                                            setState((() {
+                                                              select = true;
+                                                            }));
+                                                          },
+                                                          child: Card(
+                                                            color: select
+                                                                ? Colors.white
+                                                                : Colors
+                                                                    .red[900],
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(8.0),
+                                                              child: Container(
+                                                                child: FittedBox(
+                                                                    fit: BoxFit.cover,
+                                                                    child: Text(
+                                                                      AppLocalizations.of(
+                                                                              context)
+                                                                          .trans(
+                                                                              "currentorder"),
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: !select
+                                                                            ? Colors.white
+                                                                            : Colors.black,
                                                                       ),
+                                                                    )),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        InkWell(
+                                                          onTap: () {
+                                                            setState(
+                                                              () {
+                                                                select = false;
+                                                              },
+                                                            );
+                                                          },
+                                                          child: Card(
+                                                            color: select
+                                                                ? Colors
+                                                                    .red[900]
+                                                                : Colors.white,
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(8.0),
+                                                              child: Container(
+                                                                child:
+                                                                    FittedBox(
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  child: Text(
+                                                                    AppLocalizations.of(
+                                                                            context)
+                                                                        .trans(
+                                                                            "orderHistory"),
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: select
+                                                                          ? Colors
+                                                                              .white
+                                                                          : Colors
+                                                                              .black,
                                                                     ),
                                                                   ),
                                                                 ),
                                                               ),
                                                             ),
-                                                            InkWell(
-                                                              onTap: () {
-                                                                setState(
-                                                                  () {
-                                                                    select =
-                                                                        false;
-                                                                  },
-                                                                );
-                                                              },
-                                                              child: Card(
-                                                                color: select
-                                                                    ? Colors.red[
-                                                                        900]
-                                                                    : Colors
-                                                                        .white,
-                                                                child: Padding(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .all(
-                                                                              8.0),
-                                                                  child:
-                                                                      Container(
-                                                                    child:
-                                                                        FittedBox(
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      child:
-                                                                          Text(
-                                                                        "History",
-                                                                        style: TextStyle(
-                                                                            color: select
-                                                                                ? Colors.white
-                                                                                : Colors.red[900]),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        )
+                                                          ),
+                                                        ),
                                                       ],
-                                                    ),
-                                                  ),
-                                                  content: Container(
-                                                    width:
-                                                        screenSize.width * 0.3,
-                                                    child: Column(
-                                                      children: [
-                                                        Expanded(
-                                                          flex: 8,
-                                                          child: StreamBuilder(
-                                                              stream: FirebaseFirestore
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              content: Container(
+                                                width: screenSize.width * 0.3,
+                                                child: Column(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 8,
+                                                      child: StreamBuilder(
+                                                          stream:
+                                                              FirebaseFirestore
                                                                   .instance
                                                                   .collection(
                                                                       "users")
@@ -1033,27 +1050,331 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                   .collection(
                                                                       'orders')
                                                                   .snapshots(),
-                                                              builder: (context,
-                                                                  AsyncSnapshot
-                                                                      snapshot) {
-                                                                if (snapshot
-                                                                    .hasData) {
-                                                                  return Container(
-                                                                      width: ResponsiveWidget.isSmallScreen(
+                                                          builder: (context,
+                                                              AsyncSnapshot
+                                                                  snapshot) {
+                                                            if (snapshot
+                                                                .hasData) {
+                                                              return Container(
+                                                                  width: ResponsiveWidget
+                                                                          .isSmallScreen(
                                                                               context)
-                                                                          ? screenSize.width *
-                                                                              0.95
-                                                                          : screenSize.width *
-                                                                              0.7,
-                                                                      height:
-                                                                          screenSize.height *
-                                                                              0.7,
-                                                                      child: ListView.builder(
-                                                                          itemCount: snapshot.data.docs.length,
-                                                                          scrollDirection: Axis.vertical,
-                                                                          itemBuilder: ((context, index) {
-                                                                            return (select && snapshot.data.docs[index]['OrderStatus'] != "Pending")
-                                                                                ? Container()
+                                                                      ? screenSize
+                                                                              .width *
+                                                                          0.95
+                                                                      : screenSize
+                                                                              .width *
+                                                                          0.7,
+                                                                  height: screenSize
+                                                                          .height *
+                                                                      0.7,
+                                                                  child: ListView
+                                                                      .builder(
+                                                                          itemCount: snapshot
+                                                                              .data
+                                                                              .docs
+                                                                              .length,
+                                                                          scrollDirection: Axis
+                                                                              .vertical,
+                                                                          itemBuilder:
+                                                                              ((context, index) {
+                                                                            return (!select && snapshot.data.docs[index]['OrderStatus'] != "Pending")
+                                                                                ? Card(
+                                                                                    color: Colors.white,
+                                                                                    child: Container(
+                                                                                        width: ResponsiveWidget.isSmallScreen(context) ? screenSize.width * 0.95 : screenSize.width * 0.6,
+                                                                                        height: screenSize.height * 0.4,
+                                                                                        child: Padding(
+                                                                                          padding: const EdgeInsets.all(8.0),
+                                                                                          child: Column(
+                                                                                            children: [
+                                                                                              Expanded(
+                                                                                                  flex: 3,
+                                                                                                  child: Container(
+                                                                                                    child: Column(
+                                                                                                      mainAxisSize: MainAxisSize.min,
+                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                      children: [
+                                                                                                        Row(
+                                                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                                          children: [
+                                                                                                            Text(
+                                                                                                              snapshot.data.docs[index]['date'],
+                                                                                                              style: TextStyle(fontSize: 12),
+                                                                                                            ),
+                                                                                                            Text(
+                                                                                                              AppLocalizations.of(context).trans(snapshot.data.docs[index]['OrderStatus']),
+                                                                                                              style: TextStyle(fontSize: 12),
+                                                                                                            ),
+                                                                                                            Text(
+                                                                                                              "#" + snapshot.data.docs[index].id.toString().substring(0, 7),
+                                                                                                              style: TextStyle(fontSize: 12),
+                                                                                                            ),
+                                                                                                          ],
+                                                                                                        ),
+                                                                                                        Row(
+                                                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                                          children: [
+                                                                                                            Text(
+                                                                                                              AppLocalizations.of(context).trans('Deliverto') + snapshot.data.docs[index]['userName'],
+                                                                                                              style: TextStyle(fontSize: 12),
+                                                                                                            ),
+                                                                                                            Text(
+                                                                                                              AppLocalizations.of(context).trans('address') + snapshot.data.docs[index]['userAddress'],
+                                                                                                              style: TextStyle(fontSize: 12),
+                                                                                                            ),
+                                                                                                          ],
+                                                                                                        ),
+                                                                                                        SizedBox(
+                                                                                                          height: screenSize.height * 0.005,
+                                                                                                        ),
+                                                                                                        Text(
+                                                                                                          AppLocalizations.of(context).trans('items'),
+                                                                                                          style: TextStyle(
+                                                                                                            fontSize: 12,
+                                                                                                            color: Colors.black,
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                  )),
+                                                                                              Expanded(
+                                                                                                flex: 4,
+                                                                                                child: ListView.builder(
+                                                                                                    itemCount: snapshot.data.docs[index]['productList'].length,
+                                                                                                    scrollDirection: Axis.vertical,
+                                                                                                    itemBuilder: ((context, jindex) {
+                                                                                                      return Row(
+                                                                                                        children: [
+                                                                                                          Expanded(
+                                                                                                              flex: 3,
+                                                                                                              child: RichText(
+                                                                                                                textAlign: TextAlign.left,
+                                                                                                                overflow: TextOverflow.visible,
+                                                                                                                strutStyle: StrutStyle(fontSize: 12),
+                                                                                                                text: TextSpan(
+                                                                                                                    style: TextStyle(
+                                                                                                                      color: Colors.black,
+                                                                                                                      fontSize: 12,
+                                                                                                                    ),
+                                                                                                                    text: (jindex + 1).toString() + ". " + snapshot.data.docs[index]['productList'][jindex]['name'].toString().toLowerCase()),
+                                                                                                              )),
+                                                                                                          Expanded(
+                                                                                                              flex: 1,
+                                                                                                              child: RichText(
+                                                                                                                textAlign: TextAlign.center,
+                                                                                                                overflow: TextOverflow.visible,
+                                                                                                                strutStyle: StrutStyle(fontSize: 12),
+                                                                                                                text: TextSpan(
+                                                                                                                    style: TextStyle(
+                                                                                                                      color: Colors.black,
+                                                                                                                      fontSize: 12,
+                                                                                                                    ),
+                                                                                                                    text: snapshot.data.docs[index]['productList'][jindex]['quantity'].toString()),
+                                                                                                              )),
+                                                                                                          Expanded(
+                                                                                                              flex: 2,
+                                                                                                              child: RichText(
+                                                                                                                textAlign: TextAlign.right,
+                                                                                                                overflow: TextOverflow.visible,
+                                                                                                                strutStyle: StrutStyle(fontSize: 12),
+                                                                                                                text: TextSpan(
+                                                                                                                    style: TextStyle(
+                                                                                                                      color: Colors.black,
+                                                                                                                      fontSize: 12,
+                                                                                                                    ),
+                                                                                                                    text: snapshot.data.docs[index]['productList'][jindex]['price'].toString() + "\$"),
+                                                                                                              )),
+                                                                                                        ],
+                                                                                                      );
+                                                                                                    })),
+                                                                                              ),
+                                                                                              Expanded(
+                                                                                                  flex: 4,
+                                                                                                  child: Container(
+                                                                                                    child: Column(
+                                                                                                      mainAxisSize: MainAxisSize.min,
+                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                      children: [
+                                                                                                        Divider(),
+                                                                                                        Row(
+                                                                                                          children: [
+                                                                                                            Expanded(
+                                                                                                                flex: 3,
+                                                                                                                child: RichText(
+                                                                                                                  textAlign: TextAlign.left,
+                                                                                                                  overflow: TextOverflow.visible,
+                                                                                                                  strutStyle: StrutStyle(fontSize: 12),
+                                                                                                                  text: TextSpan(
+                                                                                                                      style: TextStyle(
+                                                                                                                        color: Colors.black,
+                                                                                                                        fontSize: 12,
+                                                                                                                      ),
+                                                                                                                      text: AppLocalizations.of(context).trans('subtotal')),
+                                                                                                                )),
+                                                                                                            Expanded(
+                                                                                                                flex: 1,
+                                                                                                                child: RichText(
+                                                                                                                  textAlign: TextAlign.center,
+                                                                                                                  overflow: TextOverflow.visible,
+                                                                                                                  strutStyle: StrutStyle(fontSize: 12),
+                                                                                                                  text: TextSpan(
+                                                                                                                      style: TextStyle(
+                                                                                                                        color: Colors.black,
+                                                                                                                        fontSize: 12,
+                                                                                                                      ),
+                                                                                                                      text: ""),
+                                                                                                                )),
+                                                                                                            Expanded(
+                                                                                                                flex: 2,
+                                                                                                                child: RichText(
+                                                                                                                  textAlign: TextAlign.right,
+                                                                                                                  overflow: TextOverflow.visible,
+                                                                                                                  strutStyle: StrutStyle(fontSize: 12),
+                                                                                                                  text: TextSpan(
+                                                                                                                      style: TextStyle(
+                                                                                                                        color: Colors.black,
+                                                                                                                        fontSize: 12,
+                                                                                                                      ),
+                                                                                                                      text: snapshot.data.docs[index]['subTotal'].toString() + "\$"),
+                                                                                                                )),
+                                                                                                          ],
+                                                                                                        ),
+                                                                                                        SizedBox(
+                                                                                                          height: 6,
+                                                                                                        ),
+                                                                                                        Row(
+                                                                                                          children: [
+                                                                                                            Expanded(
+                                                                                                                flex: 3,
+                                                                                                                child: RichText(
+                                                                                                                  textAlign: TextAlign.left,
+                                                                                                                  overflow: TextOverflow.visible,
+                                                                                                                  strutStyle: StrutStyle(fontSize: 10),
+                                                                                                                  text: TextSpan(
+                                                                                                                      style: TextStyle(
+                                                                                                                        color: Colors.grey[900],
+                                                                                                                        fontSize: 10,
+                                                                                                                      ),
+                                                                                                                      text: AppLocalizations.of(context).trans('DeliveryFee')),
+                                                                                                                )),
+                                                                                                            Expanded(
+                                                                                                                flex: 1,
+                                                                                                                child: RichText(
+                                                                                                                  textAlign: TextAlign.center,
+                                                                                                                  overflow: TextOverflow.visible,
+                                                                                                                  strutStyle: StrutStyle(fontSize: 12),
+                                                                                                                  text: TextSpan(style: TextStyle(fontSize: 12, color: Colors.grey[900]), text: ""),
+                                                                                                                )),
+                                                                                                            Expanded(
+                                                                                                                flex: 2,
+                                                                                                                child: RichText(
+                                                                                                                  textAlign: TextAlign.right,
+                                                                                                                  overflow: TextOverflow.visible,
+                                                                                                                  strutStyle: StrutStyle(fontSize: 10),
+                                                                                                                  text: TextSpan(
+                                                                                                                      style: TextStyle(
+                                                                                                                        color: Colors.grey[900],
+                                                                                                                        fontSize: 10,
+                                                                                                                      ),
+                                                                                                                      text: snapshot.data.docs[index]['deliveryFee'].toString() + "\$"),
+                                                                                                                )),
+                                                                                                          ],
+                                                                                                        ),
+                                                                                                        Row(
+                                                                                                          children: [
+                                                                                                            Expanded(
+                                                                                                                flex: 3,
+                                                                                                                child: RichText(
+                                                                                                                  textAlign: TextAlign.left,
+                                                                                                                  overflow: TextOverflow.visible,
+                                                                                                                  strutStyle: StrutStyle(fontSize: 10),
+                                                                                                                  text: TextSpan(
+                                                                                                                      style: TextStyle(
+                                                                                                                        color: Colors.grey[900],
+                                                                                                                        fontSize: 10,
+                                                                                                                      ),
+                                                                                                                      text: AppLocalizations.of(context).trans('Exchangedrate')),
+                                                                                                                )),
+                                                                                                            Expanded(
+                                                                                                                flex: 1,
+                                                                                                                child: RichText(
+                                                                                                                  textAlign: TextAlign.center,
+                                                                                                                  overflow: TextOverflow.visible,
+                                                                                                                  strutStyle: StrutStyle(fontSize: 12),
+                                                                                                                  text: TextSpan(
+                                                                                                                      style: TextStyle(
+                                                                                                                        fontSize: 12,
+                                                                                                                      ),
+                                                                                                                      text: ""),
+                                                                                                                )),
+                                                                                                            Expanded(
+                                                                                                                flex: 2,
+                                                                                                                child: RichText(
+                                                                                                                  textAlign: TextAlign.right,
+                                                                                                                  overflow: TextOverflow.visible,
+                                                                                                                  strutStyle: StrutStyle(fontSize: 10),
+                                                                                                                  text: TextSpan(
+                                                                                                                      style: TextStyle(
+                                                                                                                        color: Colors.grey[900],
+                                                                                                                        fontSize: 10,
+                                                                                                                      ),
+                                                                                                                      text: snapshot.data.docs[index]['dinnar'].toString() + "\$"),
+                                                                                                                )),
+                                                                                                          ],
+                                                                                                        ),
+                                                                                                        Row(
+                                                                                                          children: [
+                                                                                                            Expanded(
+                                                                                                                flex: 3,
+                                                                                                                child: RichText(
+                                                                                                                  textAlign: TextAlign.left,
+                                                                                                                  overflow: TextOverflow.visible,
+                                                                                                                  strutStyle: StrutStyle(fontSize: 12),
+                                                                                                                  text: TextSpan(
+                                                                                                                      style: TextStyle(
+                                                                                                                        color: Colors.black,
+                                                                                                                        fontSize: 12,
+                                                                                                                      ),
+                                                                                                                      text: AppLocalizations.of(context).trans('total')),
+                                                                                                                )),
+                                                                                                            Expanded(
+                                                                                                                flex: 1,
+                                                                                                                child: RichText(
+                                                                                                                  textAlign: TextAlign.center,
+                                                                                                                  overflow: TextOverflow.visible,
+                                                                                                                  strutStyle: StrutStyle(fontSize: 12),
+                                                                                                                  text: TextSpan(
+                                                                                                                      style: TextStyle(
+                                                                                                                        color: Colors.black,
+                                                                                                                        fontSize: 12,
+                                                                                                                      ),
+                                                                                                                      text: ""),
+                                                                                                                )),
+                                                                                                            Expanded(
+                                                                                                                flex: 2,
+                                                                                                                child: RichText(
+                                                                                                                  textAlign: TextAlign.right,
+                                                                                                                  overflow: TextOverflow.visible,
+                                                                                                                  strutStyle: StrutStyle(fontSize: 12),
+                                                                                                                  text: TextSpan(
+                                                                                                                      style: TextStyle(
+                                                                                                                        color: Colors.black,
+                                                                                                                        fontSize: 12,
+                                                                                                                      ),
+                                                                                                                      text: snapshot.data.docs[index]['totalPrice'].toString() + " IQD"),
+                                                                                                                )),
+                                                                                                          ],
+                                                                                                        ),
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                  )),
+                                                                                            ],
+                                                                                          ),
+                                                                                        )),
+                                                                                  )
                                                                                 : (select && snapshot.data.docs[index]['OrderStatus'] == "Pending")
                                                                                     ? Card(
                                                                                         color: Colors.white,
@@ -1080,7 +1401,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                                                                   style: TextStyle(fontSize: 12),
                                                                                                                 ),
                                                                                                                 Text(
-                                                                                                                  snapshot.data.docs[index]['OrderStatus'],
+                                                                                                                  AppLocalizations.of(context).trans(snapshot.data.docs[index]['OrderStatus']),
                                                                                                                   style: TextStyle(fontSize: 12),
                                                                                                                 ),
                                                                                                                 Text(
@@ -1089,15 +1410,20 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                                                                 ),
                                                                                                               ],
                                                                                                             ),
+                                                                                                            //    krmanj                                                                AppLocalizations.of(context).locale.languageCode.toString()=='ku'?
+                                                                                                            // productListSnapShot[i]['nameK'].toString().toUpperCase():
+                                                                                                            // AppLocalizations.of(context).locale.languageCode.toString()=='ar'?
+                                                                                                            // productListSnapShot[i]['nameA'].toString().toUpperCase():
+                                                                                                            // productListSnapShot[i]['name'].toString().toUpperCase(),
                                                                                                             Row(
                                                                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                                                               children: [
                                                                                                                 Text(
-                                                                                                                  "Deliver to: " + snapshot.data.docs[index]['userName'],
+                                                                                                                  AppLocalizations.of(context).trans('Deliverto') + snapshot.data.docs[index]['userName'],
                                                                                                                   style: TextStyle(fontSize: 12),
                                                                                                                 ),
                                                                                                                 Text(
-                                                                                                                  "Location: " + snapshot.data.docs[index]['userAddress'],
+                                                                                                                  AppLocalizations.of(context).trans('address') + snapshot.data.docs[index]['userAddress'],
                                                                                                                   style: TextStyle(fontSize: 12),
                                                                                                                 ),
                                                                                                               ],
@@ -1106,7 +1432,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                                                               height: screenSize.height * 0.005,
                                                                                                             ),
                                                                                                             Text(
-                                                                                                              "Items",
+                                                                                                              AppLocalizations.of(context).trans('items'),
                                                                                                               style: TextStyle(
                                                                                                                 fontSize: 12,
                                                                                                                 color: Colors.black,
@@ -1188,7 +1514,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                                                                             color: Colors.black,
                                                                                                                             fontSize: 12,
                                                                                                                           ),
-                                                                                                                          text: "Sub Total"),
+                                                                                                                          text: AppLocalizations.of(context).trans('subtotal')),
                                                                                                                     )),
                                                                                                                 Expanded(
                                                                                                                     flex: 1,
@@ -1234,7 +1560,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                                                                             color: Colors.grey[900],
                                                                                                                             fontSize: 10,
                                                                                                                           ),
-                                                                                                                          text: "Delivery Fee"),
+                                                                                                                          text: AppLocalizations.of(context).trans('DeliveryFee')),
                                                                                                                     )),
                                                                                                                 Expanded(
                                                                                                                     flex: 1,
@@ -1272,7 +1598,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                                                                             color: Colors.grey[900],
                                                                                                                             fontSize: 10,
                                                                                                                           ),
-                                                                                                                          text: "Dinnar Exg Rate"),
+                                                                                                                          text: AppLocalizations.of(context).trans("Exchangedrate")),
                                                                                                                     )),
                                                                                                                 Expanded(
                                                                                                                     flex: 1,
@@ -1314,7 +1640,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                                                                             color: Colors.black,
                                                                                                                             fontSize: 12,
                                                                                                                           ),
-                                                                                                                          text: "Total"),
+                                                                                                                          text: AppLocalizations.of(context).trans('total')),
                                                                                                                     )),
                                                                                                                 Expanded(
                                                                                                                     flex: 1,
@@ -1351,534 +1677,388 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                                               ),
                                                                                             )),
                                                                                       )
-                                                                                    : Card(
-                                                                                        color: Colors.white,
-                                                                                        child: Container(
-                                                                                            width: ResponsiveWidget.isSmallScreen(context) ? screenSize.width * 0.95 : screenSize.width * 0.6,
-                                                                                            height: screenSize.height * 0.4,
-                                                                                            child: Padding(
-                                                                                              padding: const EdgeInsets.all(8.0),
-                                                                                              child: Column(
-                                                                                                children: [
-                                                                                                  Expanded(
-                                                                                                      flex: 3,
-                                                                                                      child: Container(
-                                                                                                        child: Column(
-                                                                                                          mainAxisSize: MainAxisSize.min,
-                                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                          children: [
-                                                                                                            Row(
-                                                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                                              children: [
-                                                                                                                Text(
-                                                                                                                  snapshot.data.docs[index]['date'],
-                                                                                                                  style: TextStyle(fontSize: 12),
-                                                                                                                ),
-                                                                                                                Text(
-                                                                                                                  snapshot.data.docs[index]['OrderStatus'],
-                                                                                                                  style: TextStyle(fontSize: 12),
-                                                                                                                ),
-                                                                                                                Text(
-                                                                                                                  "#" + snapshot.data.docs[index].id.toString().substring(0, 7),
-                                                                                                                  style: TextStyle(fontSize: 12),
-                                                                                                                ),
-                                                                                                              ],
-                                                                                                            ),
-                                                                                                            Row(
-                                                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                                              children: [
-                                                                                                                Text(
-                                                                                                                  "Deliver to: " + snapshot.data.docs[index]['userName'],
-                                                                                                                  style: TextStyle(fontSize: 12),
-                                                                                                                ),
-                                                                                                                Text(
-                                                                                                                  "Location: " + snapshot.data.docs[index]['userAddress'],
-                                                                                                                  style: TextStyle(fontSize: 12),
-                                                                                                                ),
-                                                                                                              ],
-                                                                                                            ),
-                                                                                                            SizedBox(
-                                                                                                              height: screenSize.height * 0.005,
-                                                                                                            ),
-                                                                                                            Text(
-                                                                                                              "Items",
-                                                                                                              style: TextStyle(
-                                                                                                                fontSize: 12,
-                                                                                                                color: Colors.black,
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                          ],
-                                                                                                        ),
-                                                                                                      )),
-                                                                                                  Expanded(
-                                                                                                    flex: 4,
-                                                                                                    child: ListView.builder(
-                                                                                                        itemCount: snapshot.data.docs[index]['productList'].length,
-                                                                                                        scrollDirection: Axis.vertical,
-                                                                                                        itemBuilder: ((context, jindex) {
-                                                                                                          return Row(
-                                                                                                            children: [
-                                                                                                              Expanded(
-                                                                                                                  flex: 3,
-                                                                                                                  child: RichText(
-                                                                                                                    textAlign: TextAlign.left,
-                                                                                                                    overflow: TextOverflow.visible,
-                                                                                                                    strutStyle: StrutStyle(fontSize: 12),
-                                                                                                                    text: TextSpan(
-                                                                                                                        style: TextStyle(
-                                                                                                                          color: Colors.black,
-                                                                                                                          fontSize: 12,
-                                                                                                                        ),
-                                                                                                                        text: (jindex + 1).toString() + ". " + snapshot.data.docs[index]['productList'][jindex]['name'].toString().toLowerCase()),
-                                                                                                                  )),
-                                                                                                              Expanded(
-                                                                                                                  flex: 1,
-                                                                                                                  child: RichText(
-                                                                                                                    textAlign: TextAlign.center,
-                                                                                                                    overflow: TextOverflow.visible,
-                                                                                                                    strutStyle: StrutStyle(fontSize: 12),
-                                                                                                                    text: TextSpan(
-                                                                                                                        style: TextStyle(
-                                                                                                                          color: Colors.black,
-                                                                                                                          fontSize: 12,
-                                                                                                                        ),
-                                                                                                                        text: snapshot.data.docs[index]['productList'][jindex]['quantity'].toString()),
-                                                                                                                  )),
-                                                                                                              Expanded(
-                                                                                                                  flex: 2,
-                                                                                                                  child: RichText(
-                                                                                                                    textAlign: TextAlign.right,
-                                                                                                                    overflow: TextOverflow.visible,
-                                                                                                                    strutStyle: StrutStyle(fontSize: 12),
-                                                                                                                    text: TextSpan(
-                                                                                                                        style: TextStyle(
-                                                                                                                          color: Colors.black,
-                                                                                                                          fontSize: 12,
-                                                                                                                        ),
-                                                                                                                        text: snapshot.data.docs[index]['productList'][jindex]['price'].toString() + "\$"),
-                                                                                                                  )),
-                                                                                                            ],
-                                                                                                          );
-                                                                                                        })),
-                                                                                                  ),
-                                                                                                  Expanded(
-                                                                                                      flex: 4,
-                                                                                                      child: Container(
-                                                                                                        child: Column(
-                                                                                                          mainAxisSize: MainAxisSize.min,
-                                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                          children: [
-                                                                                                            Divider(),
-                                                                                                            Row(
-                                                                                                              children: [
-                                                                                                                Expanded(
-                                                                                                                    flex: 3,
-                                                                                                                    child: RichText(
-                                                                                                                      textAlign: TextAlign.left,
-                                                                                                                      overflow: TextOverflow.visible,
-                                                                                                                      strutStyle: StrutStyle(fontSize: 12),
-                                                                                                                      text: TextSpan(
-                                                                                                                          style: TextStyle(
-                                                                                                                            color: Colors.black,
-                                                                                                                            fontSize: 12,
-                                                                                                                          ),
-                                                                                                                          text: "Sub Total"),
-                                                                                                                    )),
-                                                                                                                Expanded(
-                                                                                                                    flex: 1,
-                                                                                                                    child: RichText(
-                                                                                                                      textAlign: TextAlign.center,
-                                                                                                                      overflow: TextOverflow.visible,
-                                                                                                                      strutStyle: StrutStyle(fontSize: 12),
-                                                                                                                      text: TextSpan(
-                                                                                                                          style: TextStyle(
-                                                                                                                            color: Colors.black,
-                                                                                                                            fontSize: 12,
-                                                                                                                          ),
-                                                                                                                          text: ""),
-                                                                                                                    )),
-                                                                                                                Expanded(
-                                                                                                                    flex: 2,
-                                                                                                                    child: RichText(
-                                                                                                                      textAlign: TextAlign.right,
-                                                                                                                      overflow: TextOverflow.visible,
-                                                                                                                      strutStyle: StrutStyle(fontSize: 12),
-                                                                                                                      text: TextSpan(
-                                                                                                                          style: TextStyle(
-                                                                                                                            color: Colors.black,
-                                                                                                                            fontSize: 12,
-                                                                                                                          ),
-                                                                                                                          text: snapshot.data.docs[index]['subTotal'].toString() + "\$"),
-                                                                                                                    )),
-                                                                                                              ],
-                                                                                                            ),
-                                                                                                            SizedBox(
-                                                                                                              height: 6,
-                                                                                                            ),
-                                                                                                            Row(
-                                                                                                              children: [
-                                                                                                                Expanded(
-                                                                                                                    flex: 3,
-                                                                                                                    child: RichText(
-                                                                                                                      textAlign: TextAlign.left,
-                                                                                                                      overflow: TextOverflow.visible,
-                                                                                                                      strutStyle: StrutStyle(fontSize: 10),
-                                                                                                                      text: TextSpan(
-                                                                                                                          style: TextStyle(
-                                                                                                                            color: Colors.grey[900],
-                                                                                                                            fontSize: 10,
-                                                                                                                          ),
-                                                                                                                          text: "Delivery Fee"),
-                                                                                                                    )),
-                                                                                                                Expanded(
-                                                                                                                    flex: 1,
-                                                                                                                    child: RichText(
-                                                                                                                      textAlign: TextAlign.center,
-                                                                                                                      overflow: TextOverflow.visible,
-                                                                                                                      strutStyle: StrutStyle(fontSize: 12),
-                                                                                                                      text: TextSpan(style: TextStyle(fontSize: 12, color: Colors.grey[900]), text: ""),
-                                                                                                                    )),
-                                                                                                                Expanded(
-                                                                                                                    flex: 2,
-                                                                                                                    child: RichText(
-                                                                                                                      textAlign: TextAlign.right,
-                                                                                                                      overflow: TextOverflow.visible,
-                                                                                                                      strutStyle: StrutStyle(fontSize: 10),
-                                                                                                                      text: TextSpan(
-                                                                                                                          style: TextStyle(
-                                                                                                                            color: Colors.grey[900],
-                                                                                                                            fontSize: 10,
-                                                                                                                          ),
-                                                                                                                          text: snapshot.data.docs[index]['deliveryFee'].toString() + "\$"),
-                                                                                                                    )),
-                                                                                                              ],
-                                                                                                            ),
-                                                                                                            Row(
-                                                                                                              children: [
-                                                                                                                Expanded(
-                                                                                                                    flex: 3,
-                                                                                                                    child: RichText(
-                                                                                                                      textAlign: TextAlign.left,
-                                                                                                                      overflow: TextOverflow.visible,
-                                                                                                                      strutStyle: StrutStyle(fontSize: 10),
-                                                                                                                      text: TextSpan(
-                                                                                                                          style: TextStyle(
-                                                                                                                            color: Colors.grey[900],
-                                                                                                                            fontSize: 10,
-                                                                                                                          ),
-                                                                                                                          text: "Dinnar Exg Rate"),
-                                                                                                                    )),
-                                                                                                                Expanded(
-                                                                                                                    flex: 1,
-                                                                                                                    child: RichText(
-                                                                                                                      textAlign: TextAlign.center,
-                                                                                                                      overflow: TextOverflow.visible,
-                                                                                                                      strutStyle: StrutStyle(fontSize: 12),
-                                                                                                                      text: TextSpan(
-                                                                                                                          style: TextStyle(
-                                                                                                                            fontSize: 12,
-                                                                                                                          ),
-                                                                                                                          text: ""),
-                                                                                                                    )),
-                                                                                                                Expanded(
-                                                                                                                    flex: 2,
-                                                                                                                    child: RichText(
-                                                                                                                      textAlign: TextAlign.right,
-                                                                                                                      overflow: TextOverflow.visible,
-                                                                                                                      strutStyle: StrutStyle(fontSize: 10),
-                                                                                                                      text: TextSpan(
-                                                                                                                          style: TextStyle(
-                                                                                                                            color: Colors.grey[900],
-                                                                                                                            fontSize: 10,
-                                                                                                                          ),
-                                                                                                                          text: snapshot.data.docs[index]['dinnar'].toString() + "\$"),
-                                                                                                                    )),
-                                                                                                              ],
-                                                                                                            ),
-                                                                                                            Row(
-                                                                                                              children: [
-                                                                                                                Expanded(
-                                                                                                                    flex: 3,
-                                                                                                                    child: RichText(
-                                                                                                                      textAlign: TextAlign.left,
-                                                                                                                      overflow: TextOverflow.visible,
-                                                                                                                      strutStyle: StrutStyle(fontSize: 12),
-                                                                                                                      text: TextSpan(
-                                                                                                                          style: TextStyle(
-                                                                                                                            color: Colors.black,
-                                                                                                                            fontSize: 12,
-                                                                                                                          ),
-                                                                                                                          text: "Total"),
-                                                                                                                    )),
-                                                                                                                Expanded(
-                                                                                                                    flex: 1,
-                                                                                                                    child: RichText(
-                                                                                                                      textAlign: TextAlign.center,
-                                                                                                                      overflow: TextOverflow.visible,
-                                                                                                                      strutStyle: StrutStyle(fontSize: 12),
-                                                                                                                      text: TextSpan(
-                                                                                                                          style: TextStyle(
-                                                                                                                            color: Colors.black,
-                                                                                                                            fontSize: 12,
-                                                                                                                          ),
-                                                                                                                          text: ""),
-                                                                                                                    )),
-                                                                                                                Expanded(
-                                                                                                                    flex: 2,
-                                                                                                                    child: RichText(
-                                                                                                                      textAlign: TextAlign.right,
-                                                                                                                      overflow: TextOverflow.visible,
-                                                                                                                      strutStyle: StrutStyle(fontSize: 12),
-                                                                                                                      text: TextSpan(
-                                                                                                                          style: TextStyle(
-                                                                                                                            color: Colors.black,
-                                                                                                                            fontSize: 12,
-                                                                                                                          ),
-                                                                                                                          text: snapshot.data.docs[index]['totalPrice'].toString() + " IQD"),
-                                                                                                                    )),
-                                                                                                              ],
-                                                                                                            ),
-                                                                                                          ],
-                                                                                                        ),
-                                                                                                      )),
-                                                                                                ],
-                                                                                              ),
-                                                                                            )),
-                                                                                      );
+                                                                                    : Container();
                                                                           })));
-                                                                } else {
-                                                                  //<DoretcumentSnapshot> items = snapshot.data;
-                                                                  return Container(
-                                                                      child: Text(
-                                                                          "No data"));
-                                                                }
-                                                              }),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      style: ButtonStyle(
-                                                          backgroundColor:
-                                                              MaterialStateProperty
-                                                                  .all(Colors
-                                                                          .red[
-                                                                      900])),
-                                                      onPressed: () =>
-                                                          Navigator.pop(context,
-                                                              'Cancel'),
-                                                      child: Icon(
-                                                        Icons.close,
-                                                        color: Colors.white,
-                                                        size: 14,
-                                                      ),
+                                                            } else {
+                                                              //<DoretcumentSnapshot> items = snapshot.data;
+                                                              return Container(
+                                                                  child: Text(AppLocalizations.of(
+                                                                          context)
+                                                                      .trans(
+                                                                          'Empty')));
+                                                            }
+                                                          }),
                                                     ),
                                                   ],
                                                 ),
-                                              );
-                                            });
-                                          });
-                                    },
-                                  );
-                                }
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Orders',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Visibility(
-                                    maintainAnimation: true,
-                                    maintainState: true,
-                                    maintainSize: true,
-                                    visible: _isHovering[4],
-                                    child: Container(
-                                      height: 2,
-                                      width: 20,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            InkWell(
-                              onHover: (value) {
-                                setState(() {
-                                  value
-                                      ? _isHovering[5] = true
-                                      : _isHovering[5] = false;
-                                });
-                              },
-                              onTap: () {
-                                setState(() {
-                                  _scrollController.animateTo(
-                                      screenSize.height * 3,
-                                      duration: Duration(milliseconds: 300),
-                                      curve: Curves.ease);
-                                });
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Contact Us',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Visibility(
-                                    maintainAnimation: true,
-                                    maintainState: true,
-                                    maintainSize: true,
-                                    visible: _isHovering[5],
-                                    child: Container(
-                                      height: 2,
-                                      width: 20,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: screenSize.width / 50,
-                  ),
-                  InkWell(
-                    onHover: (value) {
-                      setState(() {
-                        value ? _isHovering[6] = true : _isHovering[6] = false;
-                      });
-                    },
-                    onTap: uid == null
-                        ? () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AuthDialog(),
-                            );
-                          }
-                        : null,
-                    child: uid == null
-                        ? Text(
-                            'Sign in',
-                            style: TextStyle(
-                              color: _isHovering[6]
-                                  ? Colors.white
-                                  : Colors.white70,
-                            ),
-                          )
-                        : Row(
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors
+                                                                  .red[900])),
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, 'Cancel'),
+                                                  child: Icon(
+                                                    Icons.close,
+                                                    color: Colors.white,
+                                                    size: 14,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        });
+                                      });
+                                },
+                              );
+                            }
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  primary: Colors.blueGrey,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                ),
-                                onPressed: _isProcessing
-                                    ? null
-                                    : () async {
-                                        setState(() {
-                                          _isProcessing = true;
-                                        });
-                                        await signOut().then((result) {
-                                          Navigator.of(context).pushReplacement(
-                                            MaterialPageRoute(
-                                              fullscreenDialog: true,
-                                              builder: (context) => HomePage(),
-                                            ),
-                                          );
-                                        }).catchError((error) {});
-                                        setState(() {
-                                          _isProcessing = false;
-                                        });
-                                      },
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    top: 8.0,
-                                    bottom: 8.0,
-                                  ),
-                                  child: _isProcessing
-                                      ? CircularProgressIndicator()
-                                      : SizedBox.shrink(),
+                              Text(
+                                AppLocalizations.of(context).trans("orders"),
+                                style: TextStyle(
+                                  color: Colors.white,
                                 ),
                               ),
-                              SizedBox(width: 10),
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  primary: Colors.black,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
+                              SizedBox(height: 5),
+                              Visibility(
+                                maintainAnimation: true,
+                                maintainState: true,
+                                maintainSize: true,
+                                visible: _isHovering[4],
+                                child: Container(
+                                  height: 2,
+                                  width: 20,
+                                  color: Colors.white,
                                 ),
-                                onPressed: _isProcessing
-                                    ? null
-                                    : () async {
-                                        setState(() {
-                                          _isProcessing = true;
-                                        });
-                                        await signOut().then((result) {
-                                          print(result);
-                                          Navigator.of(context).pushReplacement(
-                                            MaterialPageRoute(
-                                              fullscreenDialog: true,
-                                              builder: (context) => HomePage(),
-                                            ),
-                                          );
-                                        }).catchError((error) {
-                                          print('Sign Out Error: $error');
-                                        });
-                                        setState(() {
-                                          _isProcessing = false;
-                                        });
-                                      },
-                                // shape: RoundedRectangleBorder(
-                                //   borderRadius: BorderRadius.circular(15),
-                                // ),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    top: 15.0,
-                                    bottom: 15.0,
-                                  ),
-                                  child: _isProcessing
-                                      ? CircularProgressIndicator()
-                                      : Text(
-                                          'Sign out',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                ),
-                              ),
+                              )
                             ],
                           ),
+                        ),
+                        InkWell(
+                          onHover: (value) {
+                            setState(() {
+                              value
+                                  ? _isHovering[5] = true
+                                  : _isHovering[5] = false;
+                            });
+                          },
+                          onTap: () {
+                            setState(() {
+                              _scrollController.animateTo(screenSize.height * 3,
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease);
+                            });
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)
+                                    .trans("contact_us"),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Visibility(
+                                maintainAnimation: true,
+                                maintainState: true,
+                                maintainSize: true,
+                                visible: _isHovering[5],
+                                child: Container(
+                                  height: 2,
+                                  width: 20,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.brightness_6),
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    color: Colors.white,
-                    onPressed: () {
-                      EasyDynamicTheme.of(context).changeTheme();
-                    },
-                  ),
-                ],
+                ),
               ),
-            ),
+              SizedBox(
+                width: screenSize.width / 50,
+              ),
+              InkWell(
+                onHover: (value) {
+                  setState(() {
+                    value ? _isHovering[6] = true : _isHovering[6] = false;
+                  });
+                },
+                onTap: uid == null
+                    ? () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AuthDialog(),
+                        );
+                      }
+                    : null,
+                child: uid == null
+                    ? Icon(
+                        Icons.login_rounded,
+                        color: Colors.white,
+                      )
+                    : Row(
+                        children: [
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              primary: Colors.blueGrey,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            onPressed: _isProcessing
+                                ? null
+                                : () async {
+                                    setState(() {
+                                      _isProcessing = true;
+                                    });
+                                    await signOut().then((result) {
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          fullscreenDialog: true,
+                                          builder: (context) => HomePage(),
+                                        ),
+                                      );
+                                    }).catchError((error) {});
+                                    setState(() {
+                                      _isProcessing = false;
+                                    });
+                                  },
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: 8.0,
+                                bottom: 8.0,
+                              ),
+                              child: _isProcessing
+                                  ? CircularProgressIndicator()
+                                  : SizedBox.shrink(),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              primary: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            onPressed: _isProcessing
+                                ? null
+                                : () async {
+                                    setState(() {
+                                      _isProcessing = true;
+                                    });
+                                    await signOut().then((result) {
+                                      print(result);
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          fullscreenDialog: true,
+                                          builder: (context) => HomePage(),
+                                        ),
+                                      );
+                                    }).catchError((error) {
+                                      print('Sign Out Error: $error');
+                                    });
+                                    setState(() {
+                                      _isProcessing = false;
+                                    });
+                                  },
+                            // shape: RoundedRectangleBorder(
+                            //   borderRadius: BorderRadius.circular(15),
+                            // ),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: 15.0,
+                                bottom: 15.0,
+                              ),
+                              child: _isProcessing
+                                  ? CircularProgressIndicator()
+                                  : Icon(
+                                      Icons.logout_outlined,
+                                      color: Colors.white,
+                                    ),
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
+
+              // DropdownButton(
+              //   dropdownColor: Colors.white,
+              //   icon: Icon(Icons.language),
+              //   items: [
+              //     DropdownMenuItem(
+              //       value: 'ku',
+              //       child: Text(
+              //         'Kurdish',
+              //         style: TextStyle(color: Colors.white),
+              //       ),
+              //     ),
+              //     DropdownMenuItem(
+              //       value: 'en',
+              //       child: Text('English',
+              //           style: TextStyle(color: Colors.white)),
+              //     ),
+              //     DropdownMenuItem(
+              //       value: 'ar',
+              //       child: Text('العربية',
+              //           style: TextStyle(color: Colors.white)),
+              //     )
+              //   ],
+              //   onChanged: (v) {
+              //     setState(() {
+              //       LocalStorageService.instance.languageCode = 'en';
+              //     });
+              //   },
+              //   value: "en",
+              // ),
+
+              IconButton(
+                icon: Icon(Icons.language_sharp),
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                color: Colors.white,
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return StatefulBuilder(builder: (context, setState) {
+                          return Container(
+                            child: AlertDialog(
+                              title: Container(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)
+                                          .trans("language"),
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              content: Container(
+                                width: screenSize.width * 0.3,
+                                height: screenSize.height * 0.1,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          LocalStorageService
+                                              .instance.languageCode = "ku";
+                                        });
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => MyApp()));
+                                      },
+                                      child: Container(
+                                        child: Card(
+                                            color: Colors.white,
+                                            elevation: 5,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text("Kurdish"),
+                                            )),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          LocalStorageService
+                                              .instance.languageCode = "en";
+                                        });
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => MyApp()));
+                                      },
+                                      child: Container(
+                                        child: Card(
+                                            color: Colors.white,
+                                            elevation: 5,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text("English"),
+                                            )),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          LocalStorageService
+                                              .instance.languageCode = "ar";
+                                        });
+
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => MyApp()));
+                                      },
+                                      child: Container(
+                                        child: Card(
+                                            color: Colors.white,
+                                            elevation: 5,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text("Arabic"),
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.red[900])),
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Cancel'),
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                    size: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        });
+                      });
+                },
+              ),
+
+              IconButton(
+                icon: Icon(Icons.brightness_6),
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                color: Colors.white,
+                onPressed: () {
+                  EasyDynamicTheme.of(context).changeTheme();
+                },
+              ),
+            ],
           ),
         ),
       ),

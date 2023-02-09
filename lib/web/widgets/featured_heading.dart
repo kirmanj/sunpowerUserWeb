@@ -1,3 +1,4 @@
+import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/web/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 
@@ -35,13 +36,14 @@ class FeaturedHeading extends StatelessWidget {
                             padding: EdgeInsets.only(bottom: 10.0),
                             child: Container(
                               child: Text(
-                                "Sunpower Company",
+                                AppLocalizations.of(context)
+                                    .trans("companyName"),
                                 style: TextStyle(fontSize: 24),
                               ),
                             ),
                           ),
                           subtitle: Text(
-                            "Sunpower is located in Erbil fastest growing sub-region, Lower Silesia, and specialises in manufacturing lamps and retro-reflectors used in the automotive industry. We have been on the market since 1979, constantly developing our manufacturing processes and products we offer. We use the latest state-of-the-art technology in the industry so that we can provide innovative solutions for automotive lighting. We combine innovation with environmental awareness, attention to new trends and a thorough analysis of our customers' needs.",
+                            AppLocalizations.of(context).trans("companyDetail"),
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
@@ -62,7 +64,7 @@ class FeaturedHeading extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Services",
+                  AppLocalizations.of(context).trans("services"),
                   style: TextStyle(fontSize: 24),
                 ),
                 SizedBox(height: 10),
@@ -83,13 +85,14 @@ class FeaturedHeading extends StatelessWidget {
                             padding: EdgeInsets.only(bottom: 10.0),
                             child: Container(
                               child: Text(
-                                "Sunpower Company",
+                                AppLocalizations.of(context)
+                                    .trans("companyName"),
                                 style: TextStyle(fontSize: 24),
                               ),
                             ),
                           ),
                           subtitle: Text(
-                            "Sunpower is located in Erbil fastest growing sub-region, Lower Silesia, and specialises in manufacturing lamps and retro-reflectors used in the automotive industry. We have been on the market since 1979, constantly developing our manufacturing processes and products we offer. We use the latest state-of-the-art technology in the industry so that we can provide innovative solutions for automotive lighting. We combine innovation with environmental awareness, attention to new trends and a thorough analysis of our customers' needs.",
+                            AppLocalizations.of(context).trans("companyDetail"),
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
@@ -113,7 +116,7 @@ class FeaturedHeading extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      'Services',
+                      AppLocalizations.of(context).trans("services"),
                       style: TextStyle(fontSize: 24),
                     ),
                   ],

@@ -155,29 +155,6 @@ class _DestinationCarouselState extends State<DestinationCarousel> {
                             color: Colors.white,
                           ),
                         ),
-                        InkWell(
-                          splashColor: Colors.transparent,
-                          onHover: (value) {},
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ReadPDF(
-                                          brands[_current]['pdf'],
-                                          brands[_current]['name'],
-                                        )));
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: screenSize.height / 80,
-                                bottom: screenSize.height / 90),
-                            child: Icon(
-                              Icons.picture_as_pdf,
-                              size: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),

@@ -1,6 +1,10 @@
+import 'package:explore/localization/AppLocal.dart';
+import 'package:explore/web/map.dart';
 import 'package:explore/web/widgets/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:latlong2/latlong.dart';
 
 class ContactUs extends StatefulWidget {
   const ContactUs({Key? key}) : super(key: key);
@@ -18,6 +22,8 @@ class _ContactUsState extends State<ContactUs> {
       throw 'Could not launch $url';
     }
   }
+
+  final mapController = MapController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +48,7 @@ class _ContactUsState extends State<ContactUs> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Contact Us',
+                              AppLocalizations.of(context).trans("contact_us"),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 24,
@@ -56,7 +62,7 @@ class _ContactUsState extends State<ContactUs> {
                               child: Container(
                                 height: screenSize.height * 0.45,
                                 width: screenSize.width * 0.9,
-                                child: Image.asset("assets/images/map.jpg"),
+                                child: SunMap(),
                               ),
                             ),
                             Row(
@@ -253,18 +259,30 @@ class _ContactUsState extends State<ContactUs> {
                   height: screenSize.height * 0.5,
                   child: Container(
                     padding: EdgeInsets.only(
-                      left: screenSize.width * 0.2,
+                      top: screenSize.height * 0.025,
+                      left: AppLocalizations.of(context)
+                                  .locale
+                                  .languageCode
+                                  .toString() !=
+                              'en'
+                          ? 5
+                          : screenSize.width * 0.2,
+                      right: AppLocalizations.of(context)
+                                  .locale
+                                  .languageCode
+                                  .toString() ==
+                              'en'
+                          ? 5
+                          : screenSize.width * 0.7,
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ListTile(
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '+964 750 077 7000',
+                                '+964-750-077-7000',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 12,
@@ -273,7 +291,7 @@ class _ContactUsState extends State<ContactUs> {
                                     color: Colors.white),
                               ),
                               Text(
-                                '+964 772 277 7000  ',
+                                '+964-772-277-7000  ',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 12,
@@ -282,7 +300,7 @@ class _ContactUsState extends State<ContactUs> {
                                     color: Colors.white),
                               ),
                               Text(
-                                '+964 750 033 3000',
+                                '+964-750-033-3000',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 12,
@@ -383,7 +401,13 @@ class _ContactUsState extends State<ContactUs> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: screenSize.width * 0.5),
+                  margin: AppLocalizations.of(context)
+                              .locale
+                              .languageCode
+                              .toString() !=
+                          'en'
+                      ? EdgeInsets.only(right: screenSize.width * 0.01)
+                      : EdgeInsets.only(left: screenSize.width * 0.5),
                   height: screenSize.height * 0.7,
                   width: screenSize.width * 0.4,
                   child: Card(
@@ -393,11 +417,17 @@ class _ContactUsState extends State<ContactUs> {
                       child: Padding(
                         padding: const EdgeInsets.all(25.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: AppLocalizations.of(context)
+                                      .locale
+                                      .languageCode
+                                      .toString() !=
+                                  'en'
+                              ? CrossAxisAlignment.end
+                              : CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Contact Us',
+                              AppLocalizations.of(context).trans("contact_us"),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 24,
@@ -408,9 +438,9 @@ class _ContactUsState extends State<ContactUs> {
                             Card(
                               elevation: 1,
                               child: Container(
-                                height: screenSize.height * 0.45,
+                                height: screenSize.height * 0.5,
                                 width: screenSize.width * 0.4,
-                                child: Image.asset("assets/images/map.jpg"),
+                                child: SunMap(),
                               ),
                             ),
                             Row(

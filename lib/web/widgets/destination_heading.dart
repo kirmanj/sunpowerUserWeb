@@ -1,3 +1,4 @@
+import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/web/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class DestinationHeading extends StatelessWidget {
             width: screenSize.width,
             // color: Colors.black,
             child: Text(
-              'Brands',
+              AppLocalizations.of(context).trans("Brands"),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 24,
@@ -37,7 +38,7 @@ class DestinationHeading extends StatelessWidget {
             width: screenSize.width,
             // color: Colors.black,
             child: Text(
-              'Brands',
+              AppLocalizations.of(context).trans("Brands"),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 40,

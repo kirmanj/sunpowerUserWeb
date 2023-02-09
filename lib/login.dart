@@ -39,7 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: 1,
                       ),
                       borderRadius: BorderRadius.circular(5)),
-                  child: Center(child: Text(AppLocalizations.of(context).trans("user_panel")))),
+                  child: Center(
+                      child: Text(
+                          AppLocalizations.of(context).trans("user_panel")))),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
