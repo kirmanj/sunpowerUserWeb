@@ -1,11 +1,15 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/main.dart';
 import 'package:explore/services/local_storage_service.dart';
 import 'package:explore/web/utils/authentication.dart';
+import 'package:explore/web/widgets/categorieSlider.dart';
 import 'package:explore/web/widgets/contact.dart';
 import 'package:explore/web/widgets/newProduts.dart';
+import 'package:explore/web/widgets/offersImageSlider.dart';
+import 'package:explore/web/widgets/offersSlider.dart';
 import 'package:explore/web/widgets/web_scrollbar.dart';
 import 'package:explore/web/widgets/bottom_bar.dart';
 import 'package:explore/web/widgets/carousel.dart';
@@ -32,6 +36,9 @@ class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController = ScrollController();
   double _scrollPosition = 0;
   double _opacity = 0;
+
+  List images = [];
+  List slideImages = [];
 
   getCart() async {
     if (uid!.isNotEmpty) {
@@ -133,6 +140,17 @@ class _HomePageState extends State<HomePage> {
     _scrollController.addListener(_scrollListener);
     getBrands();
     getCart();
+    FirebaseFirestore.instance
+        .collection('Admin')
+        .doc("admindoc")
+        .get()
+        .then((value) {
+      setState(() {
+        images = value.get("sliderImages");
+
+        slideImages = value.get("offerImages");
+      });
+    });
 
     super.initState();
   }
@@ -190,10 +208,69 @@ class _HomePageState extends State<HomePage> {
                     child: SizedBox(
                       height: screenSize.height * 0.55,
                       width: screenSize.width,
-                      child: Image.asset(
-                        'assets/images/tools.jpg',
-                        fit: BoxFit.cover,
-                      ),
+                      child: images.isNotEmpty
+                          ? Container(
+                              child: CarouselSlider(
+                              options: CarouselOptions(
+                                  autoPlay: true,
+                                  autoPlayAnimationDuration:
+                                      Duration(seconds: 2)),
+                              items: images
+                                  .map((item) => Container(
+                                        child: Center(
+                                            child: Container(
+                                          margin: EdgeInsets.all(1.0),
+                                          child: ClipRRect(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(0.0)),
+                                              child: Stack(
+                                                children: <Widget>[
+                                                  Image.network(
+                                                    item,
+                                                    fit: BoxFit.fitWidth,
+                                                    width: screenSize.width,
+                                                  ),
+                                                  Positioned(
+                                                    top: 0.0,
+                                                    left: 0.0,
+                                                    right: 0.0,
+                                                    child: Container(
+                                                      height:
+                                                          screenSize.height *
+                                                              0.1,
+                                                      decoration: BoxDecoration(
+                                                        gradient:
+                                                            LinearGradient(
+                                                          colors: [
+                                                            Color.fromARGB(
+                                                                182, 0, 0, 0),
+                                                            Color.fromARGB(
+                                                                0, 0, 0, 0)
+                                                          ],
+                                                          begin: Alignment
+                                                              .topCenter,
+                                                          end: Alignment
+                                                              .bottomCenter,
+                                                        ),
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
+                                        )),
+                                      ))
+                                  .toList(),
+                            ))
+                          : Image.asset(
+                              'assets/images/tools.jpg',
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
                   Column(
@@ -205,11 +282,33 @@ class _HomePageState extends State<HomePage> {
                             FeaturedHeading(
                               screenSize: screenSize,
                             ),
-                            FeaturedTiles(screenSize: screenSize)
+                            ResponsiveWidget.isSmallScreen(context)
+                                ? SizedBox(height: screenSize.height / 20)
+                                : SizedBox(height: screenSize.height / 10),
+                            Categories(),
                           ],
                         ),
                       ),
                     ],
+                  )
+                ],
+              ),
+              SizedBox(height: screenSize.height / 15),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  OffersSlidder(
+                    screenSize: screenSize,
+                  ),
+                  Container(
+                    width: ResponsiveWidget.isSmallScreen(context)
+                        ? screenSize.width
+                        : screenSize.width * 0.9,
+                    height: screenSize.height * 0.4,
+                    child: OffersImageSlider(
+                      screenSize: screenSize,
+                      imageSlide: slideImages,
+                    ),
                   )
                 ],
               ),

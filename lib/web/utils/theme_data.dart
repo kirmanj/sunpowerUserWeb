@@ -25,27 +25,25 @@ var lightThemeData = ThemeData(
 );
 
 var darkThemeData = ThemeData(
-  primarySwatch: Colors.grey,
-  backgroundColor: Colors.black87,
-  cardColor: Colors.black,
+  primarySwatch: Colors.blueGrey,
+  backgroundColor: Colors.white,
+  cardColor: Colors.blueGrey[50],
   primaryTextTheme: TextTheme(
     button: TextStyle(
-      color: Colors.blueGrey[200],
-      decorationColor: Colors.blueGrey[50],
+      color: Colors.blueGrey,
+      decorationColor: Colors.blueGrey[300],
     ),
     subtitle2: TextStyle(
-      color: Colors.white,
+      color: Colors.black87,
     ),
     subtitle1: TextStyle(
-      color: Colors.white,
+      color: Colors.black,
     ),
-    headline1: TextStyle(
-      color: Colors.white70,
-    ),
+    headline1: TextStyle(color: Colors.black),
   ),
-  bottomAppBarColor: Colors.white,
+  bottomAppBarColor: Colors.blueGrey[900],
   iconTheme: IconThemeData(
     color: Colors.black87,
   ),
-  brightness: Brightness.dark,
+  brightness: Brightness.light,
 );
