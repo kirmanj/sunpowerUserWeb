@@ -6,6 +6,8 @@ import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/widgets/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 import 'auth_dialog.dart';
 
@@ -23,9 +25,9 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
   ScrollController _scrollController;
   _ExploreDrawerState(this._scrollController);
 
-  int subTotal = 0;
-  int deliveryFee = 0;
-  int exchangeRate = 0;
+  double subTotal = 0;
+  double deliveryFee = 0;
+  double exchangeRate = 0;
   getInfo() {
     FirebaseFirestore.instance
         .collection('Admin')
@@ -38,16 +40,18 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
       });
     });
 
-    FirebaseFirestore.instance
-      ..collection("users").doc(uid).collection('cart').get().then((value) {
-        value.docs.forEach(((element) {
-          subTotal = subTotal + int.parse(element['subPrice'].toString());
-        }));
-      }).whenComplete(() {
-        setState(() {
-          subTotal = subTotal;
+    if (uid!.isNotEmpty) {
+      FirebaseFirestore.instance
+        ..collection("users").doc(uid).collection('cart').get().then((value) {
+          value.docs.forEach(((element) {
+            subTotal = subTotal + double.parse(element['subPrice'].toString());
+          }));
+        }).whenComplete(() {
+          setState(() {
+            subTotal = subTotal;
+          });
         });
-      });
+    }
   }
 
   bool select = true;
@@ -73,7 +77,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               InkWell(
-                onTap: uid == null
+                onTap: uid!.isEmpty
                     ? () {
                         showDialog(
                           context: context,
@@ -81,7 +85,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                         );
                       }
                     : null,
-                child: uid == null
+                child: uid!.isEmpty
                     ? Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -110,7 +114,6 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                       _isProcessing = true;
                                     });
                                     await signOut().then((result) {
-                                      print(result);
                                       Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
                                           fullscreenDialog: true,
@@ -224,7 +227,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      AppLocalizations.of(context).trans("brands"),
+                      AppLocalizations.of(context).trans("Brands"),
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -242,12 +245,12 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
               ),
               InkWell(
                 onTap: () {
-                  if (uid == null) {
+                  if (uid!.isEmpty) {
                     showDialog(
                       context: context,
                       builder: (context) => AuthDialog(),
                     );
-                  } else if (cartC == 0 && uid != null) {
+                  } else if (cartC == 0 && uid!.isNotEmpty) {
                     Widget okButton = TextButton(
                       child: Text(
                         AppLocalizations.of(context).trans("ok"),
@@ -290,7 +293,6 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                           email = value.get("email");
                           userName = value.get("name");
                           address = value.get("address");
-                          print(phoneNo + email + address);
                         });
                       },
                     ).whenComplete(
@@ -503,10 +505,10 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                         } else {
                                                                                           FirebaseFirestore.instance.collection("users").doc(uid).collection("cart").doc(snapshot.data.docs[index].id).update({
                                                                                             "quantity": FieldValue.increment(-1),
-                                                                                            "subPrice": FieldValue.increment(-int.parse(snapshot.data.docs[index].data()['price'].toString()))
+                                                                                            "subPrice": FieldValue.increment(-double.parse(snapshot.data.docs[index].data()['price'].toString()))
                                                                                           });
                                                                                           setState(() {
-                                                                                            subTotal -= int.parse(snapshot.data.docs[index].data()['price'].toString());
+                                                                                            subTotal -= double.parse(snapshot.data.docs[index].data()['price'].toString());
                                                                                           });
                                                                                         }
                                                                                       });
@@ -536,10 +538,10 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                                                     onPressed: () {
                                                                                       FirebaseFirestore.instance.collection("users").doc(uid).collection("cart").doc(snapshot.data.docs[index].id).update({
                                                                                         "quantity": FieldValue.increment(1),
-                                                                                        "subPrice": FieldValue.increment(int.parse(snapshot.data.docs[index].data()['price'].toString()))
+                                                                                        "subPrice": FieldValue.increment(double.parse(snapshot.data.docs[index].data()['price'].toString()))
                                                                                       });
                                                                                       setState(() {
-                                                                                        subTotal += int.parse(snapshot.data.docs[index].data()['price'].toString());
+                                                                                        subTotal += double.parse(snapshot.data.docs[index].data()['price'].toString());
                                                                                       });
                                                                                     },
                                                                                     child: Icon(
@@ -684,6 +686,12 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                     Colors.white)),
                                         onPressed: () {
                                           List productsOrder = [];
+                                          var uuid = Uuid();
+                                          var date = DateTime.now();
+                                          var orderDate =
+                                              DateFormat('MM-dd-yyyy, hh:mm a')
+                                                  .format(date);
+                                          String orderId = uuid.v1();
                                           FirebaseFirestore.instance
                                               .collection("users")
                                               .doc(uid)
@@ -703,9 +711,12 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                 .collection("users")
                                                 .doc(uid)
                                                 .collection("orders")
-                                                .doc()
+                                                .doc(orderId)
                                                 .set({
                                               "OrderStatus": "Pending",
+                                              'timeStamp': DateTime.now()
+                                                  .microsecondsSinceEpoch,
+                                              'date': orderDate,
                                               "deliveryFee": deliveryFee,
                                               "dinnar": exchangeRate / 100,
                                               "subTotal": (subTotal),
@@ -715,10 +726,34 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                               "userAddress": address,
                                               "userID": uid,
                                               "userName": userName,
-                                              "userPhone": "7505448229",
+                                              "userPhone": phoneNo,
                                               "productList": productsOrder
                                             });
                                           }).whenComplete(() {
+                                            FirebaseFirestore.instance
+                                                .collection("Admin")
+                                                .doc("admindoc")
+                                                .collection("orders")
+                                                .doc(orderId)
+                                                .set({
+                                              "OrderStatus": "Pending",
+                                              'timeStamp': DateTime.now()
+                                                  .microsecondsSinceEpoch,
+                                              'date': orderDate,
+                                              "deliveryFee": deliveryFee,
+                                              "dinnar": exchangeRate / 100,
+                                              "subTotal": (subTotal),
+                                              "totalPrice": (subTotal *
+                                                  exchangeRate /
+                                                  100),
+                                              "userAddress": address,
+                                              "orderId": orderId,
+                                              "userID": uid,
+                                              "userName": userName,
+                                              "userPhone": phoneNo,
+                                              "productList": productsOrder
+                                            });
+
                                             FirebaseFirestore.instance
                                                 .collection("users")
                                                 .doc(uid)
@@ -733,6 +768,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                     .doc(element.id)
                                                     .delete();
                                               });
+
                                               Navigator.of(context)
                                                   .pushReplacement(
                                                 MaterialPageRoute(
@@ -822,7 +858,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
               ),
               InkWell(
                 onTap: () {
-                  if (uid == null) {
+                  if (uid!.isEmpty) {
                     showDialog(
                       context: context,
                       builder: (context) => AuthDialog(),
@@ -839,7 +875,6 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                           phoneNo = value.get("phone");
                           email = value.get("email");
                           address = value.get("address");
-                          print(phoneNo + email + address);
                         });
                       },
                     ).whenComplete(

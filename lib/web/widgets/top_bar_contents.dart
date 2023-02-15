@@ -7,10 +7,13 @@ import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/widgets/auth_dialog.dart';
 import 'package:explore/web/widgets/responsive.dart';
+import 'package:explore/web/widgets/searchSale.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 class TopBarContents extends StatefulWidget {
   final double opacity;
@@ -24,11 +27,18 @@ class TopBarContents extends StatefulWidget {
       _TopBarContentsState(this.opacity, this._scrollController);
 }
 
+List products = [];
+List<String> itemCodeL = [];
+
+List<String> barcodeL = [];
+List<int> indexs = [];
+List<String> searchTerm = [];
+
 class _TopBarContentsState extends State<TopBarContents> {
   double opacity;
-  int subTotal = 0;
-  int deliveryFee = 0;
-  int exchangeRate = 0;
+  double subTotal = 0;
+  double deliveryFee = 0;
+  double exchangeRate = 0;
 
   bool select = true;
 
@@ -97,6 +107,29 @@ class _TopBarContentsState extends State<TopBarContents> {
   bool _isProcessing = false;
 
   getInfo() {
+    print(subTotal);
+    print(subTotal);
+    if (uid!.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid)
+          .collection('cart')
+          .get()
+          .then((value) {
+        print(subTotal);
+        value.docs.forEach(((element) {
+          print(subTotal);
+          print(element);
+          subTotal = subTotal + double.parse(element['subPrice'].toString());
+          print(subTotal);
+        }));
+      }).whenComplete(() {
+        setState(() {
+          subTotal = subTotal;
+        });
+        print(subTotal);
+      });
+    }
     FirebaseFirestore.instance
         .collection('Admin')
         .doc("admindoc")
@@ -107,21 +140,38 @@ class _TopBarContentsState extends State<TopBarContents> {
         exchangeRate = value.data()?['dinnar'] * 100;
       });
     });
+  }
 
-    FirebaseFirestore.instance
-      ..collection("users").doc(uid).collection('cart').get().then((value) {
-        value.docs.forEach(((element) {
-          subTotal = subTotal + int.parse(element['subPrice'].toString());
-        }));
-      }).whenComplete(() {
-        setState(() {
-          subTotal = subTotal;
+  getProduts() {
+    int i = 0;
+    FirebaseFirestore.instance.collection('products').get().then((value) => {
+          value.docs.forEach((element) async {
+            var storage =
+                FirebaseStorage.instance.ref().child(element['images'][0]);
+            String url = await storage.getDownloadURL();
+            setState(() {
+              products.add({
+                "image": url,
+                'name': element['name'],
+                'Price': element['retail price'],
+                'itemCode': element['itemCode'],
+                'barCode': element['barCode'],
+                'id': element.id
+              });
+              itemCodeL.add(element['itemCode']);
+              barcodeL.add(element['barCode']);
+              indexs.add(i);
+
+              searchTerm.add(element['name']);
+            });
+            i++;
+          })
         });
-      });
   }
 
   @override
   void initState() {
+    getProduts();
     getInfo();
     // TODO: implement initState
     super.initState();
@@ -292,12 +342,12 @@ class _TopBarContentsState extends State<TopBarContents> {
                           });
                         },
                         onTap: () {
-                          if (uid == null) {
+                          if (uid!.isEmpty) {
                             showDialog(
                               context: context,
                               builder: (context) => AuthDialog(),
                             );
-                          } else if (cartC == 0 && uid != null) {
+                          } else if (cartC == 0 && uid!.isNotEmpty) {
                             var okButton = TextButton(
                               child: Text(
                                 AppLocalizations.of(context).trans("ok"),
@@ -542,10 +592,10 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                                                   } else {
                                                                                                     FirebaseFirestore.instance.collection("users").doc(uid).collection("cart").doc(snapshot.data.docs[index].id).update({
                                                                                                       "quantity": FieldValue.increment(-1),
-                                                                                                      "subPrice": FieldValue.increment(-int.parse(snapshot.data.docs[index].data()['price'].toString()))
+                                                                                                      "subPrice": FieldValue.increment(-double.parse(snapshot.data.docs[index].data()['price'].toString()))
                                                                                                     });
                                                                                                     setState(() {
-                                                                                                      subTotal -= int.parse(snapshot.data.docs[index].data()['price'].toString());
+                                                                                                      subTotal -= double.parse(snapshot.data.docs[index].data()['price'].toString());
                                                                                                     });
                                                                                                   }
                                                                                                 });
@@ -575,10 +625,10 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                                                               onPressed: () {
                                                                                                 FirebaseFirestore.instance.collection("users").doc(uid).collection("cart").doc(snapshot.data.docs[index].id).update({
                                                                                                   "quantity": FieldValue.increment(1),
-                                                                                                  "subPrice": FieldValue.increment(int.parse(snapshot.data.docs[index].data()['price'].toString()))
+                                                                                                  "subPrice": FieldValue.increment(double.parse(snapshot.data.docs[index].data()['price'].toString()))
                                                                                                 });
                                                                                                 setState(() {
-                                                                                                  subTotal += int.parse(snapshot.data.docs[index].data()['price'].toString());
+                                                                                                  subTotal += double.parse(snapshot.data.docs[index].data()['price'].toString());
                                                                                                 });
                                                                                               },
                                                                                               child: Icon(
@@ -733,6 +783,12 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                             .all(Colors.white)),
                                                 onPressed: () {
                                                   List productsOrder = [];
+                                                  var uuid = Uuid();
+                                                  var date = DateTime.now();
+                                                  var orderDate = DateFormat(
+                                                          'MM-dd-yyyy, hh:mm a')
+                                                      .format(date);
+                                                  String orderId = uuid.v1();
                                                   FirebaseFirestore.instance
                                                       .collection("users")
                                                       .doc(uid)
@@ -751,15 +807,11 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                       });
                                                     });
                                                   }).whenComplete(() {
-                                                    var date = DateTime.now();
-                                                    var orderDate = DateFormat(
-                                                            'MM-dd-yyyy, hh:mm a')
-                                                        .format(date);
                                                     FirebaseFirestore.instance
                                                         .collection("users")
                                                         .doc(uid)
                                                         .collection("orders")
-                                                        .doc()
+                                                        .doc(orderId)
                                                         .set({
                                                       "OrderStatus": "Pending",
                                                       'timeStamp': DateTime
@@ -777,11 +829,39 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                       "userAddress": address,
                                                       "userID": uid,
                                                       "userName": userName,
-                                                      "userPhone": "7505448229",
+                                                      "userPhone": phoneNo,
                                                       "productList":
                                                           productsOrder
                                                     });
                                                   }).whenComplete(() {
+                                                    FirebaseFirestore.instance
+                                                        .collection("Admin")
+                                                        .doc("admindoc")
+                                                        .collection("orders")
+                                                        .doc(orderId)
+                                                        .set({
+                                                      "OrderStatus": "Pending",
+                                                      'timeStamp': DateTime
+                                                              .now()
+                                                          .microsecondsSinceEpoch,
+                                                      'date': orderDate,
+                                                      "deliveryFee":
+                                                          deliveryFee,
+                                                      "dinnar":
+                                                          exchangeRate / 100,
+                                                      "subTotal": (subTotal),
+                                                      "totalPrice": (subTotal *
+                                                          exchangeRate /
+                                                          100),
+                                                      "userAddress": address,
+                                                      "orderId": orderId,
+                                                      "userID": uid,
+                                                      "userName": userName,
+                                                      "userPhone": phoneNo,
+                                                      "productList":
+                                                          productsOrder
+                                                    });
+
                                                     FirebaseFirestore.instance
                                                         .collection("users")
                                                         .doc(uid)
@@ -798,6 +878,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                             .doc(element.id)
                                                             .delete();
                                                       });
+
                                                       Navigator.of(context)
                                                           .pushReplacement(
                                                         MaterialPageRoute(
@@ -904,7 +985,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                           });
                         },
                         onTap: () {
-                          if (uid == null) {
+                          if (uid!.isEmpty) {
                             showDialog(
                               context: context,
                               builder: (context) => AuthDialog(),
@@ -1788,7 +1869,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                         highlightColor: Colors.transparent,
                         color: Colors.white,
                         onPressed: () {
-                          EasyDynamicTheme.of(context).changeTheme();
+                          showSearch(
+                              context: context,
+                              delegate: CustomSearchDelegate());
                         },
                       ),
                     ),
@@ -1938,7 +2021,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                                 : _isHovering[6] = false;
                           });
                         },
-                        onTap: uid == null
+                        onTap: uid!.isEmpty
                             ? () {
                                 showDialog(
                                   context: context,
@@ -1946,7 +2029,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                                 );
                               }
                             : null,
-                        child: uid == null
+                        child: uid!.isEmpty
                             ? Icon(
                                 Icons.login_rounded,
                                 color: Colors.white,
@@ -2011,5 +2094,228 @@ class _TopBarContentsState extends State<TopBarContents> {
         ),
       ),
     );
+  }
+}
+
+class CustomSearchDelegate extends SearchDelegate {
+  //List<String> searchTerm = ["Apple", "Bannana", "Orange", "Milk"];
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+          onPressed: () {
+            query = "";
+          },
+          icon: Icon(Icons.clear))
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          close(context, null);
+        },
+        icon: Icon(Icons.arrow_back));
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<String> matchQuery = [];
+    List<int> matchIndex = [];
+    int i = 0;
+    for (var item in itemCodeL) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(item);
+        matchIndex.add(i);
+      }
+      i++;
+    }
+    i = 0;
+    for (var item in barcodeL) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        if (matchIndex.contains(i)) {
+        } else {
+          matchQuery.add(item);
+          matchIndex.add(i);
+        }
+      }
+      i++;
+    }
+    i = 0;
+    for (var item in searchTerm) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        if (matchIndex.contains(i)) {
+        } else {
+          matchQuery.add(item);
+          matchIndex.add(i);
+        }
+      }
+      i++;
+    }
+    return ListView.builder(
+        itemCount: matchQuery.length,
+        itemBuilder: (context, index) {
+          var result = products[matchIndex[index]];
+          return ListTile(
+            title: InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SearchSales(
+                          productId: products[index]["id"],
+                        )));
+              },
+              child: Container(
+                height: 150,
+                child: Card(
+                  elevation: 5,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Image.network(
+                            result['image'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: ListTile(
+                            title: Text("Name"),
+                            subtitle: Text(result['name']),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: ListTile(
+                            title: Text("Item Code"),
+                            subtitle: Text(result['itemCode']),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: ListTile(
+                            title: Text("Price"),
+                            subtitle: Text(result['Price'].toString() + " \$"),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: ListTile(
+                            title: Text("Bar Code"),
+                            subtitle: Text(result['barCode']),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> matchQuery = [];
+    List<int> matchIndex = [];
+    int i = 0;
+    for (var item in itemCodeL) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(item);
+        matchIndex.add(i);
+      }
+      i++;
+    }
+    i = 0;
+    for (var item in barcodeL) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        if (matchIndex.contains(i)) {
+        } else {
+          matchQuery.add(item);
+          matchIndex.add(i);
+        }
+      }
+      i++;
+    }
+    i = 0;
+    for (var item in searchTerm) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        if (matchIndex.contains(i)) {
+        } else {
+          matchQuery.add(item);
+          matchIndex.add(i);
+        }
+      }
+      i++;
+    }
+    return ListView.builder(
+        itemCount: matchQuery.length,
+        itemBuilder: (context, index) {
+          var result = products[matchIndex[index]];
+          return ListTile(
+            title: InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SearchSales(
+                          productId: products[index]["id"],
+                        )));
+              },
+              child: Container(
+                height: 150,
+                child: Card(
+                  elevation: 5,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Image.network(
+                            result['image'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: ListTile(
+                            title: Text("Name"),
+                            subtitle: Text(result['name']),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: ListTile(
+                            title: Text("Item Code"),
+                            subtitle: Text(result['itemCode']),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: ListTile(
+                            title: Text("Price"),
+                            subtitle: Text(result['Price'].toString() + " \$"),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: ListTile(
+                            title: Text("Bar Code"),
+                            subtitle: Text(result['barCode']),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 }

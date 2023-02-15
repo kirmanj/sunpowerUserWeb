@@ -5,6 +5,9 @@ import 'package:explore/scrollbehaivori.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/utils/theme_data.dart';
+import 'package:explore/web/widgets/ResponsiveSales.dart';
+import 'package:explore/web/widgets/sales.dart';
+import 'package:explore/web/widgets/searchSale.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -14,6 +17,7 @@ import 'services/local_storage_service.dart';
 import 'services/settings_service_provider.dart';
 
 int cartC = 0;
+int role = 0;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,8 +41,9 @@ class _MyAppState extends State<MyApp> {
   Future getUserInfo() async {
     await getUser();
     setState(() {
-      uid = 'b6sbCo5zKfYC1oYCMo0BRBCsPa83';
+      uid = '';
     });
+
     print(uid);
   }
 

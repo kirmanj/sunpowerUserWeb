@@ -10,6 +10,7 @@ import 'package:explore/web/widgets/contact.dart';
 import 'package:explore/web/widgets/newProduts.dart';
 import 'package:explore/web/widgets/offersImageSlider.dart';
 import 'package:explore/web/widgets/offersSlider.dart';
+import 'package:explore/web/widgets/searchSale.dart';
 import 'package:explore/web/widgets/web_scrollbar.dart';
 import 'package:explore/web/widgets/bottom_bar.dart';
 import 'package:explore/web/widgets/carousel.dart';
@@ -20,6 +21,7 @@ import 'package:explore/web/widgets/featured_tiles.dart';
 import 'package:explore/web/widgets/floating_quick_access_bar.dart';
 import 'package:explore/web/widgets/responsive.dart';
 import 'package:explore/web/widgets/top_bar_contents.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -32,10 +34,43 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+List products = [];
+List<String> itemCodeL = [];
+
+List<String> barcodeL = [];
+List<int> indexs = [];
+List<String> searchTerm = [];
+
 class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController = ScrollController();
   double _scrollPosition = 0;
   double _opacity = 0;
+  getProduts() {
+    int i = 0;
+    FirebaseFirestore.instance.collection('products').get().then((value) => {
+          value.docs.forEach((element) async {
+            var storage =
+                FirebaseStorage.instance.ref().child(element['images'][0]);
+            String url = await storage.getDownloadURL();
+            setState(() {
+              products.add({
+                "image": url,
+                'name': element['name'],
+                'Price': element['retail price'].toString(),
+                'itemCode': element['itemCode'].toString(),
+                'barCode': element['barCode'].toString(),
+                'id': element.id
+              });
+              itemCodeL.add(element['itemCode'].toString());
+              barcodeL.add(element['barCode'].toString());
+              indexs.add(i);
+
+              searchTerm.add(element['name'].toString());
+            });
+            i++;
+          })
+        });
+  }
 
   List images = [];
   List slideImages = [];
@@ -53,6 +88,11 @@ class _HomePageState extends State<HomePage> {
         });
       });
     }
+    FirebaseFirestore.instance.collection('users').doc(uid).get().then((value) {
+      setState(() {
+        role = int.parse(value.get("role").toString());
+      });
+    });
   }
 
   List _isHovering = [];
@@ -137,6 +177,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    getProduts();
     _scrollController.addListener(_scrollListener);
     getBrands();
     getCart();
@@ -167,25 +208,22 @@ class _HomePageState extends State<HomePage> {
       extendBodyBehindAppBar: true,
       appBar: ResponsiveWidget.isSmallScreen(context)
           ? AppBar(
-              backgroundColor: _opacity > 0.6
-                  ? Colors.black87
-                  : Theme.of(context).bottomAppBarColor.withOpacity(_opacity),
+              backgroundColor: Colors.black,
               elevation: 0,
               centerTitle: true,
               actions: [
                 IconButton(
-                  icon: Icon(Icons.brightness_6),
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
+                  icon: Icon(
+                    Icons.search,
+                  ),
                   onPressed: () {
-                    EasyDynamicTheme.of(context).changeTheme();
+                    showSearch(
+                        context: context, delegate: CustomSearchDelegate());
                   },
                 ),
               ],
               title: Image.asset(
-                _opacity > 0.6
-                    ? 'assets/images/sunpower2.png'
-                    : 'assets/images/sunpower.png',
+                'assets/images/sunpower2.png',
                 fit: BoxFit.cover,
               ),
             )
@@ -342,5 +380,269 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+}
+
+class CustomSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+          onPressed: () {
+            query = "";
+          },
+          icon: Icon(Icons.clear))
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          close(context, null);
+        },
+        icon: Icon(Icons.arrow_back));
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<String> matchQuery = [];
+    List<int> matchIndex = [];
+    int i = 0;
+    for (var item in itemCodeL) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(item);
+        matchIndex.add(i);
+      }
+      i++;
+    }
+    i = 0;
+    for (var item in barcodeL) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        if (matchIndex.contains(i)) {
+        } else {
+          matchQuery.add(item);
+          matchIndex.add(i);
+        }
+      }
+      i++;
+    }
+    i = 0;
+    for (var item in searchTerm) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        if (matchIndex.contains(i)) {
+        } else {
+          matchQuery.add(item);
+          matchIndex.add(i);
+        }
+      }
+      i++;
+    }
+    return ListView.builder(
+        itemCount: matchQuery.length,
+        itemBuilder: (context, index) {
+          var result = products[matchIndex[index]];
+          print(result);
+          return ListTile(
+            title: Container(
+              height: 150,
+              child: Card(
+                elevation: 5,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Image.network(
+                          result['image'],
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: ListTile(
+                          title: Text("Name"),
+                          subtitle: Text(result['name']),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: ListTile(
+                          title: Text("Item Code"),
+                          subtitle: Text(result['itemCode']),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: ListTile(
+                          title: Text("Price"),
+                          subtitle: Text(result['Price'].toString() + " \$"),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: ListTile(
+                          title: Text("Bar Code"),
+                          subtitle: Text(result['barCode']),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> matchQuery = [];
+    List<int> matchIndex = [];
+    int i = 0;
+    for (var item in itemCodeL) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(item);
+        matchIndex.add(i);
+      }
+      i++;
+    }
+    i = 0;
+    for (var item in barcodeL) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        if (matchIndex.contains(i)) {
+        } else {
+          matchQuery.add(item);
+          matchIndex.add(i);
+        }
+      }
+      i++;
+    }
+    i = 0;
+    for (var item in searchTerm) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        if (matchIndex.contains(i)) {
+        } else {
+          matchQuery.add(item);
+          matchIndex.add(i);
+        }
+      }
+      i++;
+    }
+    return ListView.builder(
+        itemCount: matchQuery.length,
+        itemBuilder: (context, index) {
+          var result = products[matchIndex[index]];
+
+          return ListTile(
+            title: InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SearchSales(
+                          productId: products[index]["id"],
+                        )));
+              },
+              child: Container(
+                height: 150,
+                child: Card(
+                  elevation: 5,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 4,
+                          child: Image.network(
+                            result['image'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 6,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    flex: 2,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Name",
+                                          style: TextStyle(fontSize: 8),
+                                        ),
+                                        Text(
+                                          result['name'],
+                                          style: TextStyle(fontSize: 8),
+                                        ),
+                                      ],
+                                    )),
+                                Expanded(
+                                    flex: 2,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Item Code",
+                                          style: TextStyle(fontSize: 8),
+                                        ),
+                                        Text(
+                                          result['itemCode'],
+                                          style: TextStyle(fontSize: 8),
+                                        ),
+                                      ],
+                                    )),
+                                Expanded(
+                                    flex: 2,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Price",
+                                          style: TextStyle(fontSize: 8),
+                                        ),
+                                        Text(
+                                          result['Price'].toString() + " \$",
+                                          style: TextStyle(fontSize: 8),
+                                        ),
+                                      ],
+                                    )),
+                                Expanded(
+                                  flex: 2,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Bar Code",
+                                        style: TextStyle(fontSize: 8),
+                                      ),
+                                      Text(
+                                        result['barCode'],
+                                        style: TextStyle(fontSize: 8),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 }

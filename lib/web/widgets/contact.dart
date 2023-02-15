@@ -67,12 +67,16 @@ class _ContactUsState extends State<ContactUs> {
                             ),
                             Row(
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Icon(
-                                    Icons.location_pin,
-                                    color: Colors.black87,
-                                  ),
+                                InkWell(
+                                  onTap: () {
+                                    _launchURL(
+                                        "https://www.google.com/maps/place/Sun+Power+Company,+North+Industrial+Area+G33,+Erbil+44001/@0,0,22z/data=!4m2!3m1!1s0x400721bde5c36167:0x3da92b465a7893c?hl=en-US&gl=us");
+                                  },
+                                  child: Container(
+                                      width: 25,
+                                      height: 25,
+                                      child: Image.asset(
+                                          "assets/images/gmap.png")),
                                 ),
                                 Text(
                                   'Address: G33, North Industrial Area, Erbil, Iraq',
@@ -167,7 +171,7 @@ class _ContactUsState extends State<ContactUs> {
                         InkWell(
                           onTap: () {
                             _launchURL(
-                                "https://www.youtube.com/@sunpowercompany172");
+                                "https://www.youtube.com/@sunpowercompany?themeRefresh=1");
                           },
                           child: ListTile(
                             title: Text(
@@ -229,6 +233,22 @@ class _ContactUsState extends State<ContactUs> {
                                 width: 25,
                                 height: 25,
                                 child: Image.asset("assets/images/tiktok.png")),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            _launchURL(
+                                "hhttps://www.snapchat.com/add/sunpowercompany?share_id=X2yOzUPlQcK0OfOwinhpLw&locale=en_US&sid=c5e95bf95b814fefb7e9fca41d23bdab");
+                          },
+                          child: ListTile(
+                            title: Text(
+                              "Sunpowercompany",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            leading: Container(
+                                width: 25,
+                                height: 25,
+                                child: Image.asset("assets/images/snap.png")),
                           ),
                         )
                       ],
@@ -332,7 +352,7 @@ class _ContactUsState extends State<ContactUs> {
                         InkWell(
                           onTap: () {
                             _launchURL(
-                                "https://www.youtube.com/@sunpowercompany172");
+                                "https://www.youtube.com/@sunpowercompany?themeRefresh=1");
                           },
                           child: ListTile(
                             title: Text(
@@ -395,6 +415,22 @@ class _ContactUsState extends State<ContactUs> {
                                 height: 25,
                                 child: Image.asset("assets/images/tiktok.png")),
                           ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            _launchURL(
+                                "https://www.snapchat.com/add/sunpowercompany?share_id=X2yOzUPlQcK0OfOwinhpLw&locale=en_US&sid=c5e95bf95b814fefb7e9fca41d23bdab");
+                          },
+                          child: ListTile(
+                            title: Text(
+                              "Sunpowercompany",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            leading: Container(
+                                width: 25,
+                                height: 25,
+                                child: Image.asset("assets/images/snap.png")),
+                          ),
                         )
                       ],
                     ),
@@ -445,12 +481,16 @@ class _ContactUsState extends State<ContactUs> {
                             ),
                             Row(
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Icon(
-                                    Icons.location_pin,
-                                    color: Colors.black87,
-                                  ),
+                                InkWell(
+                                  onTap: () {
+                                    _launchURL(
+                                        "https://www.google.com/maps/place/Sun+Power+Company,+North+Industrial+Area+G33,+Erbil+44001/@0,0,22z/data=!4m2!3m1!1s0x400721bde5c36167:0x3da92b465a7893c?hl=en-US&gl=us");
+                                  },
+                                  child: Container(
+                                      width: 25,
+                                      height: 25,
+                                      child: Image.asset(
+                                          "assets/images/gmap.png")),
                                 ),
                                 Text(
                                   'Address: G33, North Industrial Area, Erbil, Iraq',

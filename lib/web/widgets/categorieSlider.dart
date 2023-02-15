@@ -15,6 +15,25 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
+  List<bool> isHover = [false];
+  getCats() {
+    FirebaseFirestore.instance.collection('categories').get().then((value) {
+      isHover = [];
+      value.docs.forEach((element) {
+        setState(() {
+          isHover.add(false);
+        });
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    getCats();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -22,7 +41,7 @@ class _CategoriesState extends State<Categories> {
     return Container(
       width: screenSize.width * 0.9,
       height: ResponsiveWidget.isSmallScreen(context)
-          ? screenSize.height * 0.43
+          ? screenSize.height * 0.3
           : screenSize.height * 0.4,
       child: StreamBuilder(
           stream:
@@ -38,45 +57,125 @@ class _CategoriesState extends State<Categories> {
                       itemCount: snapshot.data.docs.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: ((context, index) {
-                        return Container(
-                          width: ResponsiveWidget.isSmallScreen(context)
-                              ? screenSize.width * 0.6
-                              : screenSize.width * 0.25,
-                          height: ResponsiveWidget.isSmallScreen(context)
-                              ? screenSize.height * 0.2
-                              : screenSize.height * 0.3,
-                          child: ListTile(
-                            title: Card(
-                              elevation: snapshot.data.docs.length,
-                              color: Colors.white,
-                              child: Container(
-                                  width: ResponsiveWidget.isSmallScreen(context)
-                                      ? screenSize.width * 0.6
-                                      : screenSize.width * 0.25,
-                                  height:
-                                      ResponsiveWidget.isSmallScreen(context)
-                                          ? screenSize.height * 0.2
-                                          : screenSize.height * 0.3,
-                                  child: Container(
-                                    child: Image.network(
-                                        snapshot.data.docs[index].data()['img'],
-                                        fit: BoxFit.cover),
-                                  )),
-                            ),
-                            subtitle: ResponsiveWidget.isSmallScreen(context)
-                                ? Card(
-                                    elevation: 4,
-                                    color: Colors.white,
+                        return Card(
+                          elevation: 5,
+                          color:
+                              isHover[index] ? Colors.white : Colors.red[900],
+                          child: InkWell(
+                            onTap: () {
+                              if (uid!.isEmpty) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AuthDialog(),
+                                );
+                              } else {
+                                ResponsiveWidget.isSmallScreen(context)
+                                    ? Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ResponsiveSales()))
+                                    : Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (context) => Sales()));
+                              }
+                            },
+                            onHover: (value) {
+                              setState(() {
+                                isHover[index] = !isHover[index];
+                              });
+                            },
+                            child: Container(
+                              color: isHover[index]
+                                  ? Colors.white
+                                  : Colors.red[900],
+                              width: ResponsiveWidget.isSmallScreen(context)
+                                  ? screenSize.width * 0.4
+                                  : screenSize.width * 0.1,
+                              height: ResponsiveWidget.isSmallScreen(context)
+                                  ? screenSize.height * 0.2
+                                  : screenSize.height * 0.2,
+                              child: ListTile(
+                                title: Container(
+                                    width:
+                                        ResponsiveWidget.isSmallScreen(context)
+                                            ? screenSize.width * 0.4
+                                            : screenSize.width * 0.1,
+                                    height:
+                                        ResponsiveWidget.isSmallScreen(context)
+                                            ? screenSize.height * 0.2
+                                            : screenSize.height * 0.3,
                                     child: Container(
-                                      height: screenSize.height * 0.2,
-                                      child: Column(
+                                      child: Image.network(
+                                          snapshot.data.docs[index]
+                                              .data()['img'],
+                                          fit: BoxFit.fitWidth),
+                                    )),
+                                subtitle: ResponsiveWidget.isSmallScreen(
+                                        context)
+                                    ? Container(
+                                        height: screenSize.height * 0.1,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            FittedBox(
+                                              fit: BoxFit.cover,
+                                              child: Text(
+                                                AppLocalizations.of(context)
+                                                            .locale
+                                                            .languageCode
+                                                            .toString() ==
+                                                        'ku'
+                                                    ? snapshot.data.docs[index]
+                                                        .data()['nameK']
+                                                        .toString()
+                                                        .toUpperCase()
+                                                    : AppLocalizations.of(
+                                                                    context)
+                                                                .locale
+                                                                .languageCode
+                                                                .toString() ==
+                                                            'ar'
+                                                        ? snapshot
+                                                            .data.docs[index]
+                                                            .data()['nameA']
+                                                            .toString()
+                                                            .toUpperCase()
+                                                        : snapshot
+                                                            .data.docs[index]
+                                                            .data()['name']
+                                                            .toString()
+                                                            .toUpperCase(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: isHover[index]
+                                                        ? Colors.red[900]
+                                                        : Colors.white,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
+                                            MainAxisAlignment.start,
                                         children: [
-                                          FittedBox(
-                                            fit: BoxFit.cover,
-                                            child: Text(
-                                              AppLocalizations.of(context)
+                                          RichText(
+                                            overflow: TextOverflow.ellipsis,
+                                            strutStyle: StrutStyle(
+                                              fontSize: 12.0,
+                                            ),
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                  color: isHover[index]
+                                                      ? Colors.red[900]
+                                                      : Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500),
+                                              text: AppLocalizations.of(context)
                                                           .locale
                                                           .languageCode
                                                           .toString() ==
@@ -100,57 +199,12 @@ class _CategoriesState extends State<Categories> {
                                                           .data()['name']
                                                           .toString()
                                                           .toUpperCase(),
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  )
-                                : Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Flexible(
-                                        child: RichText(
-                                          overflow: TextOverflow.ellipsis,
-                                          strutStyle:
-                                              StrutStyle(fontSize: 12.0),
-                                          text: TextSpan(
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12,
-                                            ),
-                                            text: AppLocalizations.of(context)
-                                                        .locale
-                                                        .languageCode
-                                                        .toString() ==
-                                                    'ku'
-                                                ? snapshot.data.docs[index]
-                                                    .data()['nameK']
-                                                    .toString()
-                                                    .toUpperCase()
-                                                : AppLocalizations.of(context)
-                                                            .locale
-                                                            .languageCode
-                                                            .toString() ==
-                                                        'ar'
-                                                    ? snapshot.data.docs[index]
-                                                        .data()['nameA']
-                                                        .toString()
-                                                        .toUpperCase()
-                                                    : snapshot.data.docs[index]
-                                                        .data()['name']
-                                                        .toString()
-                                                        .toUpperCase(),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                              ),
+                            ),
                           ),
                         );
                       })));

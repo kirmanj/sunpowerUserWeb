@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:explore/main.dart';
 import 'package:explore/pdfread.dart';
 import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
@@ -194,12 +195,12 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                           child: ListTile(
                             subtitle: Container(
                                 width: screenSize.width * 0.05,
-                                height: screenSize.height * 0.25,
+                                height: screenSize.height * 0.3,
                                 child: Container(
                                     child: GridView.builder(
                                         gridDelegate:
                                             SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3,
+                                          crossAxisCount: 2,
                                         ),
                                         itemCount: categories.length,
                                         scrollDirection: Axis.vertical,
@@ -232,7 +233,7 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                                                                   0.1,
                                                           height: screenSize
                                                                   .height *
-                                                              0.08,
+                                                              0.1,
                                                           child: Container(
                                                             child: Image.network(
                                                                 categories[
@@ -242,9 +243,6 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                                                                     .fitWidth),
                                                           )),
                                                       Container(
-                                                        height:
-                                                            screenSize.height *
-                                                                0.02,
                                                         child: Flexible(
                                                           child: RichText(
                                                             textAlign: TextAlign
@@ -354,7 +352,7 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                                                           0.1,
                                                       height:
                                                           screenSize.height *
-                                                              0.08,
+                                                              0.07,
                                                       child: Container(
                                                         child: Image.network(
                                                             makes[index]['img'],
@@ -362,26 +360,21 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                                                                 .fitWidth),
                                                       )),
                                                   subtitle: Container(
-                                                    height: screenSize.height *
-                                                        0.02,
-                                                    child: Flexible(
-                                                      child: RichText(
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        overflow: TextOverflow
-                                                            .visible,
-                                                        strutStyle: StrutStyle(
-                                                            fontSize: 10),
-                                                        text: TextSpan(
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 10,
-                                                            ),
-                                                            text: makes[index]
-                                                                    ['name']
-                                                                .toString()),
-                                                      ),
+                                                    child: RichText(
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      strutStyle: StrutStyle(
+                                                          fontSize: 10),
+                                                      text: TextSpan(
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 10,
+                                                          ),
+                                                          text: makes[index]
+                                                                  ['name']
+                                                              .toString()),
                                                     ),
                                                   ),
                                                 ),
@@ -554,7 +547,7 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                                     Expanded(
                                       flex: 1,
                                       child: Container(
-                                        height: screenSize.height * 0.1,
+                                        // height: screenSize.height * 0.1,
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
@@ -664,7 +657,7 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                                                                               ),
                                                                               FittedBox(
                                                                                 fit: BoxFit.cover,
-                                                                                child: true
+                                                                                child: role == 0
                                                                                     ? Text(
                                                                                         "       " + products[index]['retail price'].toString() + " \$",
                                                                                         style: TextStyle(fontSize: 12),
@@ -707,7 +700,8 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                                                                         Column(
                                                                       children: [
                                                                         images.isEmpty
-                                                                            ? Container(
+                                                                            ? Expanded(
+                                                                                flex: 3,
                                                                                 child: Center(child: Text("No Data")),
                                                                               )
                                                                             : Expanded(
@@ -755,9 +749,6 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                                                                                           ))
                                                                                       .toList(),
                                                                                 )),
-                                                                        Divider(
-                                                                            height:
-                                                                                15),
                                                                         Expanded(
                                                                             flex:
                                                                                 1,
@@ -766,14 +757,14 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                                                                               child: Row(
                                                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                                 children: [
-                                                                                  InkWell(
-                                                                                    onTap: () {
-                                                                                      setState(() {
-                                                                                        showDis = false;
-                                                                                      });
-                                                                                    },
-                                                                                    child: Expanded(
-                                                                                      flex: 1,
+                                                                                  Expanded(
+                                                                                    flex: 1,
+                                                                                    child: InkWell(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          showDis = false;
+                                                                                        });
+                                                                                      },
                                                                                       child: Container(
                                                                                         decoration: BoxDecoration(
                                                                                           border: Border(
@@ -798,14 +789,14 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                                                                                       ),
                                                                                     ),
                                                                                   ),
-                                                                                  InkWell(
-                                                                                    onTap: () {
-                                                                                      setState(() {
-                                                                                        showDis = true;
-                                                                                      });
-                                                                                    },
-                                                                                    child: Expanded(
-                                                                                      flex: 1,
+                                                                                  Expanded(
+                                                                                    flex: 1,
+                                                                                    child: InkWell(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          showDis = true;
+                                                                                        });
+                                                                                      },
                                                                                       child: Container(
                                                                                         decoration: BoxDecoration(
                                                                                           border: Border(
@@ -1102,10 +1093,10 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                                                                               'name': products[index]['name'],
                                                                               'nameK': products[index]['nameK'],
                                                                               'nameA': products[index]['nameA'],
-                                                                              'price': true ? products[index]['retail price'] : products[index]['wholesale price'],
+                                                                              'price': role == 0 ? products[index]['retail price'] : products[index]['wholesale price'],
                                                                               'productId': products[index]['productId'],
                                                                               'quantity': quantity,
-                                                                              'subPrice': true ? products[index]['retail price'] * quantity : products[index]['wholesale price'],
+                                                                              'subPrice': role == 0 ? products[index]['retail price'] * quantity : products[index]['wholesale price'] * quantity,
                                                                             }).whenComplete(() {
                                                                               Navigator.pop(context, 'Cancel');
                                                                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(

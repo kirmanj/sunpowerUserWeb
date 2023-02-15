@@ -126,7 +126,7 @@ class _LatestProductsState extends State<LatestProducts> {
                                               ),
                                               InkWell(
                                                 onTap: () {
-                                                  if (uid == null) {
+                                                  if (uid!.isEmpty) {
                                                     showDialog(
                                                       context: context,
                                                       builder: (context) =>
@@ -232,7 +232,7 @@ class _LatestProductsState extends State<LatestProducts> {
                                       ),
                                       InkWell(
                                         onTap: () {
-                                          if (uid == null) {
+                                          if (uid!.isEmpty) {
                                             showDialog(
                                               context: context,
                                               builder: (context) =>

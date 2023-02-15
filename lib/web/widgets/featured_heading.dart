@@ -24,38 +24,41 @@ class FeaturedHeading extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  height: screenSize.height * 0.8,
+                  height: screenSize.height * 0.6,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Container(
-                        height: screenSize.height * 0.5,
-                        width: screenSize.width * 0.9,
-                        child: ListTile(
-                          title: Padding(
-                            padding: EdgeInsets.only(bottom: 10.0),
-                            child: Container(
-                              child: Text(
-                                AppLocalizations.of(context)
-                                    .trans("companyName"),
-                                style: TextStyle(fontSize: 24),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          width: screenSize.width * 0.9,
+                          child: ListTile(
+                            title: Padding(
+                              padding: EdgeInsets.only(bottom: 10.0),
+                              child: Container(
+                                child: Text(
+                                  AppLocalizations.of(context)
+                                      .trans("companyName"),
+                                  style: TextStyle(fontSize: 24),
+                                ),
                               ),
                             ),
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(context).trans("companyDetail"),
-                            style: TextStyle(fontSize: 16),
+                            subtitle: Text(
+                              AppLocalizations.of(context)
+                                  .trans("companyDetail"),
+                              style: TextStyle(fontSize: 16),
+                            ),
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 00.0),
-                        child: Container(
-                          child: SizedBox(
-                            height: screenSize.height * 0.3,
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 0.0),
+                          child: Container(
                             child: Image.asset(
                               'assets/images/parts.png',
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fitWidth,
                             ),
                           ),
                         ),
@@ -63,6 +66,7 @@ class FeaturedHeading extends StatelessWidget {
                     ],
                   ),
                 ),
+                SizedBox(height: 5),
                 Text(
                   AppLocalizations.of(context).trans("services"),
                   style: TextStyle(fontSize: 24),
