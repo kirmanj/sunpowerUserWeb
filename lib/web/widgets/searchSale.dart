@@ -105,623 +105,618 @@ class _SearchSalesState extends State<SearchSales> {
         child: product.isEmpty
             ? Container()
             : ResponsiveWidget.isSmallScreen(context)
-                ? Center(
-                    child: Container(
-                      width: screenSize.width,
-                      height: screenSize.height,
-                      child: Card(
-                        color: Colors.white,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    TextButton(
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Colors.white)),
-                                      onPressed: () =>
-                                          Navigator.pop(context, 'Cancel'),
-                                      child: Icon(
-                                        Icons.arrow_back,
-                                        color: Colors.red[900],
-                                        size: 18,
-                                      ),
+                ? Container(
+                    width: screenSize.width,
+                    height: screenSize.height * 0.85,
+                    child: Card(
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  TextButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Colors.white)),
+                                    onPressed: () =>
+                                        Navigator.pop(context, 'Cancel'),
+                                    child: Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.red[900],
+                                      size: 18,
                                     ),
-                                    Flexible(
-                                      child: RichText(
-                                        overflow: TextOverflow.ellipsis,
-                                        strutStyle: StrutStyle(fontSize: 12.0),
-                                        text: TextSpan(
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),
-                                            text: product['name'].toString()),
-                                      ),
+                                  ),
+                                  Flexible(
+                                    child: RichText(
+                                      overflow: TextOverflow.ellipsis,
+                                      strutStyle: StrutStyle(fontSize: 12.0),
+                                      text: TextSpan(
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold),
+                                          text: product['name'].toString()),
                                     ),
-                                    FittedBox(
-                                      fit: BoxFit.cover,
-                                      child: role == 0
-                                          ? Text(
-                                              "       " +
-                                                  product['retail price']
-                                                      .toString() +
-                                                  " \$",
-                                              style: TextStyle(fontSize: 12),
-                                            )
-                                          : Text(
-                                              product['wholesale price']
-                                                  .toString(),
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  FittedBox(
+                                    fit: BoxFit.cover,
+                                    child: role == 0
+                                        ? Text(
+                                            "       " +
+                                                product['retail price']
+                                                    .toString() +
+                                                " \$",
+                                            style: TextStyle(fontSize: 12),
+                                          )
+                                        : Text(
+                                            product['wholesale price']
+                                                .toString(),
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                  ),
+                                ],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                width: screenSize.width,
-                                height: screenSize.height * 0.84,
-                                child: Column(
-                                  children: [
-                                    images.isEmpty
-                                        ? Expanded(
-                                            flex: 3,
-                                            child: Container(
-                                              child: Center(
-                                                  child: Text("No Data")),
-                                            ),
-                                          )
-                                        : Expanded(
-                                            flex: 3,
-                                            child: CarouselSlider(
-                                              options: CarouselOptions(),
-                                              items: images
-                                                  .map((item) => Container(
-                                                        child: Center(
-                                                            child: Container(
-                                                          margin:
-                                                              EdgeInsets.all(
-                                                                  5.0),
-                                                          child: ClipRRect(
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          5.0)),
-                                                              child: Stack(
-                                                                children: <
-                                                                    Widget>[
-                                                                  Image.network(
-                                                                      item,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      width: screenSize
-                                                                              .width *
-                                                                          0.80),
-                                                                  Positioned(
-                                                                    bottom: 0.0,
-                                                                    left: 0.0,
-                                                                    right: 0.0,
-                                                                    child:
-                                                                        Container(
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        gradient:
-                                                                            LinearGradient(
-                                                                          colors: [
-                                                                            Color.fromARGB(
-                                                                                100,
-                                                                                0,
-                                                                                0,
-                                                                                0),
-                                                                            Color.fromARGB(
-                                                                                0,
-                                                                                0,
-                                                                                0,
-                                                                                0)
-                                                                          ],
-                                                                          begin:
-                                                                              Alignment.bottomCenter,
-                                                                          end: Alignment
-                                                                              .topCenter,
-                                                                        ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: screenSize.width,
+                              height: screenSize.height * 0.69,
+                              child: Column(
+                                children: [
+                                  images.isEmpty
+                                      ? Expanded(
+                                          flex: 3,
+                                          child: Container(
+                                            child:
+                                                Center(child: Text("No Data")),
+                                          ),
+                                        )
+                                      : Expanded(
+                                          flex: 3,
+                                          child: CarouselSlider(
+                                            options: CarouselOptions(),
+                                            items: images
+                                                .map((item) => Container(
+                                                      child: Center(
+                                                          child: Container(
+                                                        margin:
+                                                            EdgeInsets.all(5.0),
+                                                        child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            5.0)),
+                                                            child: Stack(
+                                                              children: <
+                                                                  Widget>[
+                                                                Image.network(
+                                                                    item,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    width: screenSize
+                                                                            .width *
+                                                                        0.80),
+                                                                Positioned(
+                                                                  bottom: 0.0,
+                                                                  left: 0.0,
+                                                                  right: 0.0,
+                                                                  child:
+                                                                      Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      gradient:
+                                                                          LinearGradient(
+                                                                        colors: [
+                                                                          Color.fromARGB(
+                                                                              100,
+                                                                              0,
+                                                                              0,
+                                                                              0),
+                                                                          Color.fromARGB(
+                                                                              0,
+                                                                              0,
+                                                                              0,
+                                                                              0)
+                                                                        ],
+                                                                        begin: Alignment
+                                                                            .bottomCenter,
+                                                                        end: Alignment
+                                                                            .topCenter,
                                                                       ),
-                                                                      padding: EdgeInsets.symmetric(
-                                                                          vertical:
-                                                                              10.0,
-                                                                          horizontal:
-                                                                              20.0),
-                                                                      child:
-                                                                          Text(
-                                                                        'No. ${images.indexOf(item) + 1}',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                          fontSize:
-                                                                              12.0,
-                                                                        ),
+                                                                    ),
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        vertical:
+                                                                            10.0,
+                                                                        horizontal:
+                                                                            20.0),
+                                                                    child: Text(
+                                                                      'No. ${images.indexOf(item) + 1}',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            12.0,
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                ],
-                                                              )),
-                                                        )),
-                                                      ))
-                                                  .toList(),
-                                            )),
-                                    Divider(height: 15),
-                                    Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                flex: 1,
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      showDis = false;
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      border: Border(
-                                                        bottom: BorderSide(
-                                                          width: 1.5,
-                                                          color: !showDis
-                                                              ? Colors.red
-                                                              : Colors.grey,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right:
-                                                              screenSize.width *
-                                                                  0.1),
-                                                      child: Center(
-                                                        child: Text(
-                                                          "Specification",
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      )),
+                                                    ))
+                                                .toList(),
+                                          )),
+                                  Divider(height: 15),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    showDis = false;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border(
+                                                      bottom: BorderSide(
+                                                        width: 1.5,
+                                                        color: !showDis
+                                                            ? Colors.red
+                                                            : Colors.grey,
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      showDis = true;
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      border: Border(
-                                                        bottom: BorderSide(
-                                                          width: 1.5,
-                                                          color: showDis
-                                                              ? Colors.red
-                                                              : Colors.grey,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right:
+                                                            screenSize.width *
+                                                                0.1),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Specification",
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                         ),
                                                       ),
-                                                    ),
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left:
-                                                              screenSize.width *
-                                                                  0.1),
-                                                      child: Center(
-                                                        child: Text(
-                                                          "Description",
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            decorationColor:
-                                                                showDis
-                                                                    ? Colors.red[
-                                                                        900]
-                                                                    : Colors.grey[
-                                                                        900],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                    showDis
-                                        ? Expanded(
-                                            flex: 4,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                width: screenSize.width,
-                                                height:
-                                                    screenSize.height * 0.15,
-                                                child: SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.vertical,
-                                                  child: Text(
-                                                    product['desc'],
-                                                    overflow: TextOverflow.clip,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
                                                     ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          )
-                                        : Expanded(
-                                            flex: 4,
+                                            Expanded(
+                                              flex: 1,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    showDis = true;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border(
+                                                      bottom: BorderSide(
+                                                        width: 1.5,
+                                                        color: showDis
+                                                            ? Colors.red
+                                                            : Colors.grey,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: screenSize.width *
+                                                            0.1),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Description",
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          decorationColor:
+                                                              showDis
+                                                                  ? Colors
+                                                                      .red[900]
+                                                                  : Colors.grey[
+                                                                      900],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                  showDis
+                                      ? Expanded(
+                                          flex: 4,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
                                             child: Container(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Container(
-                                                      width: screenSize.width,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            "Make",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Text(
-                                                            make.toString(),
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )),
-                                                  Container(
-                                                      width: screenSize.width,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            "Model",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Text(
-                                                            model,
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                            ),
-                                                          )
-                                                        ],
-                                                      )),
-                                                  Container(
-                                                      width: screenSize.width,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            "Brand",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Text(
-                                                            product['brand'],
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                            ),
-                                                          )
-                                                        ],
-                                                      )),
-                                                  Container(
-                                                      width: screenSize.width,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            "Item Code",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Text(
-                                                            product['itemCode']
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                            ),
-                                                          )
-                                                        ],
-                                                      )),
-                                                  Container(
-                                                      width: screenSize.width,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            "Oem Code",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Text(
-                                                            product['oemCode']
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                            ),
-                                                          )
-                                                        ],
-                                                      )),
-                                                  Container(
-                                                      width: screenSize.width,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            "Pieces",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Text(
-                                                            product['piecesInBox']
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                            ),
-                                                          )
-                                                        ],
-                                                      )),
-                                                  Container(
-                                                      width: screenSize.width,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            "Volt",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Text(
-                                                            product['volt']
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                            ),
-                                                          )
-                                                        ],
-                                                      )),
-                                                  Container(
-                                                      width: screenSize.width,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            "Catalog",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          GestureDetector(
-                                                              onTap: () => Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) => ReadPDF(
-                                                                            product['pdfUrl'],
-                                                                            product['name'],
-                                                                          ))),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .picture_as_pdf,
-                                                                color: Colors
-                                                                    .grey[900],
-                                                                size: 22,
-                                                              )),
-                                                        ],
-                                                      )),
-                                                  Container(
-                                                    width: screenSize.width,
-                                                    height: 60,
-                                                    child: BarcodeWidget(
-                                                      data: product['barCode']
-                                                          .toString(),
-                                                      barcode: Barcode.code128(
-                                                          escapes: true),
-                                                    ),
+                                              width: screenSize.width,
+                                              height: screenSize.height * 0.15,
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis.vertical,
+                                                child: Text(
+                                                  product['desc'],
+                                                  overflow: TextOverflow.clip,
+                                                  style: TextStyle(
+                                                    fontSize: 12,
                                                   ),
-                                                ],
+                                                ),
                                               ),
                                             ),
                                           ),
-                                  ],
-                                ),
+                                        )
+                                      : Expanded(
+                                          flex: 4,
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                    width: screenSize.width,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "Make",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          make.toString(),
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                                Container(
+                                                    width: screenSize.width,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "Model",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          model,
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )),
+                                                Container(
+                                                    width: screenSize.width,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "Brand",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          product['brand'],
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )),
+                                                Container(
+                                                    width: screenSize.width,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "Item Code",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          product['itemCode']
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )),
+                                                Container(
+                                                    width: screenSize.width,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "Oem Code",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          product['oemCode']
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )),
+                                                Container(
+                                                    width: screenSize.width,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "Pieces",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          product['piecesInBox']
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )),
+                                                Container(
+                                                    width: screenSize.width,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "Volt",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          product['volt']
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )),
+                                                Container(
+                                                    width: screenSize.width,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "Catalog",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        GestureDetector(
+                                                            onTap: () =>
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) =>
+                                                                            ReadPDF(
+                                                                              product['pdfUrl'],
+                                                                              product['name'],
+                                                                            ))),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .picture_as_pdf,
+                                                              color: Colors
+                                                                  .grey[900],
+                                                              size: 22,
+                                                            )),
+                                                      ],
+                                                    )),
+                                                Container(
+                                                  width: screenSize.width,
+                                                  height: 60,
+                                                  child: BarcodeWidget(
+                                                    data: product['barCode']
+                                                        .toString(),
+                                                    barcode: Barcode.code128(
+                                                        escapes: true),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                ],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        if (quantity != 1) {
-                                          setState(() {
-                                            quantity = quantity - 1;
-                                          });
-                                        }
-                                      },
-                                      child: Icon(
-                                        Icons.remove,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        shape: CircleBorder(),
-                                        padding: EdgeInsets.all(20),
-                                        backgroundColor:
-                                            Colors.red[900], // <-- Splash color
-                                      ),
-                                    ),
-                                    Text(
-                                      quantity.toString(),
-                                      style: TextStyle(color: Colors.red[900]),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      if (quantity != 1) {
                                         setState(() {
-                                          quantity = 1 + quantity;
+                                          quantity = quantity - 1;
                                         });
-                                      },
-                                      child: Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        shape: CircleBorder(),
-                                        padding: EdgeInsets.all(20),
+                                      }
+                                    },
+                                    child: Icon(
+                                      Icons.remove,
+                                      color: Colors.white,
+                                      size: 14,
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      shape: CircleBorder(),
+                                      padding: EdgeInsets.all(20),
+                                      backgroundColor:
+                                          Colors.red[900], // <-- Splash color
+                                    ),
+                                  ),
+                                  Text(
+                                    quantity.toString(),
+                                    style: TextStyle(color: Colors.red[900]),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        quantity = 1 + quantity;
+                                      });
+                                    },
+                                    child: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 14,
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      shape: CircleBorder(),
+                                      padding: EdgeInsets.all(20),
+                                      backgroundColor:
+                                          Colors.red[900], // <-- Splash color
+                                    ),
+                                  ),
+                                  TextButton(
+                                    style: ButtonStyle(
                                         backgroundColor:
-                                            Colors.red[900], // <-- Splash color
-                                      ),
-                                    ),
-                                    TextButton(
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Colors.red[900])),
-                                      onPressed: () {
-                                        if (1 <= product['quantity']) {
-                                          FirebaseFirestore.instance
-                                            ..collection("users")
-                                                .doc(uid)
-                                                .collection('cart')
-                                                .doc(product['productId'])
-                                                .set({
-                                              'img': product['images'][0],
-                                              'name': product['name'],
-                                              'nameK': product['nameK'],
-                                              'nameA': product['nameA'],
-                                              'price': role == 0
-                                                  ? product['retail price']
-                                                  : product['wholesale price'],
-                                              'productId': product['productId'],
-                                              'quantity': quantity,
-                                              'subPrice': role == 0
-                                                  ? product['retail price'] *
-                                                      quantity
-                                                  : product['wholesale price'] *
-                                                      quantity,
-                                            }).whenComplete(() {
-                                              Navigator.pop(context, 'Cancel');
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                content: Text(
-                                                  ' Product has added to your cart ',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 17,
-                                                  ),
+                                            MaterialStateProperty.all(
+                                                Colors.red[900])),
+                                    onPressed: () {
+                                      if (1 <= product['quantity']) {
+                                        FirebaseFirestore.instance
+                                          ..collection("users")
+                                              .doc(uid)
+                                              .collection('cart')
+                                              .doc(product['productId'])
+                                              .set({
+                                            'img': product['images'][0],
+                                            'name': product['name'],
+                                            'nameK': product['nameK'],
+                                            'nameA': product['nameA'],
+                                            'price': role == 0
+                                                ? product['retail price']
+                                                : product['wholesale price'],
+                                            'productId': product['productId'],
+                                            'quantity': quantity,
+                                            'subPrice': role == 0
+                                                ? product['retail price'] *
+                                                    quantity
+                                                : product['wholesale price'] *
+                                                    quantity,
+                                          }).whenComplete(() {
+                                            Navigator.pop(context, 'Cancel');
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              content: Text(
+                                                ' Product has added to your cart ',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 17,
                                                 ),
-                                                backgroundColor:
-                                                    Colors.red[900],
-                                                duration: Duration(seconds: 3),
-                                              ));
-                                            });
-                                        } else {
-                                          Navigator.pop(context, 'Cancel');
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content: Text(
-                                              ' Quantity  not available ',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 17,
                                               ),
+                                              backgroundColor: Colors.red[900],
+                                              duration: Duration(seconds: 3),
+                                            ));
+                                          });
+                                      } else {
+                                        Navigator.pop(context, 'Cancel');
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: Text(
+                                            ' Quantity  not available ',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 17,
                                             ),
-                                            backgroundColor: Colors.red[900],
-                                            duration: Duration(seconds: 3),
-                                          ));
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "Add to Cart",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
+                                          ),
+                                          backgroundColor: Colors.red[900],
+                                          duration: Duration(seconds: 3),
+                                        ));
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Add to Cart",
+                                        style: TextStyle(color: Colors.white),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   )

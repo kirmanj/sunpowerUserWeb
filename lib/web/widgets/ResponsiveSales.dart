@@ -1093,6 +1093,7 @@ class _ResponsiveSalesState extends State<ResponsiveSales> {
                                                                               'name': products[index]['name'],
                                                                               'nameK': products[index]['nameK'],
                                                                               'nameA': products[index]['nameA'],
+                                                                              "itemCode": products[index]['itemCode'],
                                                                               'price': role == 0 ? products[index]['retail price'] : products[index]['wholesale price'],
                                                                               'productId': products[index]['productId'],
                                                                               'quantity': quantity,

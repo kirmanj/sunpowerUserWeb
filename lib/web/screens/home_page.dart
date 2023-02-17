@@ -5,6 +5,7 @@ import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/main.dart';
 import 'package:explore/services/local_storage_service.dart';
 import 'package:explore/web/utils/authentication.dart';
+import 'package:explore/web/widgets/auth_dialog.dart';
 import 'package:explore/web/widgets/categorieSlider.dart';
 import 'package:explore/web/widgets/contact.dart';
 import 'package:explore/web/widgets/newProduts.dart';
@@ -543,6 +544,17 @@ class CustomSearchDelegate extends SearchDelegate {
                     builder: (context) => SearchSales(
                           productId: products[index]["id"],
                         )));
+                // if (uid!.isEmpty) {
+                //   showDialog(
+                //     context: context,
+                //     builder: (context) => AuthDialog(),
+                //   );
+                // } else {
+                //   Navigator.of(context).push(MaterialPageRoute(
+                //       builder: (context) => SearchSales(
+                //             productId: products[index]["id"],
+                //           )));
+                // }
               },
               child: Container(
                 height: 150,

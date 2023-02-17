@@ -1119,6 +1119,8 @@ class _SalesState extends State<Sales> {
                                                                               : products[index]['wholesale price'],
                                                                           'productId':
                                                                               products[index]['productId'],
+                                                                          "itemCode":
+                                                                              products[index]['itemCode'],
                                                                           'quantity':
                                                                               quantity,
                                                                           'subPrice': role == 0

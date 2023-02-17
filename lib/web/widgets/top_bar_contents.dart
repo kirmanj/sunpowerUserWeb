@@ -388,7 +388,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                                 setState(() {
                                   phoneNo = value.get("phone");
                                   email = value.get("email");
-                                  userName = value.get("name");
+                                  userName = value.get("username");
                                   address = value.get("address");
                                   print(phoneNo + email + address);
                                 });
@@ -830,6 +830,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                       "userID": uid,
                                                       "userName": userName,
                                                       "userPhone": phoneNo,
+                                                      "orderID": orderId,
                                                       "productList":
                                                           productsOrder
                                                     });
@@ -854,7 +855,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                           exchangeRate /
                                                           100),
                                                       "userAddress": address,
-                                                      "orderId": orderId,
+                                                      "orderID": orderId,
                                                       "userID": uid,
                                                       "userName": userName,
                                                       "userPhone": phoneNo,
@@ -2260,10 +2261,17 @@ class CustomSearchDelegate extends SearchDelegate {
           return ListTile(
             title: InkWell(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SearchSales(
-                          productId: products[index]["id"],
-                        )));
+                if (uid!.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AuthDialog(),
+                  );
+                } else {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SearchSales(
+                            productId: products[index]["id"],
+                          )));
+                }
               },
               child: Container(
                 height: 150,

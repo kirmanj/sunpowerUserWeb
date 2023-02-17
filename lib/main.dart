@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
   Future getUserInfo() async {
     await getUser();
     setState(() {
-      uid = '';
+      uid = 'hT7sV9bRakebiN6nk8w9zNykvMp2';
     });
 
     print(uid);
