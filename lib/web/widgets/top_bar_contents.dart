@@ -799,6 +799,8 @@ class _TopBarContentsState extends State<TopBarContents> {
                                                         .forEach((element) {
                                                       productsOrder.add({
                                                         "img": element["img"],
+                                                        "itemCode":
+                                                            element["itemCode"],
                                                         "price":
                                                             element['price'],
                                                         'quantity':

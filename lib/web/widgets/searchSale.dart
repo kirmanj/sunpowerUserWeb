@@ -107,7 +107,7 @@ class _SearchSalesState extends State<SearchSales> {
             : ResponsiveWidget.isSmallScreen(context)
                 ? Container(
                     width: screenSize.width,
-                    height: screenSize.height * 0.85,
+                    height: screenSize.height * 0.87,
                     child: Card(
                       color: Colors.white,
                       child: Column(
@@ -168,7 +168,7 @@ class _SearchSalesState extends State<SearchSales> {
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                               width: screenSize.width,
-                              height: screenSize.height * 0.69,
+                              height: screenSize.height * 0.68,
                               child: Column(
                                 children: [
                                   images.isEmpty

@@ -703,7 +703,8 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                                                 "img": element["img"],
                                                 "price": element['price'],
                                                 'quantity': element['quantity'],
-                                                'name': element['name']
+                                                'name': element['name'],
+                                                'itemCode': element['itemCode']
                                               });
                                             });
                                           }).whenComplete(() {
