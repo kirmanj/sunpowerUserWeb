@@ -1,30 +1,21 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
-import 'package:explore/localization/AppLocal.dart';
+import 'package:explore/bestSales.dart';
+import 'package:explore/brands.dart';
 import 'package:explore/main.dart';
-import 'package:explore/services/local_storage_service.dart';
 import 'package:explore/web/utils/authentication.dart';
-import 'package:explore/web/widgets/auth_dialog.dart';
-import 'package:explore/web/widgets/categorieSlider.dart';
+import 'package:explore/web/widgets/ResponsiveSales.dart';
+import 'package:explore/web/widgets/categories.dart';
 import 'package:explore/web/widgets/contact.dart';
-import 'package:explore/web/widgets/newProduts.dart';
-import 'package:explore/web/widgets/offersImageSlider.dart';
 import 'package:explore/web/widgets/offersSlider.dart';
-import 'package:explore/web/widgets/searchSale.dart';
-import 'package:explore/web/widgets/web_scrollbar.dart';
-import 'package:explore/web/widgets/bottom_bar.dart';
-import 'package:explore/web/widgets/carousel.dart';
-import 'package:explore/web/widgets/destination_heading.dart';
+import 'package:explore/web/widgets/sales.dart';
 import 'package:explore/web/widgets/explore_drawer.dart';
-import 'package:explore/web/widgets/featured_heading.dart';
-import 'package:explore/web/widgets/featured_tiles.dart';
-import 'package:explore/web/widgets/floating_quick_access_bar.dart';
+
 import 'package:explore/web/widgets/responsive.dart';
+import 'package:explore/web/widgets/socialMedia.dart';
 import 'package:explore/web/widgets/top_bar_contents.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -45,6 +36,7 @@ List<String> searchTerm = [];
 class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController = ScrollController();
   double _scrollPosition = 0;
+  double _animationWidth = 0;
   double _opacity = 0;
   getProduts() {
     int i = 0;
@@ -174,25 +166,35 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _scrollPosition = _scrollController.position.pixels;
     });
+    if (_scrollPosition > 1) {
+      setState(() {
+        _animationWidth = 50;
+      });
+    }
+    if (_scrollPosition == 0) {
+      setState(() {
+        _animationWidth = 0;
+      });
+    }
   }
+
+  final List<String> imageSlide = [
+    'assets/images/offer2.jpg',
+    'assets/images/offer1.jpg',
+    'assets/images/offer4.jpg',
+  ];
 
   @override
   void initState() {
-    getProduts();
     _scrollController.addListener(_scrollListener);
-    getBrands();
-    getCart();
-    FirebaseFirestore.instance
-        .collection('Admin')
-        .doc("admindoc")
-        .get()
-        .then((value) {
-      setState(() {
-        images = value.get("sliderImages");
 
-        slideImages = value.get("offerImages");
-      });
-    });
+    // FirebaseFirestore.instance.collection('Brands').get().then((value) {
+    //   print("hi");
+    //   print(value.docs);
+    //   value.docs.forEach((element) {
+    //     print(element['name']);
+    //   });
+    // });
 
     super.initState();
   }
@@ -205,456 +207,243 @@ class _HomePageState extends State<HomePage> {
         : 1;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      extendBodyBehindAppBar: true,
+      drawer: ExploreDrawer(_scrollController),
       appBar: ResponsiveWidget.isSmallScreen(context)
           ? AppBar(
-              backgroundColor: Colors.black,
+              backgroundColor: Color(0xFF35ddde),
               elevation: 0,
               centerTitle: true,
-              actions: [
-                IconButton(
-                  icon: Icon(
-                    Icons.search,
+              title: InkWell(
+                onTap: () {
+                  ResponsiveWidget.isSmallScreen(context)
+                      ? Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ResponsiveSales()))
+                      : Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Sales()));
+                },
+                child: Container(
+                  child: Center(
+                    child: Text("HL SUNGLASS"),
                   ),
-                  onPressed: () {
-                    showSearch(
-                        context: context, delegate: CustomSearchDelegate());
-                  },
                 ),
-              ],
-              title: Image.asset(
-                'assets/images/sunpower2.png',
-                fit: BoxFit.cover,
               ),
             )
           : PreferredSize(
-              preferredSize: Size(screenSize.width, 1000),
-              child: TopBarContents(_opacity, _scrollController),
+              preferredSize: Size(screenSize.width, screenSize.height * 0.06),
+              child: AnimatedContainer(
+                duration: Duration(seconds: 1),
+                curve: Curves.fastLinearToSlowEaseIn,
+                width: screenSize.width,
+                height: screenSize.height * 0.6,
+                color: _animationWidth != 70
+                    ? Color.fromARGB(0, 244, 67, 54)
+                    : Colors.white,
+                child: TopBarContents(_opacity, _scrollController),
+              ),
             ),
-      drawer: ExploreDrawer(_scrollController),
+      backgroundColor: Colors.white,
+      extendBodyBehindAppBar: true,
       body: RawKeyboardListener(
         focusNode: _focusNode,
         autofocus: true,
         onKey: _handleKeyEvent,
         child: SingleChildScrollView(
           controller: _scrollController,
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    child: SizedBox(
-                      height: screenSize.height * 0.55,
-                      width: screenSize.width,
-                      child: images.isNotEmpty
-                          ? Container(
-                              child: CarouselSlider(
-                              options: CarouselOptions(
-                                  autoPlay: true,
-                                  autoPlayAnimationDuration:
-                                      Duration(seconds: 2)),
-                              items: images
-                                  .map((item) => Container(
-                                        child: Center(
-                                            child: Container(
-                                          margin: EdgeInsets.all(1.0),
-                                          child: ClipRRect(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(0.0)),
-                                              child: Stack(
-                                                children: <Widget>[
-                                                  Image.network(
-                                                    item,
-                                                    fit: BoxFit.fitWidth,
-                                                    width: screenSize.width,
-                                                  ),
-                                                  Positioned(
-                                                    top: 0.0,
-                                                    left: 0.0,
-                                                    right: 0.0,
-                                                    child: Container(
-                                                      height:
-                                                          screenSize.height *
-                                                              0.1,
-                                                      decoration: BoxDecoration(
-                                                        gradient:
-                                                            LinearGradient(
-                                                          colors: [
-                                                            Color.fromARGB(
-                                                                182, 0, 0, 0),
-                                                            Color.fromARGB(
-                                                                0, 0, 0, 0)
-                                                          ],
-                                                          begin: Alignment
-                                                              .topCenter,
-                                                          end: Alignment
-                                                              .bottomCenter,
-                                                        ),
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                        )),
-                                      ))
-                                  .toList(),
-                            ))
-                          : Image.asset(
-                              'assets/images/tools.jpg',
+          child: ResponsiveWidget.isSmallScreen(context)
+              ? Column(
+                  children: [
+                    Stack(
+                      children: [
+                        Container(
+                          child: SizedBox(
+                            height: screenSize.height,
+                            width: screenSize.width,
+                            child: Image.asset(
+                              'assets/images/walpper.jpg',
                               fit: BoxFit.cover,
                             ),
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      FloatingQuickAccessBar(screenSize: screenSize),
-                      Container(
-                        child: Column(
-                          children: [
-                            FeaturedHeading(
-                              screenSize: screenSize,
-                            ),
-                            ResponsiveWidget.isSmallScreen(context)
-                                ? SizedBox(height: screenSize.height / 20)
-                                : SizedBox(height: screenSize.height / 10),
-                            Categories(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              SizedBox(height: screenSize.height / 15),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  OffersSlidder(
-                    screenSize: screenSize,
-                  ),
-                  Container(
-                    width: ResponsiveWidget.isSmallScreen(context)
-                        ? screenSize.width
-                        : screenSize.width * 0.9,
-                    height: screenSize.height * 0.4,
-                    child: OffersImageSlider(
-                      screenSize: screenSize,
-                      imageSlide: slideImages,
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(height: screenSize.height / 15),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: screenSize.width / 14,
-                  right: screenSize.width / 14,
-                ),
-                child: Container(
-                  width: screenSize.width,
-                  child: Text(
-                    AppLocalizations.of(context).trans("latestProduct"),
-                    style: TextStyle(fontSize: 24),
-                  ),
-                ),
-              ),
-              ResponsiveWidget.isSmallScreen(context)
-                  ? SizedBox(height: screenSize.height / 20)
-                  : SizedBox(height: screenSize.height / 10),
-              LatestProducts(),
-              DestinationHeading(screenSize: screenSize),
-              brands.isEmpty
-                  ? Container()
-                  : DestinationCarousel(_isHovering, _isSelected, brands),
-              SizedBox(height: screenSize.height / 10),
-              ContactUs(),
-              SizedBox(height: screenSize.height / 15),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class CustomSearchDelegate extends SearchDelegate {
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-          onPressed: () {
-            query = "";
-          },
-          icon: Icon(Icons.clear))
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-        onPressed: () {
-          close(context, null);
-        },
-        icon: Icon(Icons.arrow_back));
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    List<String> matchQuery = [];
-    List<int> matchIndex = [];
-    int i = 0;
-    for (var item in itemCodeL) {
-      if (item.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(item);
-        matchIndex.add(i);
-      }
-      i++;
-    }
-    i = 0;
-    for (var item in barcodeL) {
-      if (item.toLowerCase().contains(query.toLowerCase())) {
-        if (matchIndex.contains(i)) {
-        } else {
-          matchQuery.add(item);
-          matchIndex.add(i);
-        }
-      }
-      i++;
-    }
-    i = 0;
-    for (var item in searchTerm) {
-      if (item.toLowerCase().contains(query.toLowerCase())) {
-        if (matchIndex.contains(i)) {
-        } else {
-          matchQuery.add(item);
-          matchIndex.add(i);
-        }
-      }
-      i++;
-    }
-    return ListView.builder(
-        itemCount: matchQuery.length,
-        itemBuilder: (context, index) {
-          var result = products[matchIndex[index]];
-          print(result);
-          return ListTile(
-            title: Container(
-              height: 150,
-              child: Card(
-                elevation: 5,
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Image.network(
-                          result['image'],
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: ListTile(
-                          title: Text("Name"),
-                          subtitle: Text(result['name']),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: ListTile(
-                          title: Text("Item Code"),
-                          subtitle: Text(result['itemCode']),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: ListTile(
-                          title: Text("Price"),
-                          subtitle: Text(result['Price'].toString() + " \$"),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: ListTile(
-                          title: Text("Bar Code"),
-                          subtitle: Text(result['barCode']),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        });
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> matchQuery = [];
-    List<int> matchIndex = [];
-    int i = 0;
-    for (var item in itemCodeL) {
-      if (item.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(item);
-        matchIndex.add(i);
-      }
-      i++;
-    }
-    i = 0;
-    for (var item in barcodeL) {
-      if (item.toLowerCase().contains(query.toLowerCase())) {
-        if (matchIndex.contains(i)) {
-        } else {
-          matchQuery.add(item);
-          matchIndex.add(i);
-        }
-      }
-      i++;
-    }
-    i = 0;
-    for (var item in searchTerm) {
-      if (item.toLowerCase().contains(query.toLowerCase())) {
-        if (matchIndex.contains(i)) {
-        } else {
-          matchQuery.add(item);
-          matchIndex.add(i);
-        }
-      }
-      i++;
-    }
-    return ListView.builder(
-        itemCount: matchQuery.length,
-        itemBuilder: (context, index) {
-          var result = products[matchIndex[index]];
-
-          return ListTile(
-            title: InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SearchSales(
-                          productId: products[index]["id"],
-                        )));
-                // if (uid!.isEmpty) {
-                //   showDialog(
-                //     context: context,
-                //     builder: (context) => AuthDialog(),
-                //   );
-                // } else {
-                //   Navigator.of(context).push(MaterialPageRoute(
-                //       builder: (context) => SearchSales(
-                //             productId: products[index]["id"],
-                //           )));
-                // }
-              },
-              child: Container(
-                height: 150,
-                child: Card(
-                  elevation: 5,
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 4,
-                          child: Image.network(
-                            result['image'],
-                            fit: BoxFit.cover,
                           ),
                         ),
-                        Expanded(
-                          flex: 6,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    flex: 2,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Name",
-                                          style: TextStyle(fontSize: 8),
-                                        ),
-                                        Text(
-                                          result['name'],
-                                          style: TextStyle(fontSize: 8),
-                                        ),
-                                      ],
-                                    )),
-                                Expanded(
-                                    flex: 2,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Item Code",
-                                          style: TextStyle(fontSize: 8),
-                                        ),
-                                        Text(
-                                          result['itemCode'],
-                                          style: TextStyle(fontSize: 8),
-                                        ),
-                                      ],
-                                    )),
-                                Expanded(
-                                    flex: 2,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Price",
-                                          style: TextStyle(fontSize: 8),
-                                        ),
-                                        Text(
-                                          result['Price'].toString() + " \$",
-                                          style: TextStyle(fontSize: 8),
-                                        ),
-                                      ],
-                                    )),
-                                Expanded(
-                                  flex: 2,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Bar Code",
-                                        style: TextStyle(fontSize: 8),
-                                      ),
-                                      Text(
-                                        result['barCode'],
-                                        style: TextStyle(fontSize: 8),
-                                      ),
-                                    ],
+                        AnimatedContainer(
+                          duration: Duration(seconds: 1),
+                          curve: Curves.fastLinearToSlowEaseIn,
+                          width: screenSize.width,
+                          height: screenSize.height,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            border: _animationWidth != 50
+                                ? Border(
+                                    left: BorderSide(
+                                        width: _animationWidth,
+                                        color: Color.fromARGB(0, 0, 0, 0)),
+                                    top: BorderSide(
+                                        width: _animationWidth,
+                                        color: Color.fromARGB(0, 1, 88, 155)),
+                                    right: BorderSide(
+                                        width: _animationWidth,
+                                        color: Color.fromARGB(0, 1, 88, 155)),
+                                  )
+                                : Border(
+                                    left: BorderSide(
+                                        width: _animationWidth,
+                                        color: Colors.white),
+                                    top: BorderSide(
+                                        width: _animationWidth,
+                                        color: Colors.white),
+                                    right: BorderSide(
+                                        width: _animationWidth,
+                                        color: Colors.white),
                                   ),
-                                )
-                              ],
+                          ),
+                        ),
+                        Positioned(
+                          bottom: screenSize.height * 0.05,
+                          right: screenSize.width * 0.17,
+                          child: Center(
+                            child: Text(
+                              "Style Yourself With \n  Our Sunglasses!",
+                              style: TextStyle(
+                                fontSize: 32,
+                                color: Color(0xFF35ddde),
+                                fontFamily: 'Cardo',
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                  ),
+                    Offers(screenSize: screenSize),
+                    SizedBox(
+                      height: screenSize.height * 0.1,
+                    ),
+                    Container(
+                        width: screenSize.width,
+                        height: screenSize.height * 0.65,
+                        child: Bsales()),
+                    Container(
+                        width: screenSize.width,
+                        height: screenSize.height * 0.7,
+                        child: CategoriesScreen()),
+                    Container(
+                        width: screenSize.width,
+                        height: screenSize.height * 0.4,
+                        child: Brands()),
+                    SizedBox(
+                      height: screenSize.height * 0.1,
+                    ),
+                    Container(
+                      width: screenSize.width,
+                      height: screenSize.height * 0.7,
+                      child: ContactUs(),
+                    ),
+                    SizedBox(
+                      height: screenSize.height * 0.1,
+                    ),
+                    Container(
+                      height: screenSize.height * 0.3,
+                      child: SocialMedia(screenSize: screenSize),
+                    ),
+                  ],
+                )
+              : Column(
+                  children: [
+                    Stack(
+                      children: [
+                        Container(
+                          child: SizedBox(
+                            height: screenSize.height,
+                            width: screenSize.width,
+                            child: Image.asset(
+                              'assets/images/walpper.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        AnimatedContainer(
+                          duration: Duration(seconds: 1),
+                          curve: Curves.fastLinearToSlowEaseIn,
+                          width: screenSize.width,
+                          height: screenSize.height,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            border: _animationWidth != 70
+                                ? Border(
+                                    left: BorderSide(
+                                        width: _animationWidth,
+                                        color: Color.fromARGB(0, 0, 0, 0)),
+                                    top: BorderSide(
+                                        width: _animationWidth,
+                                        color: Color.fromARGB(0, 1, 88, 155)),
+                                    right: BorderSide(
+                                        width: _animationWidth,
+                                        color: Color.fromARGB(0, 1, 88, 155)),
+                                  )
+                                : Border(
+                                    left: BorderSide(
+                                        width: _animationWidth,
+                                        color: Colors.white),
+                                    top: BorderSide(
+                                        width: _animationWidth,
+                                        color: Colors.white),
+                                    right: BorderSide(
+                                        width: _animationWidth,
+                                        color: Colors.white),
+                                  ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: screenSize.height * 0.3,
+                          right: screenSize.width * 0.04,
+                          child: Center(
+                            child: Text(
+                              " Style Yourself With \n  Our Sunglasses!",
+                              style: TextStyle(
+                                fontSize: 56,
+                                color: Color(0xFF35ddde),
+                                fontFamily: 'Cardo',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Offers(screenSize: screenSize),
+                    SizedBox(
+                      height: screenSize.height * 0.1,
+                    ),
+                    Container(
+                        width: screenSize.width,
+                        height: screenSize.height * 0.5,
+                        child: Bsales()),
+                    Container(
+                        width: screenSize.width,
+                        height: screenSize.height * 0.7,
+                        child: CategoriesScreen()),
+                    Container(
+                        width: screenSize.width,
+                        height: screenSize.height * 0.4,
+                        child: Brands()),
+                    SizedBox(
+                      height: screenSize.height * 0.1,
+                    ),
+                    Container(
+                      width: screenSize.width,
+                      height: screenSize.height * 0.7,
+                      child: ContactUs(),
+                    ),
+                    SizedBox(
+                      height: screenSize.height * 0.1,
+                    ),
+                    Container(
+                      height: screenSize.height * 0.1,
+                      child: SocialMedia(screenSize: screenSize),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-          );
-        });
+        ),
+      ),
+    );
   }
 }

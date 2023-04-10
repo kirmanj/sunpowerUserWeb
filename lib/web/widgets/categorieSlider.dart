@@ -70,11 +70,13 @@ class _CategoriesState extends State<Categories> {
                                 );
                               } else {
                                 ResponsiveWidget.isSmallScreen(context)
-                                    ? Navigator.of(context).pushReplacement(
+                                    ? Navigator.push(
+                                        context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 ResponsiveSales()))
-                                    : Navigator.of(context).pushReplacement(
+                                    : Navigator.push(
+                                        context,
                                         MaterialPageRoute(
                                             builder: (context) => Sales()));
                               }

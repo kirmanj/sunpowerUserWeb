@@ -14,7 +14,7 @@
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/png" href="favicon.png"/>
 
-  <title>Sunpower</title>
+  <title>Sunglass</title>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
@@ -27,6 +27,13 @@
         navigator.serviceWorker.register('flutter_service_worker.js');
       });
     }
+
+    
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+    
   </script>
    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBvNnYGvJ9QedPvICpC_6Lsv2ivlIhFTxw"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -42,15 +49,15 @@
 
   <script>
   //Replace with your config data
-    const firebaseConfig = {
-    apiKey: "AIzaSyCF88vjeQk3UBvrmCiZbSJZwmH8DUzGQCo",
-    authDomain: "baharka-library-e410f.firebaseapp.com",
-    projectId: "baharka-library-e410f",
-    storageBucket: "baharka-library-e410f.appspot.com",
-    messagingSenderId: "816179177968",
-    appId: "1:816179177968:web:7b7bebdb9f003c34629535",
-    measurementId: "G-5E4XGSERBY"
-  };
+  const firebaseConfig = {
+  apiKey: "AIzaSyDIX6WLl9dbCeJEFT1dRc7rmcgNPl65rHk",
+  authDomain: "sunglasses-c6c22.firebaseapp.com",
+  projectId: "sunglasses-c6c22",
+  storageBucket: "sunglasses-c6c22.appspot.com",
+  messagingSenderId: "159970368612",
+  appId: "1:159970368612:web:17a5c1a7d0e67987f99371",
+  measurementId: "G-2TCHS7Q94G"
+};
 
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);

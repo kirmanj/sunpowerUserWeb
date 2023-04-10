@@ -239,8 +239,15 @@ class _LatestProductsState extends State<LatestProducts> {
                                                   AuthDialog(),
                                             );
                                           } else {
-                                            Navigator.of(context)
-                                                .pushReplacement(
+                                            ResponsiveWidget.isSmallScreen(
+                                                    context)
+                                                ? Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ResponsiveSales()))
+                                                : Navigator.push(
+                                                    context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
                                                             Sales()));

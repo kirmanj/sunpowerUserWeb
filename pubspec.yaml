@@ -41,6 +41,7 @@ dependencies:
   provider:
   latlong2:
   search_choices: ^2.2.2
+  whatsapp_unilink: 
 
 
   

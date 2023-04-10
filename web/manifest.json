@@ -1,6 +1,6 @@
 {
-    "name": "sunpower",
-    "short_name": "sunpower",
+    "name": "Sunglass",
+    "short_name": "Sunglass",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

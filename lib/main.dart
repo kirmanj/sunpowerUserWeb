@@ -6,8 +6,6 @@ import 'package:explore/web/screens/home_page.dart';
 import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/utils/theme_data.dart';
 import 'package:explore/web/widgets/ResponsiveSales.dart';
-import 'package:explore/web/widgets/sales.dart';
-import 'package:explore/web/widgets/searchSale.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -43,8 +41,6 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       uid = '';
     });
-
-    print(uid);
   }
 
   @override
@@ -62,7 +58,7 @@ class _MyAppState extends State<MyApp> {
       child: Consumer<SettingsServiceProvider>(
         builder: (context, settings, child) {
           return MaterialApp(
-            title: 'Sunpower',
+            title: 'HL SUNGLASS',
             theme: lightThemeData,
             scrollBehavior: MyCustomScrollBehavior(),
             darkTheme: darkThemeData,
