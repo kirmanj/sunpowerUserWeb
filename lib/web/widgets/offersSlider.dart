@@ -1,24 +1,52 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:explore/localization/AppLocal.dart';
 import 'package:explore/web/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 
-class Offers extends StatelessWidget {
-  const Offers({
-    Key? key,
-    required this.screenSize,
-  }) : super(key: key);
+class Offers extends StatefulWidget {
+  const Offers({Key? key}) : super(key: key);
 
-  final Size screenSize;
+  @override
+  State<Offers> createState() => _OffersState();
+}
+
+class _OffersState extends State<Offers> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  late List imageSlide = [];
+  getOffer() {
+    FirebaseFirestore.instance.collection('offers').get().then((value) {
+      value.docs.forEach((element) {
+        setState(() {
+          imageSlide.add(element['img']);
+        });
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    getOffer();
+    super.initState();
+    _controller = AnimationController(vsync: this);
+  }
+
+  // final List<String> imageSlide = [
+  //   'assets/images/offer2.jpg',
+  //   'assets/images/offer1.jpg',
+  //   'assets/images/offer4.jpg',
+  // ];
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<String> imageSlide = [
-      'assets/images/offer2.jpg',
-      'assets/images/offer1.jpg',
-      'assets/images/offer4.jpg',
-    ];
-
+    var screenSize = MediaQuery.of(context).size;
     return ResponsiveWidget.isSmallScreen(context)
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,6 +103,7 @@ class Offers extends StatelessWidget {
                                   .toList(),
                             )),
                       ),
+
                       //   Expanded(flex: 1, child: Container()),
                       Expanded(
                           flex: 1,

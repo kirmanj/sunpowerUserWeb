@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:explore/bestSales.dart';
 import 'package:explore/brands.dart';
 import 'package:explore/main.dart';
-import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/widgets/ResponsiveSales.dart';
 import 'package:explore/web/widgets/categories.dart';
 import 'package:explore/web/widgets/contact.dart';
 import 'package:explore/web/widgets/offersSlider.dart';
 import 'package:explore/web/widgets/sales.dart';
-import 'package:explore/web/widgets/explore_drawer.dart';
 
 import 'package:explore/web/widgets/responsive.dart';
 import 'package:explore/web/widgets/socialMedia.dart';
@@ -67,26 +65,6 @@ class _HomePageState extends State<HomePage> {
 
   List images = [];
   List slideImages = [];
-
-  getCart() async {
-    if (uid!.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .collection('cart')
-          .get()
-          .then((myDocuments) {
-        setState(() {
-          cartC = myDocuments.docs.length;
-        });
-      });
-    }
-    FirebaseFirestore.instance.collection('users').doc(uid).get().then((value) {
-      setState(() {
-        role = int.parse(value.get("role").toString());
-      });
-    });
-  }
 
   List _isHovering = [];
   List _isSelected = [];
@@ -167,9 +145,13 @@ class _HomePageState extends State<HomePage> {
       _scrollPosition = _scrollController.position.pixels;
     });
     if (_scrollPosition > 1) {
-      setState(() {
-        _animationWidth = 50;
-      });
+      ResponsiveWidget.isSmallScreen(context)
+          ? setState(() {
+              _animationWidth = 50;
+            })
+          : setState(() {
+              _animationWidth = 70;
+            });
     }
     if (_scrollPosition == 0) {
       setState(() {
@@ -207,7 +189,6 @@ class _HomePageState extends State<HomePage> {
         : 1;
 
     return Scaffold(
-      drawer: ExploreDrawer(_scrollController),
       appBar: ResponsiveWidget.isSmallScreen(context)
           ? AppBar(
               backgroundColor: Color(0xFF35ddde),
@@ -314,7 +295,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    Offers(screenSize: screenSize),
+                    Offers(),
                     SizedBox(
                       height: screenSize.height * 0.1,
                     ),
@@ -409,7 +390,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    Offers(screenSize: screenSize),
+                    Offers(),
                     SizedBox(
                       height: screenSize.height * 0.1,
                     ),

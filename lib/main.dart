@@ -3,9 +3,8 @@ import 'package:explore/localization/AppLocal.dart';
 
 import 'package:explore/scrollbehaivori.dart';
 import 'package:explore/web/screens/home_page.dart';
-import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/utils/theme_data.dart';
-import 'package:explore/web/widgets/ResponsiveSales.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -19,6 +18,7 @@ int role = 0;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await LocalStorageService.instance.init();
   if (LocalStorageService.instance.languageCode == null) {
     LocalStorageService.instance.languageCode = "en";
@@ -36,16 +36,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future getUserInfo() async {
-    await getUser();
-    setState(() {
-      uid = '';
-    });
-  }
-
+  final Future<FirebaseApp> _fApp = Firebase.initializeApp();
   @override
   void initState() {
-    getUserInfo();
     super.initState();
   }
 
@@ -64,7 +57,22 @@ class _MyAppState extends State<MyApp> {
             darkTheme: darkThemeData,
             debugShowCheckedModeBanner: false,
             themeMode: EasyDynamicTheme.of(context).themeMode,
-            home: HomePage(),
+            home: FutureBuilder(
+                future: _fApp,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    print(snapshot.hasError);
+                    return Container(
+                      child: Center(
+                        child: Text(snapshot.hasError.toString()),
+                      ),
+                    );
+                  } else if (snapshot.hasData) {
+                    return HomePage();
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                }),
             localizationsDelegates: const [
               AppLocalizationsDelegate(),
               GlobalMaterialLocalizations.delegate,

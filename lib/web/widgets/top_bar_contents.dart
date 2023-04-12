@@ -1,7 +1,4 @@
 import 'package:explore/web/screens/home_page.dart';
-import 'package:explore/web/utils/authentication.dart';
-import 'package:explore/web/widgets/auth_dialog.dart';
-import 'package:explore/web/widgets/searchSale.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -126,7 +123,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                   child: InkWell(
                     onTap: () {
                       setState(() {
-                        _scrollController.animateTo(screenSize.height * 1.1,
+                        _scrollController.animateTo(screenSize.height * 1,
                             duration: Duration(milliseconds: 300),
                             curve: Curves.ease);
                       });
@@ -307,12 +304,7 @@ class CustomSearchDelegate extends SearchDelegate {
           var result = products[matchIndex[index]];
           return ListTile(
             title: InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SearchSales(
-                          productId: products[index]["id"],
-                        )));
-              },
+              onTap: () {},
               child: Container(
                 height: 150,
                 child: Card(

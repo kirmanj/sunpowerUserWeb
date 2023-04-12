@@ -16,31 +16,19 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^1.0.0
   firebase_auth: 
-  barcode_widget:
   gradient_borders: ^0.2.0
-  modal_bottom_sheet:
   intl: ^0.17.0
   flutter_map:
   http:
-  syncfusion_flutter_pdfviewer: ^20.2.45
   cloud_firestore: ^1.0.0
-  file_picker:
   shared_preferences:
   carousel_slider: ^4.1.1
   firebase_storage: ^9.0.0
-  image_picker: ^0.7.0
-  uuid: 
   firebase: ^9.0.0
   easy_dynamic_theme: ^2.0.0
   url_launcher: 
-  google_sign_in: ^5.0.1
   countup: ^0.1.4
-  path_provider:
-  open_file: 
-  easy_localization:
   provider:
-  latlong2:
-  search_choices: ^2.2.2
   whatsapp_unilink: 
 
 

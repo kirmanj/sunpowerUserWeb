@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:explore/localization/AppLocal.dart';
-import 'package:explore/web/utils/authentication.dart';
 import 'package:explore/web/widgets/ResponsiveSales.dart';
-import 'package:explore/web/widgets/auth_dialog.dart';
 import 'package:explore/web/widgets/responsive.dart';
 import 'package:explore/web/widgets/sales.dart';
 import 'package:flutter/material.dart';
@@ -63,23 +61,16 @@ class _CategoriesState extends State<Categories> {
                               isHover[index] ? Colors.white : Colors.red[900],
                           child: InkWell(
                             onTap: () {
-                              if (uid!.isEmpty) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AuthDialog(),
-                                );
-                              } else {
-                                ResponsiveWidget.isSmallScreen(context)
-                                    ? Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ResponsiveSales()))
-                                    : Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Sales()));
-                              }
+                              ResponsiveWidget.isSmallScreen(context)
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ResponsiveSales()))
+                                  : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Sales()));
                             },
                             onHover: (value) {
                               setState(() {
